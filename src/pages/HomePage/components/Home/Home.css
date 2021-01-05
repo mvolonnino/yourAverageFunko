@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap');
+
+.jumbotron {
+  display: flex !important;
+  justify-content: space-evenly !important;
+}
+
+.funkoBrand {
+  object-fit: contain;
+  height: 100px;
+}
+
+.loader {
+  position: absolute;
+  margin-left: -200px;
+  top: 50%;
+  left: 50%;
+  font-family: 'ZCOOL KuaiLe', cursive;
+  font-size: 40px;
+  color: var(--primary);
+}
+
+.loader::after {
+  content: '\2026';
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  animation: dots steps(4, end) 2s infinite;
+  width: 0px;
+}
+
+@keyframes dots {
+  to {
+    width: 1.25em;
+  }
+}

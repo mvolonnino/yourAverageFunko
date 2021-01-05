@@ -5,8 +5,8 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const config = require("./congif");
-const puppeteer = require("puppeteer");
 const funkoPopRoutes = require("./routes/funkoPop-routes");
+const { main } = require("./getFunkoData");
 
 const app = express();
 app.use(express.json());
@@ -27,6 +27,8 @@ admin.initializeApp({
 const db = admin.firestore();
 
 exports.app = functions.https.onRequest(app);
+
+main();
 
 app.listen(config.port, () =>
   console.log("APP is listening on url http://localhost:" + config.port)

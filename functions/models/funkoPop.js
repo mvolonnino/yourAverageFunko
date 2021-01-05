@@ -1,5 +1,5 @@
 class FunkoPop {
-  constructor(id, genre, funkoData, number, name, price, img) {
+  constructor(id, genre, funkoData) {
     this.genre = genre;
     this.funkoData = funkoData;
   }
