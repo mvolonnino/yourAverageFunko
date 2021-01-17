@@ -5,10 +5,11 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const config = require("./congif");
-const funkoPopRoutes = require("./routes/funkoPop-routes");
-const { main } = require("./getFunkoData");
+// const { main } = require("./getFunkoData");
 
 const app = express();
+
+// MIDDLEWARES
 app.use(express.json());
 app.use(
   cors({
@@ -17,6 +18,10 @@ app.use(
 );
 app.use(bodyParser.json());
 
+// IMPORT ROUTES
+const funkoPopRoutes = require("./routes/funkoPop-routes");
+
+// ROUTES
 app.use("/api", funkoPopRoutes.routes);
 
 admin.initializeApp({
@@ -27,8 +32,6 @@ admin.initializeApp({
 const db = admin.firestore();
 
 exports.app = functions.https.onRequest(app);
-
-main();
 
 app.listen(config.port, () =>
   console.log("APP is listening on url http://localhost:" + config.port)

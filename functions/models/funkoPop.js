@@ -1,6 +1,8 @@
 class FunkoPop {
-  constructor(id, genre, funkoData) {
+  constructor(genre, funkoData) {
     this.genre = genre;
     this.funkoData = funkoData;
   }
 }
+
+module.exports = FunkoPop;

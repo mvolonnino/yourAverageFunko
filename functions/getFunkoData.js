@@ -1,7 +1,6 @@
 const puppeteer = require("puppeteer");
 const firebase = require("./db");
 const firestore = firebase.firestore();
-const { addFunkoPop } = require("./controllers/funkoPopController");
 
 async function getFunkoData(url, page, i) {
   await page.goto(url, { waitUntil: "domcontentloaded", timeout: 0 });
