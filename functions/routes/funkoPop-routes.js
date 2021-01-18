@@ -6,13 +6,14 @@ const {
   getFunkoPopGenre,
 } = require("../controllers/funkoPopController");
 const db = require("../db");
+const verifyToken = require("../verifyToken");
 
 const router = express.Router();
 
-router.post("/funkoPop", addFunkoPop);
-router.get("/funkoPops", getAllFunkoPops);
-router.get("/funkoPops/:name", getFunkoPopName);
-router.get("/funkoPop/:genre", getFunkoPopGenre);
+router.post("/add", addFunkoPop);
+router.get("/getAll", verifyToken, getAllFunkoPops);
+router.get("/getName/:name", getFunkoPopName);
+router.get("/getGenre/:genre", getFunkoPopGenre);
 
 module.exports = {
   routes: router,

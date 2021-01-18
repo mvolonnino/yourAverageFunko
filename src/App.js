@@ -16,7 +16,14 @@ function App() {
         if (!user) {
           dispatch({
             type: "SET_USER",
-            user: authUser.providerData[0],
+            user: {
+              uid: authUser.uid,
+              displayName: authUser.displayName,
+              email: authUser.email,
+              photoUrl: authUser.photoURL,
+              phoneNumber: authUser.phoneNumber,
+              providerId: authUser.providerId,
+            },
           });
         }
       }
