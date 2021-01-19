@@ -8,7 +8,6 @@ import "./App.css";
 function App() {
   const [{ user }, dispatch] = useDataLayerValue();
   const [loading, setLoading] = useState(true);
-  console.log({ user });
 
   useEffect(() => {
     auth.onAuthStateChanged((authUser) => {

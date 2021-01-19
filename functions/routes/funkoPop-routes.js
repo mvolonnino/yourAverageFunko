@@ -6,7 +6,6 @@ const {
   getFunkoPopGenre,
   getFunkoPopQuery,
 } = require("../controllers/funkoPopController");
-const db = require("../db");
 const verifyToken = require("../verifyToken");
 
 const router = express.Router();

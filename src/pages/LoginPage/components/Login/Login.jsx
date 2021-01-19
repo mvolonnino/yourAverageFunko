@@ -71,6 +71,16 @@ function Login() {
     e.preventDefault();
     auth
       .signInWithEmailAndPassword(userObj.email, userObj.password)
+      .then(() => {
+        const u = auth.currentUser;
+        API.signUpUser({ u })
+          .then((res) => {
+            console.log({ res });
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      })
       .catch((error) => {
         const { code, message } = error;
         console.error({ code, message });
