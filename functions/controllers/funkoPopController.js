@@ -34,7 +34,7 @@ const getAllFunkoPops = async (req, res, next) => {
     const data = await funkoPops.get();
     const funkoArray = [];
     if (data.empty) {
-      res.status(404).send("No Funko Pop records found");
+      res.status(404).send("No Funko Pop records exsist");
     } else {
       data.forEach((doc) => {
         const funkoPop = new FunkoPop(doc.data().genre, doc.data().funkoData);
@@ -55,10 +55,12 @@ const getFunkoPopName = async (req, res, next) => {
     const data = await funkoPops.get();
     const funkoArray = [];
     if (data.empty) {
-      res.status(404).send("No Funko Pop records found");
+      res.status(404).send("No Funko Pop records exsist");
     } else {
       data.forEach((doc) => {
+        console.log(doc.data());
         const funkoObj = new FunkoPop(doc.data().genre, doc.data().funkoData);
+        console.log(funkoObj);
         funkoArray.push(funkoObj);
       });
       const matchArr = [];
@@ -76,7 +78,7 @@ const getFunkoPopName = async (req, res, next) => {
         }
       });
       if (matchArr.length === 0) {
-        res.status(404).send(`No Funko Genres found for search: ${query}`);
+        res.status(404).send(`No Funko Pops found for search: ${query}`);
       } else {
         res.send(matchArr);
       }
@@ -94,7 +96,7 @@ const getFunkoPopGenre = async (req, res, next) => {
     const data = await funkoPops.get();
     const genreArray = [];
     if (data.empty) {
-      res.status(404).send("No Funko Pop records found");
+      res.status(404).send("No Funko Pop records exsist");
     } else {
       data.forEach((doc) => {
         const funkoObj = new FunkoPop(doc.data().genre, doc.data().funkoData);
@@ -114,9 +116,79 @@ const getFunkoPopGenre = async (req, res, next) => {
   }
 };
 
+const getFunkoPopQuery = async (req, res, next) => {
+  try {
+    console.log(req.params);
+    const query = req.params.query.trim().toLowerCase();
+    const funkoPops = await firestore.collection("test");
+    const data = await funkoPops.get();
+    const funkoArr = [];
+    if (data.empty) {
+      res.status(404).send("No Funko Pop records exsist");
+    } else {
+      data.forEach((doc) => {
+        const funkoObj = new FunkoPop(doc.data().genre, doc.data().funkoData);
+        funkoArr.push(funkoObj);
+      });
+
+      // genre matching
+      let genreMatches = funkoArr.filter((funko) =>
+        funko.genre.toLowerCase().includes(query)
+      );
+      if (genreMatches.length === 0) {
+        genreMatches = `No funko pop genres with search: ${query}`;
+      }
+      // name & number matching
+      let nameMatches = [];
+      let numbMatches = [];
+      funkoArr.forEach((funko) => {
+        const genre = funko.genre;
+        const funkoData = funko.funkoData;
+        const name = funkoData.filter((data) =>
+          data.name.toLowerCase().includes(query)
+        );
+        const number = funkoData.filter((data) =>
+          data.number.toLowerCase().includes(query)
+        );
+
+        if (Object.keys(name).length > 0) {
+          nameMatches.push({
+            genre,
+            name,
+          });
+        }
+        if (Object.keys(number).length > 0) {
+          numbMatches.push({
+            genre,
+            number,
+          });
+        }
+      });
+
+      if (nameMatches.length === 0) {
+        nameMatches = `No funko pops found with search name: ${query}`;
+      }
+      if (numbMatches.length === 0) {
+        numbMatches = `No funko pop numbers found with search: ${query}`;
+      }
+
+      const searchFinds = {
+        genre: genreMatches,
+        name: nameMatches,
+        number: numbMatches,
+      };
+
+      res.send(searchFinds);
+    }
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
 module.exports = {
   addFunkoPop,
   getAllFunkoPops,
   getFunkoPopName,
   getFunkoPopGenre,
+  getFunkoPopQuery,
 };

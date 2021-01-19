@@ -2,8 +2,6 @@ import axios from "axios";
 
 export default {
   signUpUser: function ({ u }) {
-    console.log({ u });
-
     return axios({
       method: "POST",
       data: {

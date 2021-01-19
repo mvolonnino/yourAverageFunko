@@ -15,7 +15,6 @@ const signUpUser = async (req, res, next) => {
         },
         process.env.TOKEN_SECRET
       );
-      console.log({ token });
       res.header("auth-token", token).send(token);
     } else {
       await uiDoc.set({ user });
@@ -25,7 +24,6 @@ const signUpUser = async (req, res, next) => {
         },
         process.env.TOKEN_SECRET
       );
-      console.log({ token });
       res.header("auth-token", token).send(token);
     }
   } catch (error) {
