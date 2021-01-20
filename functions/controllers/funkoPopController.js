@@ -2,14 +2,6 @@ const firebase = require("../db");
 const FunkoPop = require("../models/funkoPop");
 const firestore = firebase.firestore();
 
-function removeEmpty(obj) {
-  return Object.fromEntries(
-    Object.entries(obj)
-      .filter(([_, v]) => v != null)
-      .map(([k, v]) => [k, v === Object(v) ? removeEmpty(v) : v])
-  );
-}
-
 const addFunkoPop = async (req, res, next) => {
   try {
     console.log(req.body);
@@ -158,15 +150,26 @@ const getFunkoPopQuery = async (req, res, next) => {
       }
 
       // name & number matching
+      const objToSearch = {
+        notNullNameArr: [],
+        notNullNumbArr: [],
+        nameMatches: [],
+        numbMatches: [],
+      };
 
-      const notNullNameArr = [];
       funkoArr.forEach((funko) => {
         const genre = funko.genre;
         if (funko.funkoData) {
           const funkoDataArr = funko.funkoData;
           funkoDataArr.forEach((data) => {
             if (data.name) {
-              notNullNameArr.push({
+              objToSearch.notNullNameArr.push({
+                funkoData: [data],
+                genre: genre,
+              });
+            }
+            if (data.number) {
+              objToSearch.notNullNumbArr.push({
                 funkoData: [data],
                 genre: genre,
               });
@@ -174,60 +177,42 @@ const getFunkoPopQuery = async (req, res, next) => {
           });
         }
       });
-
-      let nameMatches = [];
-      notNullNameArr.forEach((funko) => {
+      // find name that includes query
+      objToSearch.notNullNameArr.forEach((funko) => {
         const genre = funko.genre;
         const name = funko.funkoData.filter((data) =>
           data.name.toLowerCase().includes(query)
         );
         if (Object.keys(name).length > 0) {
-          nameMatches.push({
+          objToSearch.nameMatches.push({
             genre,
             name,
           });
         }
       });
-
-      const notNullNumbArr = [];
-      funkoArr.forEach((funko) => {
-        const genre = funko.genre;
-        if (funko.funkoData) {
-          const funkoDataArr = funko.funkoData;
-          funkoDataArr.forEach((data) => {
-            if (data.number) {
-              notNullNumbArr.push({
-                funkoData: [data],
-                genre: genre,
-              });
-            }
-          });
-        }
-      });
-
-      let numbMatches = [];
-      notNullNumbArr.forEach((funko) => {
+      // find number that matches query
+      objToSearch.notNullNumbArr.forEach((funko) => {
         const genre = funko.genre;
         const number = funko.funkoData.filter((data) => data.number === query);
         if (Object.keys(number).length > 0) {
-          numbMatches.push({
+          objToSearch.numbMatches.push({
             genre,
             number,
           });
         }
       });
 
-      if (nameMatches.length === 0) {
-        nameMatches = `No funko pops found with search name: ${query}`;
+      if (objToSearch.nameMatches.length === 0) {
+        objToSearch.nameMatches = `No funko pops found with search name: ${query}`;
       }
-      if (numbMatches.length === 0) {
-        numbMatches = `No funko pop numbers found with search: ${query}`;
+      if (objToSearch.numbMatches.length === 0) {
+        objToSearch.numbMatches = `No funko pop numbers found with search: ${query}`;
       }
 
       const searchFinds = {
         genre: genreMatches,
-        name: nameMatches,
-        number: numbMatches,
+        name: objToSearch.nameMatches,
+        number: objToSearch.numbMatches,
       };
 
       res.send(searchFinds);
