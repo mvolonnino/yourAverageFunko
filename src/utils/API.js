@@ -16,4 +16,12 @@ export default {
       url: "/api/user/signup",
     });
   },
+
+  getFunkoPopData: function (data) {
+    return axios({
+      method: "GET",
+      withCredentials: true,
+      url: "/api/funkoPop/getAll",
+    });
+  },
 };

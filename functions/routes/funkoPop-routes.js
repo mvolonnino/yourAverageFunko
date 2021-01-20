@@ -11,7 +11,7 @@ const verifyToken = require("../verifyToken");
 const router = express.Router();
 
 router.post("/add", addFunkoPop);
-router.get("/getAll", verifyToken, getAllFunkoPops);
+router.get("/getAll", getAllFunkoPops);
 router.get("/getName/:name", getFunkoPopName);
 router.get("/getGenre/:genre", getFunkoPopGenre);
 router.get("/search/:query", getFunkoPopQuery);

@@ -23,7 +23,7 @@ app.use(bodyParser.json());
 const funkoPopRoutes = require("./routes/funkoPop-routes");
 const userRoutes = require("./routes/userAuth-routes");
 
-// ROUTES
+// MIDDLEWARE ROUTES
 app.use("/api/funkoPop", funkoPopRoutes.routes);
 app.use("/api/user", userRoutes.routes);
 
@@ -31,7 +31,6 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://youraveragefunko-vols8994.firebaseio.com",
 });
-
 const db = admin.firestore();
 
 exports.app = functions.https.onRequest(app);
