@@ -1,27 +1,56 @@
 import axios from "axios";
+const controller = new AbortController();
+const signal = controller.signal;
 
-export default {
-  signUpUser: function ({ u }) {
-    return axios({
-      method: "POST",
-      data: {
-        uid: u.uid,
-        displayName: u.displayName,
-        email: u.email,
-        photoUrl: u.photoURL,
-        phoneNumber: u.phoneNumber,
-        providerId: u.providerData[0].providerId,
+const API = {
+  signUpUser: function ({
+    uid,
+    displayName,
+    email,
+    photoURL,
+    phoneNumber,
+    providerData,
+  }) {
+    return axios(
+      {
+        method: "POST",
+        data: {
+          uid: uid,
+          displayName: displayName,
+          email: email,
+          photoUrl: photoURL,
+          phoneNumber: phoneNumber,
+          providerId: providerData[0].providerId,
+        },
+        withCredentials: true,
+        url: "/api/user/signup",
       },
-      withCredentials: true,
-      url: "/api/user/signup",
-    });
+      { signal }
+    );
   },
 
-  getFunkoPopData: function (data) {
-    return axios({
-      method: "GET",
-      withCredentials: true,
-      url: "/api/funkoPop/getAll",
-    });
+  getFunkoPopData: function () {
+    return axios(
+      {
+        method: "GET",
+        withCredentials: true,
+        url: "/api/funkoPop/getAll",
+      },
+      { signal }
+    );
+  },
+
+  searchFunkoPopData: function (query) {
+    console.log(query);
+    return axios(
+      {
+        method: "GET",
+        withCredentials: true,
+        url: `/api/funkoPop/search/${query}`,
+      },
+      { signal }
+    );
   },
 };
+
+export default API;

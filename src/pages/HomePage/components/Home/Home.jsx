@@ -9,12 +9,23 @@ import "./Home.css";
 
 function Home() {
   const [{ user }, dispatch] = useDataLayerValue();
+  const [search, setSearch] = useState("");
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    API.searchFunkoPopData(search)
+      .then((res) => {
+        const { data } = res;
+        console.log({ data });
+      })
+      .catch((err) => console.error(err));
+  };
 
   useEffect(() => {
     API.getFunkoPopData()
       .then((res) => {
-        const data = res.data;
-        console.log({ data });
+        const { data } = res;
+        console.log("getAll: ", { data });
       })
       .catch((err) => {
         console.error(err);
@@ -44,6 +55,13 @@ function Home() {
           LogOut
         </button>
       </div>
+      <form>
+        <input
+          placeholder="Enter Search here"
+          onChange={(e) => setSearch(e.currentTarget.value)}
+        ></input>
+        <button onClick={handleSearch}>Search</button>
+      </form>
     </div>
   );
 }

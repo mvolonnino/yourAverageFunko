@@ -33,27 +33,44 @@ function Login() {
       .createUserWithEmailAndPassword(userObj.email, userObj.password)
       .then((user) => {
         // signed up
-        var u = auth.currentUser;
-        u.updateProfile({
-          displayName: userObj.displayName,
-        })
+        const {
+          uid,
+          email,
+          photoURL,
+          phoneNumber,
+          providerData,
+        } = auth.currentUser;
+
+        auth.currentUser
+          .updateProfile({
+            displayName: userObj.displayName,
+          })
           .then(() => {
-            API.signUpUser({ u })
+            const { displayName } = auth.currentUser;
+            API.signUpUser({
+              uid,
+              displayName,
+              email,
+              photoURL,
+              phoneNumber,
+              providerData,
+            })
               .then((res) => {
                 console.log({ res });
               })
               .catch((error) => {
                 console.error(error);
               });
+
             dispatch({
               type: "SET_USER",
               user: {
-                uid: u.uid,
-                displayName: u.displayName,
-                email: u.email,
-                photoUrl: u.photoURL,
-                phoneNumber: u.phoneNumber,
-                providerId: u.providerData[0].providerId,
+                uid: uid,
+                displayName: displayName,
+                email: email,
+                photoUrl: photoURL,
+                phoneNumber: phoneNumber,
+                providerId: providerData[0].providerId,
               },
             });
           })
@@ -72,8 +89,23 @@ function Login() {
     auth
       .signInWithEmailAndPassword(userObj.email, userObj.password)
       .then(() => {
-        const u = auth.currentUser;
-        API.signUpUser({ u })
+        const {
+          uid,
+          displayName,
+          email,
+          photoURL,
+          phoneNumber,
+          providerData,
+        } = auth.currentUser;
+
+        API.signUpUser({
+          uid,
+          displayName,
+          email,
+          photoURL,
+          phoneNumber,
+          providerData,
+        })
           .then((res) => {
             console.log({ res });
           })
@@ -94,8 +126,23 @@ function Login() {
         auth
           .signInWithPopup(gProvider)
           .then(() => {
-            const u = auth.currentUser;
-            API.signUpUser({ u })
+            const {
+              uid,
+              displayName,
+              email,
+              photoURL,
+              phoneNumber,
+              providerData,
+            } = auth.currentUser;
+
+            API.signUpUser({
+              uid,
+              displayName,
+              email,
+              photoURL,
+              phoneNumber,
+              providerData,
+            })
               .then((res) => {
                 console.log({ res });
               })
@@ -109,8 +156,23 @@ function Login() {
         auth
           .signInWithPopup(fProvider)
           .then(() => {
-            const u = auth.currentUser;
-            API.signUpUser({ u })
+            const {
+              uid,
+              displayName,
+              email,
+              photoURL,
+              phoneNumber,
+              providerData,
+            } = auth.currentUser;
+
+            API.signUpUser({
+              uid,
+              displayName,
+              email,
+              photoURL,
+              phoneNumber,
+              providerData,
+            })
               .then((res) => {
                 console.log({ res });
               })

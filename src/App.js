@@ -12,16 +12,25 @@ function App() {
   useEffect(() => {
     auth.onAuthStateChanged((authUser) => {
       if (authUser) {
+        const {
+          uid,
+          displayName,
+          email,
+          photoURL,
+          phoneNumber,
+          providerId,
+        } = authUser;
+
         if (!user) {
           dispatch({
             type: "SET_USER",
             user: {
-              uid: authUser.uid,
-              displayName: authUser.displayName,
-              email: authUser.email,
-              photoUrl: authUser.photoURL,
-              phoneNumber: authUser.phoneNumber,
-              providerId: authUser.providerId,
+              uid: uid,
+              displayName: displayName,
+              email: email,
+              photoUrl: photoURL,
+              phoneNumber: phoneNumber,
+              providerId: providerId,
             },
           });
         }
