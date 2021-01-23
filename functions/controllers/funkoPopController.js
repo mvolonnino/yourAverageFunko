@@ -2,25 +2,24 @@ const firebase = require("../db");
 const FunkoPop = require("../models/funkoPop");
 const firestore = firebase.firestore();
 
-const addFunkoPop = async (req, res, next) => {
+const blukAddFunkoPop = async (req, res, next) => {
   try {
     const { body } = req;
-    console.log({ body });
-    const genreCheck = await firestore.collection("test").doc(body.genre);
-    const data = await genreCheck.get();
+    const dbData = await firestore.collection("test").doc(body.genre);
+    const data = await dbData.get();
     if (data.exists) {
-      let funkoData = data.data().funkoData;
+      let dbFunkoData = data.data().funkoData;
       body.funkoData.forEach((funko) => {
-        funkoData.push(funko);
+        dbFunkoData.push(funko);
       });
       const funkoAdd = {
-        genre: body.genre,
-        funkoData: funkoData,
+        genre: genre,
+        funkoData: dbFunkoData,
       };
-      await genreCheck.update(funkoAdd);
+      await dbData.update(funkoAdd);
       res.status(200).send(funkoAdd);
     } else {
-      await genreCheck.set(body);
+      await dbData.set(body);
       res.status(200).send(body);
     }
   } catch (error) {
@@ -28,31 +27,73 @@ const addFunkoPop = async (req, res, next) => {
   }
 };
 
-const getAllFunkoPops = async (req, res, next) => {
+const userAddFunkoPop = async (req, res) => {
   try {
-    const funkoPops = await firestore.collection("test");
-    const data = await funkoPops.get();
-    const funkoArray = [];
-    if (data.empty) {
-      res.status(200).data([]);
-    } else {
-      data.forEach((doc) => {
-        const funkoPop = new FunkoPop(doc.data().genre, doc.data().funkoData);
-        funkoArray.push(funkoPop);
-      });
-      res.status(200).send(funkoArray);
+    const { body } = req;
+    console.log(body);
+    let headerData = [];
+    for (let [i, dataSet] of body.entries()) {
+      console.log(i);
+      const funkoPop = new FunkoPop(dataSet);
+      console.log(funkoPop);
+      if (funkoPop.error) {
+        // funko pop data not constructed correctly
+        headerData.push({ funkoPop });
+      } else {
+        const dbData = await firestore.collection("test").doc(funkoPop.genre);
+        const doc = await dbData.get();
+        if (doc.exists) {
+          let newFunkoData = [];
+          const dbFunkoData = doc.data().funkoData;
+          dbFunkoData.map((dbFunko) => {
+            newFunkoData.push(dbFunko);
+          });
+          funkoPop.funkoData.forEach((funko) => {
+            newFunkoData.push(funko);
+          });
+          await dbData.update({
+            funkoData: newFunkoData,
+          });
+          headerData.push({
+            genre: funkoPop.genre,
+            funkoData: newFunkoData,
+          });
+        } else {
+          await dbData.set(funkoPop);
+          headerData.push({ funkoPop });
+        }
+      }
     }
+    res.status(200).send(headerData);
   } catch (error) {
     res.status(400).send(error.message);
   }
 };
 
+// const getAllFunkoPops = async (req, res, next) => {
+//   try {
+//     const funkoPops = await firestore.collection("test");
+//     const data = await funkoPops.get();
+//     const funkoArray = [];
+//     if (data.empty) {
+//       res.status(200).data([]);
+//     } else {
+//       data.forEach((doc) => {
+//         const funkoPop = new FunkoPop(doc.data().genre, doc.data().funkoData);
+//         funkoArray.push(funkoPop);
+//       });
+//       res.status(200).send(funkoArray);
+//     }
+//   } catch (error) {
+//     res.status(400).send(error.message);
+//   }
+// };
+
 const getFunkoPopQuery = async (req, res, next) => {
   try {
     console.log(req.params);
     const query = req.params.query.trim().toLowerCase();
-    const funkoPops = await firestore.collection("test");
-    const data = await funkoPops.get();
+    const data = await firestore.collection("funkoPops").get();
     const funkoArr = [];
     if (data.empty) {
       res.status(200).data([]);
@@ -68,6 +109,12 @@ const getFunkoPopQuery = async (req, res, next) => {
         genreMatches = funkoArr.filter((funko) =>
           funko.genre.toLowerCase().includes(query)
         );
+      } else if (!isNaN(query)) {
+        if (query.length > 3) {
+          genreMatches = funkoArr.filter((funko) =>
+            funko.genre.toLowerCase().includes(query)
+          );
+        }
       }
 
       // name & number matching
@@ -101,9 +148,12 @@ const getFunkoPopQuery = async (req, res, next) => {
       // find name that includes query
       objToSearch.notNullNameArr.forEach((funko) => {
         const genre = funko.genre;
-        const name = funko.funkoData.filter((data) =>
-          data.name.toLowerCase().includes(query)
-        );
+        let name = {};
+        if (isNaN(query)) {
+          name = funko.funkoData.filter((data) =>
+            data.name.toLowerCase().includes(query)
+          );
+        }
         if (Object.keys(name).length > 0) {
           objToSearch.nameMatches.push({
             genre,
@@ -206,8 +256,29 @@ const getFunkoPopGenre = async (req, res, next) => {
   }
 };
 
+const getAllFunkoPops = async (req, res, next) => {
+  try {
+    const data = await firestore.collection("funkoPops").get();
+    const funkoArray = [];
+    if (data.empty) {
+      res.status(200).send([]);
+    } else {
+      data.forEach((doc) => {
+        console.log(doc.data());
+        // const funkoPop = new FunkoPop(doc.data().genre, doc.data().funkoData);
+        funkoArray.push(doc.data());
+      });
+      funkoArray.map((funko) => console.log(funko.number));
+      res.status(200).send(funkoArray);
+    }
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
 module.exports = {
-  addFunkoPop,
+  blukAddFunkoPop,
+  userAddFunkoPop,
   getAllFunkoPops,
   getFunkoPopName,
   getFunkoPopGenre,

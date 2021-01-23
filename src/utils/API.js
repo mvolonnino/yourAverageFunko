@@ -41,7 +41,6 @@ const API = {
   },
 
   searchFunkoPopData: function (query) {
-    console.log(query);
     return axios(
       {
         method: "GET",
