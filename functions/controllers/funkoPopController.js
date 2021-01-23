@@ -70,36 +70,36 @@ const userAddFunkoPop = async (req, res) => {
   }
 };
 
-// const getAllFunkoPops = async (req, res, next) => {
-//   try {
-//     const funkoPops = await firestore.collection("test");
-//     const data = await funkoPops.get();
-//     const funkoArray = [];
-//     if (data.empty) {
-//       res.status(200).data([]);
-//     } else {
-//       data.forEach((doc) => {
-//         const funkoPop = new FunkoPop(doc.data().genre, doc.data().funkoData);
-//         funkoArray.push(funkoPop);
-//       });
-//       res.status(200).send(funkoArray);
-//     }
-//   } catch (error) {
-//     res.status(400).send(error.message);
-//   }
-// };
+const getAllFunkoPops = async (req, res, next) => {
+  try {
+    const funkoPops = await firestore.collection("test");
+    const data = await funkoPops.get();
+    const funkoArray = [];
+    if (data.empty) {
+      res.status(200).send([]);
+    } else {
+      data.forEach((doc) => {
+        const funkoPop = doc.data();
+        funkoArray.push(funkoPop);
+      });
+      res.status(200).send(funkoArray);
+    }
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
 
 const getFunkoPopQuery = async (req, res, next) => {
   try {
     console.log(req.params);
     const query = req.params.query.trim().toLowerCase();
-    const data = await firestore.collection("funkoPops").get();
+    const data = await firestore.collection("test").get();
     const funkoArr = [];
     if (data.empty) {
       res.status(200).data([]);
     } else {
       data.forEach((doc) => {
-        const funkoObj = new FunkoPop(doc.data().genre, doc.data().funkoData);
+        const funkoObj = doc.data();
         funkoArr.push(funkoObj);
       });
 
@@ -256,25 +256,25 @@ const getFunkoPopGenre = async (req, res, next) => {
   }
 };
 
-const getAllFunkoPops = async (req, res, next) => {
-  try {
-    const data = await firestore.collection("funkoPops").get();
-    const funkoArray = [];
-    if (data.empty) {
-      res.status(200).send([]);
-    } else {
-      data.forEach((doc) => {
-        console.log(doc.data());
-        // const funkoPop = new FunkoPop(doc.data().genre, doc.data().funkoData);
-        funkoArray.push(doc.data());
-      });
-      funkoArray.map((funko) => console.log(funko.number));
-      res.status(200).send(funkoArray);
-    }
-  } catch (error) {
-    res.status(400).send(error.message);
-  }
-};
+// const getAllFunkoPops = async (req, res, next) => {
+//   try {
+//     const data = await firestore.collection("funkoPops").get();
+//     const funkoArray = [];
+//     if (data.empty) {
+//       res.status(200).send([]);
+//     } else {
+//       data.forEach((doc) => {
+//         console.log(doc.data());
+//         // const funkoPop = new FunkoPop(doc.data().genre, doc.data().funkoData);
+//         funkoArray.push(doc.data());
+//       });
+//       funkoArray.map((funko) => console.log(funko.number));
+//       res.status(200).send(funkoArray);
+//     }
+//   } catch (error) {
+//     res.status(400).send(error.message);
+//   }
+// };
 
 module.exports = {
   blukAddFunkoPop,
