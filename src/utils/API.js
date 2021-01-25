@@ -50,6 +50,22 @@ const API = {
       { signal }
     );
   },
+
+  addFunkoPopTooUser: function (uid, funko) {
+    console.log({ uid, funko });
+    return axios(
+      {
+        method: "POST",
+        withCredentials: true,
+        data: {
+          funko: funko,
+          uid: uid,
+        },
+        url: "/api/user/addFunkoPop",
+      },
+      { signal }
+    );
+  },
 };
 
 export default API;

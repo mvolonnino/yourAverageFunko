@@ -4,12 +4,15 @@ import { useDataLayerValue } from "../../../../context/DataLayer";
 import { auth } from "../../../../fire";
 import funkoBrand from "../../../../img/funkoBrand.png";
 import API from "../../../../utils/API";
+import { Card, GenreContainer } from "../../../../components";
 
 import "./Home.css";
 
 function Home() {
   const [{ user }, dispatch] = useDataLayerValue();
   const [search, setSearch] = useState("");
+  const [funkoData, setFunkoData] = useState([]);
+  console.log({ user, funkoData });
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -26,6 +29,7 @@ function Home() {
       .then((res) => {
         const { data } = res;
         console.log("getAll: ", { data });
+        setFunkoData(data);
       })
       .catch((err) => {
         console.error(err);
@@ -62,6 +66,9 @@ function Home() {
         ></input>
         <button onClick={handleSearch}>Search</button>
       </form>
+      {funkoData.map((funkoSet) => (
+        <GenreContainer funkoSet={funkoSet} />
+      ))}
     </div>
   );
 }

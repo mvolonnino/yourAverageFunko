@@ -1,13 +1,14 @@
 const firebase = require("../db");
 const User = require("../models/user");
+const FunkoPop = require("../models/funkoPop");
 const firestore = firebase.firestore();
 const jwt = require("jsonwebtoken");
 
 const signUpUser = async (req, res, next) => {
   try {
     const user = req.body;
-    const uiDoc = await firestore.collection("users").doc(user.uid);
-    const data = await uiDoc.get();
+    const uidDoc = await firestore.collection("users").doc(user.uid);
+    const data = await uidDoc.get();
     if (data.exists) {
       const token = jwt.sign(
         {
@@ -17,7 +18,7 @@ const signUpUser = async (req, res, next) => {
       );
       res.header("auth-token", token).send(token);
     } else {
-      await uiDoc.set({ user });
+      await uidDoc.set({ user });
       const token = jwt.sign(
         {
           uid: user.uid,
@@ -31,6 +32,50 @@ const signUpUser = async (req, res, next) => {
   }
 };
 
+const addFunkoPopTooUser = async (req, res) => {
+  try {
+    const { uid, funko } = req.body;
+    const funkoPop = new FunkoPop(funko);
+    if (funkoPop.error) {
+      res.status(422).send({ funkoPop });
+    } else {
+      const dbUser = await firestore.collection("users").doc(uid);
+      const userData = await dbUser.get();
+      if (userData.exists) {
+        const userFunkoPopCollection = await firestore
+          .collection("users")
+          .doc(uid)
+          .collection("userFunkoPops")
+          .doc(funkoPop.genre);
+        const userFunkoData = await userFunkoPopCollection.get();
+        if (userFunkoData.exists) {
+          let newFunkoData = [];
+          const dbFunkoData = userFunkoData.data().funkoData;
+          dbFunkoData.map((dbFunko) => {
+            newFunkoData.push(dbFunko);
+          });
+          newFunkoData.push(funkoPop.funkoData[0]);
+          await userFunkoPopCollection.update({
+            funkoData: newFunkoData,
+          });
+          res.status(200).send({
+            genre: funkoPop.genre,
+            funkoData: newFunkoData,
+          });
+        } else {
+          await userFunkoPopCollection.set(funkoPop);
+          res.status(200).send(funkoPop);
+        }
+      } else {
+        console.log("user does not exist");
+      }
+    }
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
 module.exports = {
   signUpUser,
+  addFunkoPopTooUser,
 };

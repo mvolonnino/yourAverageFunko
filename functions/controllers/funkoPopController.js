@@ -2,7 +2,7 @@ const firebase = require("../db");
 const FunkoPop = require("../models/funkoPop");
 const firestore = firebase.firestore();
 
-const blukAddFunkoPop = async (req, res, next) => {
+const bulkAddFunkoPop = async (req, res, next) => {
   try {
     const { body } = req;
     const dbData = await firestore.collection("test").doc(body.genre);
@@ -30,12 +30,9 @@ const blukAddFunkoPop = async (req, res, next) => {
 const userAddFunkoPop = async (req, res) => {
   try {
     const { body } = req;
-    console.log(body);
     let headerData = [];
     for (let [i, dataSet] of body.entries()) {
-      console.log(i);
       const funkoPop = new FunkoPop(dataSet);
-      console.log(funkoPop);
       if (funkoPop.error) {
         // funko pop data not constructed correctly
         headerData.push({ funkoPop });
@@ -277,7 +274,7 @@ const getFunkoPopGenre = async (req, res, next) => {
 // };
 
 module.exports = {
-  blukAddFunkoPop,
+  bulkAddFunkoPop,
   userAddFunkoPop,
   getAllFunkoPops,
   getFunkoPopName,

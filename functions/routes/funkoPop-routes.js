@@ -1,6 +1,6 @@
 const express = require("express");
 const {
-  blukAddFunkoPop,
+  bulkAddFunkoPop,
   getAllFunkoPops,
   getFunkoPopName,
   getFunkoPopGenre,
@@ -11,7 +11,7 @@ const verifyToken = require("../verifyToken");
 
 const router = express.Router();
 
-router.post("/bulkAdd", blukAddFunkoPop);
+router.post("/bulkAdd", bulkAddFunkoPop);
 router.post("/userAdd", userAddFunkoPop);
 
 router.get("/getAll", getAllFunkoPops);

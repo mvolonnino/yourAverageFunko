@@ -1,7 +1,7 @@
 class FunkoPop {
-  constructor(body) {
-    const { genre, name, image, number } = body;
-    const keyFields = Object.keys(body);
+  constructor(data) {
+    const { genre, name, image, number } = data;
+    const keyFields = Object.keys(data);
     const wrongKeyFields = keyFields.filter((key) => {
       return (
         !key.includes("genre") &&
@@ -13,8 +13,8 @@ class FunkoPop {
     if (wrongKeyFields.length >= 1) {
       console.log({ wrongKeyFields });
       return {
-        error: `Funko Pop not added to databse - ${wrongKeyFields} is not a defined key for Funko Pop`,
-        funkoData: body,
+        error: `Error! - ${wrongKeyFields} is not a defined key for Funko Pop`,
+        funkoData: data,
       };
     }
     if (genre && name && image && number) {
@@ -30,7 +30,7 @@ class FunkoPop {
       });
     } else {
       return {
-        error: `Funko Pop not added to database - missing one or more needed details!`,
+        error: `Error! - missing one or more needed details!`,
       };
     }
   }
