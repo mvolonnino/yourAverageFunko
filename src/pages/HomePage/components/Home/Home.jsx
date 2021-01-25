@@ -1,13 +1,40 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
-import { useDataLayerValue } from '../../../../context/DataLayer';
-import { auth } from '../../../../fire';
-import funkoBrand from '../../../../img/funkoBrand.png';
+import { useDataLayerValue } from "../../../../context/DataLayer";
+import { auth } from "../../../../fire";
+import funkoBrand from "../../../../img/funkoBrand.png";
+import API from "../../../../utils/API";
+import { Card, GenreContainer } from "../../../../components";
 
-import './Home.css';
+import "./Home.css";
 
 function Home() {
   const [{ user }, dispatch] = useDataLayerValue();
+  const [search, setSearch] = useState("");
+  const [funkoData, setFunkoData] = useState([]);
+  console.log({ user, funkoData });
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    API.searchFunkoPopData(search)
+      .then((res) => {
+        const { data } = res;
+        console.log({ data });
+      })
+      .catch((err) => console.error(err));
+  };
+
+  useEffect(() => {
+    API.getFunkoPopData()
+      .then((res) => {
+        const { data } = res;
+        console.log("getAll: ", { data });
+        setFunkoData(data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
 
   return (
     <div className="application container-fluid">
@@ -21,10 +48,10 @@ function Home() {
               .signOut()
               .then(() => {
                 dispatch({
-                  type: 'LOGOUT'
+                  type: "LOGOUT",
                 });
               })
-              .catch(err => {
+              .catch((err) => {
                 console.error(err);
               })
           }
@@ -32,6 +59,16 @@ function Home() {
           LogOut
         </button>
       </div>
+      <form>
+        <input
+          placeholder="Enter Search here"
+          onChange={(e) => setSearch(e.currentTarget.value)}
+        ></input>
+        <button onClick={handleSearch}>Search</button>
+      </form>
+      {funkoData.map((funkoSet) => (
+        <GenreContainer funkoSet={funkoSet} />
+      ))}
     </div>
   );
 }

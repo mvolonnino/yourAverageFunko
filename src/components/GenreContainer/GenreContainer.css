@@ -1,0 +1,19 @@
+ul {
+  list-style: none;
+}
+
+.genre {
+  height: 45vh;
+  margin-bottom: 10px;
+  background-color: beige;
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+}
+
+/* .genreTitle {
+  position: absolute;
+  top: 0;
+  left: 0;
+} */

@@ -8,15 +8,30 @@ import "./App.css";
 function App() {
   const [{ user }, dispatch] = useDataLayerValue();
   const [loading, setLoading] = useState(true);
-  console.log({ user });
 
   useEffect(() => {
     auth.onAuthStateChanged((authUser) => {
       if (authUser) {
+        const {
+          uid,
+          displayName,
+          email,
+          photoURL,
+          phoneNumber,
+          providerId,
+        } = authUser;
+
         if (!user) {
           dispatch({
             type: "SET_USER",
-            user: authUser.providerData[0],
+            user: {
+              uid: uid,
+              displayName: displayName,
+              email: email,
+              photoUrl: photoURL,
+              phoneNumber: phoneNumber,
+              providerId: providerId,
+            },
           });
         }
       }

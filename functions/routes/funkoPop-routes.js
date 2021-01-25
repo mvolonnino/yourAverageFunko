@@ -1,18 +1,23 @@
 const express = require("express");
 const {
-  addFunkoPop,
+  bulkAddFunkoPop,
   getAllFunkoPops,
   getFunkoPopName,
   getFunkoPopGenre,
+  getFunkoPopQuery,
+  userAddFunkoPop,
 } = require("../controllers/funkoPopController");
-const db = require("../db");
+const verifyToken = require("../verifyToken");
 
 const router = express.Router();
 
-router.post("/funkoPop", addFunkoPop);
-router.get("/funkoPops", getAllFunkoPops);
-router.get("/funkoPops/:name", getFunkoPopName);
-router.get("/funkoPop/:genre", getFunkoPopGenre);
+router.post("/bulkAdd", bulkAddFunkoPop);
+router.post("/userAdd", userAddFunkoPop);
+
+router.get("/getAll", getAllFunkoPops);
+router.get("/getName/:name", getFunkoPopName);
+router.get("/getGenre/:genre", getFunkoPopGenre);
+router.get("/search/:query", getFunkoPopQuery);
 
 module.exports = {
   routes: router,
