@@ -4,7 +4,7 @@ import { useDataLayerValue } from "../../../../context/DataLayer";
 import { auth } from "../../../../fire";
 import funkoBrand from "../../../../img/funkoBrand.png";
 import API from "../../../../utils/API";
-import { Card, GenreContainer } from "../../../../components";
+import { GenreContainer } from "../../../../components";
 
 import "./Home.css";
 
@@ -28,7 +28,6 @@ function Home() {
     API.getFunkoPopData()
       .then((res) => {
         const { data } = res;
-        console.log("getAll: ", { data });
         setFunkoData(data);
       })
       .catch((err) => {
@@ -66,7 +65,7 @@ function Home() {
         ></input>
         <button onClick={handleSearch}>Search</button>
       </form>
-      {funkoData.map((funkoSet) => (
+      {funkoData?.map((funkoSet) => (
         <GenreContainer funkoSet={funkoSet} />
       ))}
     </div>

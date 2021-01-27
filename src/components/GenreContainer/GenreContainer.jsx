@@ -8,7 +8,7 @@ function GenreContainer({ funkoSet }) {
     <>
       <small className="genreTitle">{funkoSet.genre}</small>
       <div className="container-fluid genre">
-        {funkoSet.funkoData.map((data) => {
+        {funkoSet?.funkoData?.map((data) => {
           return <Card data={data} genre={funkoSet.genre} />;
         })}
       </div>

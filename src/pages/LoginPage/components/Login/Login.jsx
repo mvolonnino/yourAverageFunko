@@ -26,6 +26,13 @@ function Login() {
     elementsObj.container.classList.remove("sign-up-mode");
   };
 
+  const setToken = (token) => {
+    dispatch({
+      type: "SET_AUTH_TOKEN",
+      authToken: token,
+    });
+  };
+
   const handleSignUp = (e) => {
     e.preventDefault();
 
@@ -56,7 +63,7 @@ function Login() {
               providerData,
             })
               .then((res) => {
-                console.log({ res });
+                setToken(res.headers["auth-token"]);
               })
               .catch((error) => {
                 console.error(error);
@@ -107,7 +114,7 @@ function Login() {
           providerData,
         })
           .then((res) => {
-            console.log({ res });
+            setToken(res.headers["auth-token"]);
           })
           .catch((error) => {
             console.error(error);
@@ -144,7 +151,7 @@ function Login() {
               providerData,
             })
               .then((res) => {
-                console.log({ res });
+                setToken(res.headers["auth-token"]);
               })
               .catch((error) => {
                 console.error(error);
@@ -174,7 +181,7 @@ function Login() {
               providerData,
             })
               .then((res) => {
-                console.log({ res });
+                setToken(res.headers["auth-token"]);
               })
               .catch((error) => {
                 console.error(error);

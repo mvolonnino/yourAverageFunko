@@ -51,7 +51,7 @@ const API = {
     );
   },
 
-  addFunkoPopTooUser: function (uid, funko) {
+  addFunkoPopTooUser: function (uid, funko, authToken) {
     console.log({ uid, funko });
     return axios(
       {
@@ -62,6 +62,9 @@ const API = {
           uid: uid,
         },
         url: "/api/user/addFunkoPop",
+        headers: {
+          "auth-token": authToken,
+        },
       },
       { signal }
     );
