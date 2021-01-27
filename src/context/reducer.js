@@ -1,5 +1,6 @@
 export const initialState = {
   user: null,
+  authToken: null,
 };
 
 const reducer = (state, action) => {
@@ -10,6 +11,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         user: action.user,
+      };
+    case "SET_AUTH_TOKEN":
+      return {
+        ...state,
+        authToken: action.authToken,
       };
     case "LOGOUT":
       return {

@@ -67,9 +67,31 @@ const addFunkoPopTooUser = async (req, res) => {
           res.status(200).send(funkoPop);
         }
       } else {
-        console.log("user does not exist");
+        res.status(404).send("User does not exist!");
       }
     }
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
+const getUserFunkoPops = async (req, res) => {
+  try {
+    const { uid } = req.body;
+    console.log({ uid });
+    const funkoArray = [];
+    const userFunkoCollection = await firestore
+      .collection("users")
+      .doc(uid)
+      .collection("userFunkoPops")
+      .get();
+    userFunkoCollection.forEach((doc) => {
+      if (doc.exists) {
+        const funkoPop = doc.data();
+        funkoArray.push(funkoPop);
+      }
+    });
+    res.status(200).send(funkoArray);
   } catch (error) {
     res.status(400).send(error.message);
   }
@@ -78,4 +100,5 @@ const addFunkoPopTooUser = async (req, res) => {
 module.exports = {
   signUpUser,
   addFunkoPopTooUser,
+  getUserFunkoPops,
 };
