@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 
 import "./Login.css";
 import wavingPikachu from "../../../../img/waving-pikachu.png";
@@ -17,6 +18,7 @@ function Login() {
   const [{}, dispatch] = useDataLayerValue();
   const [elementsObj, setElementsObj] = useState({});
   const [userObj, setUserObj] = useState({});
+  const history = useHistory();
 
   const addSignUpMode = () => {
     elementsObj.container.classList.add("sign-up-mode");
@@ -114,7 +116,10 @@ function Login() {
           providerData,
         })
           .then((res) => {
-            setToken(res.headers["auth-token"]);
+            if (res.headers["auth-token"]) {
+              setToken(res.headers["auth-token"]);
+              history.push("/home");
+            }
           })
           .catch((error) => {
             console.error(error);

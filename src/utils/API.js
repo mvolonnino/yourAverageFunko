@@ -52,7 +52,6 @@ const API = {
   },
 
   addFunkoPopTooUser: function (uid, funko, authToken) {
-    console.log({ uid, funko });
     return axios(
       {
         method: "POST",

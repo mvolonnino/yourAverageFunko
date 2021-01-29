@@ -4,11 +4,11 @@ import { useDataLayerValue } from "../../../../context/DataLayer";
 import { auth } from "../../../../fire";
 import funkoBrand from "../../../../img/funkoBrand.png";
 import API from "../../../../utils/API";
-import { GenreContainer } from "../../../../components";
+import { GenreContainer, Navbar } from "../../../../components";
 
 import "./Home.css";
 
-function Home() {
+function Home(props) {
   const [{ user }, dispatch] = useDataLayerValue();
   const [search, setSearch] = useState("");
   const [funkoData, setFunkoData] = useState([]);
@@ -39,34 +39,19 @@ function Home() {
     <div className="application container-fluid">
       <div className="jumbotron">
         <img src={funkoBrand} alt="" className="funkoBrand" />
-        <h1 className="text-center">{`Logged in as ${user?.displayName}`}</h1>
-        <button
-          className="btn btn-danger"
-          onClick={() =>
-            auth
-              .signOut()
-              .then(() => {
-                dispatch({
-                  type: "LOGOUT",
-                });
-              })
-              .catch((err) => {
-                console.error(err);
-              })
-          }
-        >
-          LogOut
-        </button>
+        <form className="search">
+          <input
+            className="searchField"
+            placeholder="Enter Search here"
+            onChange={(e) => setSearch(e.currentTarget.value)}
+          ></input>
+          <button className="btn btn-primary" onClick={handleSearch}>
+            Search
+          </button>
+        </form>
       </div>
-      <form>
-        <input
-          placeholder="Enter Search here"
-          onChange={(e) => setSearch(e.currentTarget.value)}
-        ></input>
-        <button onClick={handleSearch}>Search</button>
-      </form>
-      {funkoData?.map((funkoSet) => (
-        <GenreContainer funkoSet={funkoSet} />
+      {funkoData?.map((funkoSet, i) => (
+        <GenreContainer funkoSet={funkoSet} key={i} />
       ))}
     </div>
   );

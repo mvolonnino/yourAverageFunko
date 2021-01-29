@@ -3,13 +3,14 @@ ul {
 }
 
 .genre {
-  height: 45vh;
+  height: 500px;
   margin-bottom: 10px;
   background-color: beige;
   position: relative;
   display: flex;
   align-items: center;
   overflow-x: auto;
+  padding: 0 !important;
 }
 
 /* .genreTitle {

@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { LoginPage, HomePage } from "./pages";
 import { useDataLayerValue } from "./context/DataLayer";
 import { auth } from "./fire";
 import "./App.css";
+import { Navbar } from "./components";
+import API from "./utils/API";
 
 function App() {
   const [{ user }, dispatch] = useDataLayerValue();
@@ -18,20 +20,35 @@ function App() {
           email,
           photoURL,
           phoneNumber,
-          providerId,
+          providerData,
         } = authUser;
 
         if (!user) {
-          dispatch({
-            type: "SET_USER",
-            user: {
-              uid: uid,
-              displayName: displayName,
-              email: email,
-              photoUrl: photoURL,
-              phoneNumber: phoneNumber,
-              providerId: providerId,
-            },
+          API.signUpUser({
+            uid,
+            displayName,
+            email,
+            photoURL,
+            phoneNumber,
+            providerData,
+          }).then((res) => {
+            if (res.status === 200) {
+              dispatch({
+                type: "SET_AUTH_TOKEN",
+                authToken: res.headers["auth-token"],
+              });
+              dispatch({
+                type: "SET_USER",
+                user: {
+                  uid: uid,
+                  displayName: displayName,
+                  email: email,
+                  photoUrl: photoURL,
+                  phoneNumber: phoneNumber,
+                  providerId: providerData[0].providerId,
+                },
+              });
+            }
           });
         }
       }
@@ -44,7 +61,22 @@ function App() {
     return <div className="loader">Your Average Funko</div>;
   }
 
-  return <div className="app">{user ? <HomePage /> : <LoginPage />}</div>;
+  return (
+    <Router>
+      <div className="app">
+        {user ? (
+          <>
+            <Navbar />
+            <Switch>
+              <Route exact path="/home" component={HomePage} />
+            </Switch>
+          </>
+        ) : (
+          <Route exact path="/" component={LoginPage} />
+        )}
+      </div>
+    </Router>
+  );
 }
 
 export default App;

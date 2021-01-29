@@ -1,6 +1,8 @@
 export const initialState = {
   user: null,
   authToken: null,
+  limit: 3,
+  offset: 0,
 };
 
 const reducer = (state, action) => {
@@ -16,6 +18,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         authToken: action.authToken,
+      };
+    case "SET_OFFSET":
+      return {
+        ...state,
+        offset: action.offset,
       };
     case "LOGOUT":
       return {

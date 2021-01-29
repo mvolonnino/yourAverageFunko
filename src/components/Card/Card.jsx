@@ -24,7 +24,7 @@ function Card({ data, genre }) {
   };
 
   return (
-    <div className="card funkoCard m-3">
+    <div className="card funkoCard">
       <div className="card-img-top text-center mt-3">
         <img src={data?.image} alt={data?.name} className="funkoImage" />
       </div>

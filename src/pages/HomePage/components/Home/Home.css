@@ -1,8 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap");
 
 .jumbotron {
   display: flex !important;
-  justify-content: space-evenly !important;
+  justify-content: space-between !important;
+  margin-top: 100px;
 }
 
 .funkoBrand {
@@ -15,18 +16,35 @@
   margin-left: -200px;
   top: 50%;
   left: 50%;
-  font-family: 'ZCOOL KuaiLe', cursive;
+  font-family: "ZCOOL KuaiLe", cursive;
   font-size: 40px;
   color: var(--primary);
 }
 
 .loader::after {
-  content: '\2026';
+  content: "\2026";
   display: inline-block;
   overflow: hidden;
   vertical-align: bottom;
   animation: dots steps(4, end) 2s infinite;
   width: 0px;
+}
+
+.searchField {
+  height: 35px;
+  outline: none;
+  border: none;
+  margin-right: 5px;
+}
+
+.search:hover > input {
+  border-bottom: 1px solid red;
+}
+
+.search {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 @keyframes dots {
