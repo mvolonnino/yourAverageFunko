@@ -15,7 +15,7 @@ import { useDataLayerValue } from "../../../../context/DataLayer";
 import API from "../../../../utils/API";
 
 function Login() {
-  const [{}, dispatch] = useDataLayerValue();
+  const [{ authToken }, dispatch] = useDataLayerValue();
   const [elementsObj, setElementsObj] = useState({});
   const [userObj, setUserObj] = useState({});
   const history = useHistory();
@@ -29,10 +29,12 @@ function Login() {
   };
 
   const setToken = (token) => {
-    dispatch({
-      type: "SET_AUTH_TOKEN",
-      authToken: token,
-    });
+    if (!authToken) {
+      dispatch({
+        type: "SET_AUTH_TOKEN",
+        authToken: token,
+      });
+    }
   };
 
   const handleSignUp = (e) => {
@@ -65,7 +67,10 @@ function Login() {
               providerData,
             })
               .then((res) => {
-                setToken(res.headers["auth-token"]);
+                if (res.headers["auth-token"]) {
+                  setToken(res.headers["auth-token"]);
+                  history.push("/home");
+                }
               })
               .catch((error) => {
                 console.error(error);
@@ -156,7 +161,10 @@ function Login() {
               providerData,
             })
               .then((res) => {
-                setToken(res.headers["auth-token"]);
+                if (res.headers["auth-token"]) {
+                  setToken(res.headers["auth-token"]);
+                  history.push("/home");
+                }
               })
               .catch((error) => {
                 console.error(error);
@@ -186,7 +194,10 @@ function Login() {
               providerData,
             })
               .then((res) => {
-                setToken(res.headers["auth-token"]);
+                if (res.headers["auth-token"]) {
+                  setToken(res.headers["auth-token"]);
+                  history.push("/home");
+                }
               })
               .catch((error) => {
                 console.error(error);

@@ -3,6 +3,7 @@ import React from "react";
 import "./Card.css";
 import { useDataLayerValue } from "../../context/DataLayer";
 import API from "../../utils/API";
+import noData from "../../assets/noData.jpg";
 
 function Card({ data, genre }) {
   const [{ user, authToken }] = useDataLayerValue();
@@ -26,16 +27,20 @@ function Card({ data, genre }) {
   return (
     <div className="card funkoCard">
       <div className="card-img-top text-center mt-3">
-        <img src={data?.image} alt={data?.name} className="funkoImage" />
+        <img
+          src={data?.image || noData}
+          alt={data?.name || `no data found`}
+          className="funkoImage"
+        />
       </div>
       <div className="card-body text-center">
         <hr className="mb-0" />
-        <p className="number">{data?.number}</p>
+        <p className="number">{data?.number || `Pop!`}</p>
         <p className="name">{data?.name}</p>
         <div className="footer">
           <hr />
-          <button className="btn btn-primary" onClick={handleAddFunkoPop}>
-            Add
+          <button className="addButton" onClick={handleAddFunkoPop}>
+            I Have!
           </button>
         </div>
       </div>

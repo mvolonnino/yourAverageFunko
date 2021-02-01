@@ -3,7 +3,7 @@
   margin-right: 3rem;
 }
 
-.searchTab {
+.funkosTab {
   margin-right: 3rem;
 }
 
@@ -13,6 +13,32 @@
 
 .navbar-nav {
   align-items: center !important;
+}
+
+.userAvatar {
+  height: 25px !important;
+  width: 25px !important;
+  margin-left: 5px !important;
+}
+
+.navSearch {
+  padding: 0 !important;
+  transform: translateX(30px);
+}
+
+.navDropdown {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.searchIcon {
+  color: white !important;
+  transform: translateX(-30px);
+}
+
+.navbarSearch {
+  display: flex;
+  align-items: center;
 }
 
 @media only screen and (max-width: 400px) {
@@ -37,7 +63,7 @@
     display: none;
   }
 
-  .searchTab {
+  .funkosTab {
     margin: 0 !important;
   }
 }
