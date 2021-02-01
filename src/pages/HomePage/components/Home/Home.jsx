@@ -1,58 +1,82 @@
 import React, { useEffect, useState } from "react";
+import Avatar from "@material-ui/core/Avatar";
+import EditIcon from "@material-ui/icons/Edit";
+import SearchIcon from "@material-ui/icons/Search";
 
 import { useDataLayerValue } from "../../../../context/DataLayer";
-import { auth } from "../../../../fire";
 import funkoBrand from "../../../../img/funkoBrand.png";
 import API from "../../../../utils/API";
-import { GenreContainer, Navbar } from "../../../../components";
+import { GenreContainer } from "../../../../components";
 
 import "./Home.css";
 
-function Home(props) {
-  const [{ user }, dispatch] = useDataLayerValue();
-  const [search, setSearch] = useState("");
+function Home() {
+  const [{ user, userFunkoPops }, dispatch] = useDataLayerValue();
   const [funkoData, setFunkoData] = useState([]);
-  console.log({ user, funkoData });
+  console.log({ user, funkoData, userFunkoPops });
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    API.searchFunkoPopData(search)
-      .then((res) => {
-        const { data } = res;
-        console.log({ data });
-      })
-      .catch((err) => console.error(err));
+  const setUserFunkos = (data) => {
+    dispatch({
+      type: "SET_USER_FUNKOPOPS",
+      userFunkoPops: data,
+    });
   };
 
   useEffect(() => {
-    API.getFunkoPopData()
-      .then((res) => {
-        const { data } = res;
-        setFunkoData(data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    // API.getFunkoPopData()
+    //   .then((res) => {
+    //     const { data } = res;
+    //     setFunkoData(data);
+    //   })
+    //   .catch((err) => {
+    //     console.error(err);
+    //   });
+    if (!userFunkoPops) {
+      API.getUserFunkoPops(user.uid)
+        .then((res) => {
+          const { data } = res;
+          setUserFunkos(data);
+        })
+        .catch((err) => console.error(err));
+    }
   }, []);
 
   return (
     <div className="application container-fluid">
-      <div className="jumbotron">
-        <img src={funkoBrand} alt="" className="funkoBrand" />
-        <form className="search">
-          <input
-            className="searchField"
-            placeholder="Enter Search here"
-            onChange={(e) => setSearch(e.currentTarget.value)}
-          ></input>
-          <button className="btn btn-primary" onClick={handleSearch}>
-            Search
-          </button>
-        </form>
+      <div className="jumbotron bg-dark">
+        <div className="row imageRow">
+          <div className="col-md-8 text-center">
+            <img src={funkoBrand} alt="" className="funkoBrand" />
+          </div>
+        </div>
+        <div className="row userRow">
+          <div className="col-md-8 text-center">
+            <div className="avatar">
+              <Avatar
+                src={user?.photoUrl || "alt will be used"}
+                alt={user?.displayName}
+              />
+              <EditIcon fontSize="small" />
+            </div>
+            <div className="displayName">
+              <h4>{user?.displayName}</h4>
+              <EditIcon fontSize="small" />
+            </div>
+            <div className="email">
+              <h5>{user?.email}</h5>
+              <EditIcon fontSize="small" />
+            </div>
+          </div>
+        </div>
       </div>
-      {funkoData?.map((funkoSet, i) => (
+      {userFunkoPops?.map((funkoSet, i) => (
         <GenreContainer funkoSet={funkoSet} key={i} />
       ))}
+      {userFunkoPops?.length === 0 && (
+        <div className="noUserFunkos">
+          You new here? We're not showing any saved funko pops, get searching!
+        </div>
+      )}
     </div>
   );
 }

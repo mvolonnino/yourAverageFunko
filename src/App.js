@@ -8,7 +8,7 @@ import { Navbar } from "./components";
 import API from "./utils/API";
 
 function App() {
-  const [{ user }, dispatch] = useDataLayerValue();
+  const [{ user, authToken }, dispatch] = useDataLayerValue();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -33,10 +33,12 @@ function App() {
             providerData,
           }).then((res) => {
             if (res.status === 200) {
-              dispatch({
-                type: "SET_AUTH_TOKEN",
-                authToken: res.headers["auth-token"],
-              });
+              if (!authToken) {
+                dispatch({
+                  type: "SET_AUTH_TOKEN",
+                  authToken: res.headers["auth-token"],
+                });
+              }
               dispatch({
                 type: "SET_USER",
                 user: {

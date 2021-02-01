@@ -68,6 +68,17 @@ const API = {
       { signal }
     );
   },
+
+  getUserFunkoPops: function (uid) {
+    return axios(
+      {
+        method: "GET",
+        withCredentials: true,
+        url: `/api/user/getUserFunkoPops/${uid}`,
+      },
+      { signal }
+    );
+  },
 };
 
 export default API;

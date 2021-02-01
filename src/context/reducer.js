@@ -3,6 +3,7 @@ export const initialState = {
   authToken: null,
   limit: 3,
   offset: 0,
+  userFunkoPops: null,
 };
 
 const reducer = (state, action) => {
@@ -24,9 +25,16 @@ const reducer = (state, action) => {
         ...state,
         offset: action.offset,
       };
+    case "SET_USER_FUNKOPOPS":
+      return {
+        ...state,
+        userFunkoPops: action.userFunkoPops,
+      };
     case "LOGOUT":
       return {
-        ...initialState,
+        ...state,
+        user: null,
+        authToken: null,
       };
     default:
       return;

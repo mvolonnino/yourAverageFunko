@@ -2,8 +2,46 @@
 
 .jumbotron {
   display: flex !important;
-  justify-content: space-between !important;
+  flex-direction: column;
+  padding: 2rem 0 !important;
   margin-top: 100px;
+}
+
+.imageRow {
+  justify-content: center !important;
+  margin-bottom: 2rem;
+}
+
+.displayName,
+.email {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.avatar,
+.displayName,
+.email {
+  margin-left: 5px !important;
+  color: whitesmoke;
+}
+
+.noUserFunkos {
+  display: flex;
+  justify-content: center;
+}
+
+.avatar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.userRow {
+  width: 100% !important;
+  justify-content: space-evenly !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 }
 
 .funkoBrand {
@@ -50,5 +88,15 @@
 @keyframes dots {
   to {
     width: 1.25em;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .jumbotron {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .search {
+    margin-top: 50px;
   }
 }

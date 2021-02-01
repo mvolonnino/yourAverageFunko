@@ -9,7 +9,7 @@ const verifyToken = require("../verifyToken");
 router.post("/signup", signUpUser);
 router.post("/addFunkoPop", verifyToken, addFunkoPopTooUser);
 
-router.get("/getUserFunkoPops", getUserFunkoPops);
+router.get("/getUserFunkoPops/:uid", getUserFunkoPops);
 
 module.exports = {
   routes: router,

@@ -77,7 +77,7 @@ const addFunkoPopTooUser = async (req, res) => {
 
 const getUserFunkoPops = async (req, res) => {
   try {
-    const { uid } = req.body;
+    const { uid } = req.params;
     console.log({ uid });
     const funkoArray = [];
     const userFunkoCollection = await firestore
