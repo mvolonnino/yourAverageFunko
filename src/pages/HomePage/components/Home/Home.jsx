@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import EditIcon from "@material-ui/icons/Edit";
-import SearchIcon from "@material-ui/icons/Search";
 
 import { useDataLayerValue } from "../../../../context/DataLayer";
 import funkoBrand from "../../../../img/funkoBrand.png";

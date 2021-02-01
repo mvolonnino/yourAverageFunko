@@ -43,6 +43,20 @@ const Navbar = () => {
       .catch((err) => console.error(err));
   };
 
+  const handleLogout = () => {
+    auth
+      .signOut()
+      .then(() => {
+        history.push("/");
+        dispatch({
+          type: "LOGOUT",
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   const overlay = (
     <div
       id="sidenav-overlay"
@@ -77,22 +91,7 @@ const Navbar = () => {
                 </MDBNavItem>
               </MDBDropdownItem>
               <MDBDropdownItem>
-                <MDBNavItem
-                  className="logoutText"
-                  onClick={() =>
-                    auth
-                      .signOut()
-                      .then(() => {
-                        history.push("/");
-                        dispatch({
-                          type: "LOGOUT",
-                        });
-                      })
-                      .catch((err) => {
-                        console.error(err);
-                      })
-                  }
-                >
+                <MDBNavItem className="logoutText" onClick={handleLogout}>
                   Logout
                 </MDBNavItem>
               </MDBDropdownItem>

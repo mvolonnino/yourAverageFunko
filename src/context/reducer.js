@@ -32,9 +32,7 @@ const reducer = (state, action) => {
       };
     case "LOGOUT":
       return {
-        ...state,
-        user: null,
-        authToken: null,
+        ...initialState,
       };
     default:
       return;
