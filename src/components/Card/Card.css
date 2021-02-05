@@ -8,10 +8,6 @@
   scroll-snap-align: center;
 }
 
-.funkoCard:last-child {
-  width: 300px !important;
-}
-
 p {
   margin: 0;
 }
