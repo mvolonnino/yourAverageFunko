@@ -1,9 +1,10 @@
 export const initialState = {
   user: null,
   authToken: null,
-  limit: 3,
-  offset: 0,
   userFunkoPops: null,
+  searchedFunkoPops: null,
+  dbGenreList: [],
+  reGetUserFunkos: false,
 };
 
 const reducer = (state, action) => {
@@ -20,15 +21,25 @@ const reducer = (state, action) => {
         ...state,
         authToken: action.authToken,
       };
-    case "SET_OFFSET":
-      return {
-        ...state,
-        offset: action.offset,
-      };
     case "SET_USER_FUNKOPOPS":
       return {
         ...state,
         userFunkoPops: action.userFunkoPops,
+      };
+    case "SET_SEARCHED_FUNKOPOPS":
+      return {
+        ...state,
+        searchedFunkoPops: action.searchedFunkoPops,
+      };
+    case "SET_DB_GENRELIST":
+      return {
+        ...state,
+        dbGenreList: action.dbGenreList,
+      };
+    case "REGET_USER_FUNKOS":
+      return {
+        ...state,
+        reGetUserFunkos: action.reGetUserFunkos,
       };
     case "LOGOUT":
       return {

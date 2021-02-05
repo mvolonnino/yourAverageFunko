@@ -39,6 +39,10 @@ const Navbar = () => {
       .then((res) => {
         const { data } = res;
         setDbData(data);
+        dispatch({
+          type: "SET_SEARCHED_FUNKOPOPS",
+          searchedFunkoPops: data,
+        });
       })
       .catch((err) => console.error(err));
   };
@@ -86,6 +90,9 @@ const Navbar = () => {
             </MDBDropdownToggle>
             <MDBDropdownMenu>
               <MDBDropdownItem>
+                <MDBNavItem>{user?.displayName}</MDBNavItem>
+              </MDBDropdownItem>
+              <MDBDropdownItem>
                 <MDBNavItem>
                   <MDBLink to="/home">Profile</MDBLink>
                 </MDBNavItem>
@@ -102,7 +109,12 @@ const Navbar = () => {
         <MDBCollapse isOpen={collapsed} navbar>
           <MDBNavbarNav left>
             <MDBNavItem className="text-black-50 dividerTab">|</MDBNavItem>
-            <MDBNavItem className="text-white funkosTab">Funkos</MDBNavItem>
+            <MDBNavItem
+              className="text-white funkosTab"
+              onClick={handleTogglerClick}
+            >
+              <MDBLink to="/funkos">Funkos</MDBLink>
+            </MDBNavItem>
             <MDBNavItem className="text-white userTab">Users</MDBNavItem>
           </MDBNavbarNav>
 

@@ -5,11 +5,13 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const config = require("./congif");
+const logger = require("morgan");
 // const { main } = require("./getFunkoData");
 
 const app = express();
 
 // MIDDLEWARES
+app.use(logger("dev"));
 app.use(express.json());
 app.use(
   cors({

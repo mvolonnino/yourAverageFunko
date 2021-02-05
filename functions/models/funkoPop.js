@@ -1,13 +1,14 @@
 class FunkoPop {
   constructor(data) {
-    const { genre, name, image, number } = data;
+    const { genre, name, image, number, user } = data;
     const keyFields = Object.keys(data);
     const wrongKeyFields = keyFields.filter((key) => {
       return (
         !key.includes("genre") &&
         !key.includes("name") &&
         !key.includes("image") &&
-        !key.includes("number")
+        !key.includes("number") &&
+        !key.includes("user")
       );
     });
     if (wrongKeyFields.length >= 1) {
@@ -17,7 +18,7 @@ class FunkoPop {
         funkoData: data,
       };
     }
-    if (genre && name && image && number) {
+    if (!user && genre && name && image && number) {
       return Object.assign({
         genre: genre,
         funkoData: [
@@ -25,6 +26,18 @@ class FunkoPop {
             name: name,
             image: image,
             number: number,
+          },
+        ],
+      });
+    } else if (user && genre && name && image && number) {
+      return Object.assign({
+        genre: genre,
+        funkoData: [
+          {
+            name: name,
+            image: image,
+            number: number,
+            user: user,
           },
         ],
       });

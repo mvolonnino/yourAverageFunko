@@ -86,18 +86,71 @@ const getAllFunkoPops = async (req, res, next) => {
   }
 };
 
+// whenever new genre is added to db, need to turn this to get the new list of all the genres in an array to add it back to its on doc in the db
+const getAndPostGenreList = async (req, res) => {
+  try {
+    const genres = await firestore.collection("test");
+    const data = await genres.get();
+    const genreArray = [];
+    data.forEach((doc) => {
+      if (doc.exists) {
+        const genre = doc.data().genre;
+        genreArray.push(genre);
+      }
+    });
+    console.log(genreArray);
+    await genres.doc("allGenres").set({ genreList: genreArray });
+    res.status(200).send(genreArray);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
+const getAllGenres = async (req, res) => {
+  try {
+    const allGenres = await firestore
+      .collection("funkoPops")
+      .doc("allGenres")
+      .get();
+    const data = allGenres.data();
+    res.status(200).send(data);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
+const getPickedGenre = async (req, res) => {
+  try {
+    const genre = req.params.genre;
+    const dbGenre = await firestore
+      .collection("funkoPops")
+      .where("genre", "==", genre)
+      .get();
+
+    dbGenre.forEach((doc) => {
+      const data = doc.data();
+      res.status(200).send(data);
+    });
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
 const getFunkoPopQuery = async (req, res, next) => {
   try {
-    console.log(req.params);
-    const query = req.params.query.trim().toLowerCase();
-    const data = await firestore.collection("test").get();
+    const query = req.params.query.toLowerCase().trim();
+    console.log(query);
+    const data = await firestore.collection("funkoPops").get();
     const funkoArr = [];
     if (data.empty) {
       res.status(200).data([]);
     } else {
       data.forEach((doc) => {
         const funkoObj = doc.data();
-        funkoArr.push(funkoObj);
+        console.log(funkoObj);
+        if (funkoObj.funkoData) {
+          funkoArr.push(funkoObj);
+        }
       });
 
       // genre matching if query is not a number
@@ -179,7 +232,8 @@ const getFunkoPopQuery = async (req, res, next) => {
       res.status(200).send(searchFinds);
     }
   } catch (error) {
-    res.status(400).send(error.message);
+    console.log({ error });
+    res.status(400).send(error);
   }
 };
 
@@ -277,7 +331,10 @@ module.exports = {
   bulkAddFunkoPop,
   userAddFunkoPop,
   getAllFunkoPops,
+  getAndPostGenreList,
+  getAllGenres,
   getFunkoPopName,
   getFunkoPopGenre,
   getFunkoPopQuery,
+  getPickedGenre,
 };

@@ -5,19 +5,27 @@ import { useDataLayerValue } from "../../context/DataLayer";
 import API from "../../utils/API";
 import noData from "../../assets/noData.jpg";
 
-function Card({ data, genre }) {
-  const [{ user, authToken }] = useDataLayerValue();
+const Card = ({ data, genre }) => {
+  const [{ user, authToken, reGetUserFunkos }, dispatch] = useDataLayerValue();
 
   const handleAddFunkoPop = (e) => {
     e.preventDefault();
     const { name, number, image } = data;
     const { uid } = user;
 
+    if (!reGetUserFunkos) {
+      dispatch({
+        type: "REGET_USER_FUNKOS",
+        reGetUserFunkos: true,
+      });
+    }
+
     const funko = {
       genre: genre,
       name: name,
       number: number,
       image: image,
+      user: true,
     };
     API.addFunkoPopTooUser(uid, funko, authToken)
       .then((res) => console.log(res))
@@ -39,13 +47,17 @@ function Card({ data, genre }) {
         <p className="name">{data?.name}</p>
         <div className="footer">
           <hr />
-          <button className="addButton" onClick={handleAddFunkoPop}>
-            I Have!
-          </button>
+          {data?.user ? (
+            <button className="addButton">Remove</button>
+          ) : (
+            <button className="addButton" onClick={handleAddFunkoPop}>
+              I Have!
+            </button>
+          )}
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default Card;

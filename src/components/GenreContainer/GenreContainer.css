@@ -12,10 +12,15 @@ ul {
   overflow-x: auto;
   padding: 0 !important;
   border-radius: 5px;
+  scroll-snap-type: x mandatory;
 }
 
-/* .genreTitle {
+.anchor {
   position: absolute;
-  top: 0;
-  left: 0;
-} */
+  transform: translateY(-25vh);
+}
+.noFunkoPops {
+  color: white;
+  display: flex;
+  justify-content: center;
+}

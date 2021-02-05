@@ -9,6 +9,7 @@ import reducer, { initialState } from "./context/reducer";
 // bootstrap
 import "bootstrap/dist/css/bootstrap.min.css";
 import "mdbreact/dist/css/mdb.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 ReactDOM.render(
   <DataLayer initialState={initialState} reducer={reducer}>

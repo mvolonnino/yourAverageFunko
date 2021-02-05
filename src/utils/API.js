@@ -40,6 +40,28 @@ const API = {
     );
   },
 
+  getGenreListData: function () {
+    return axios(
+      {
+        method: "GET",
+        withCredentials: true,
+        url: "/api/funkoPop/getAllGenres",
+      },
+      { signal }
+    );
+  },
+
+  getPickedGenre: function (query) {
+    return axios(
+      {
+        method: "GET",
+        withCredentials: true,
+        url: `/api/funkoPop/getPickedGenre/${query}`,
+      },
+      { signal }
+    );
+  },
+
   searchFunkoPopData: function (query) {
     return axios(
       {

@@ -85,6 +85,12 @@
   justify-content: center;
 }
 
+.collectionInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 @keyframes dots {
   to {
     width: 1.25em;
@@ -98,5 +104,9 @@
   }
   .search {
     margin-top: 50px;
+  }
+
+  .collectionInfo {
+    margin-top: 5px;
   }
 }

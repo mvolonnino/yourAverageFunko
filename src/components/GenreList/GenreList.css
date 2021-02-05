@@ -1,0 +1,44 @@
+.mdb-datatable-filter > .form-control-sm {
+  width: 200px !important;
+}
+
+.clickGenre {
+  cursor: pointer;
+}
+
+.clickGenre:hover {
+  color: blue;
+}
+
+.customTable tr {
+  cursor: pointer;
+}
+
+able.mdb-dataTable thead .sorting:before,
+table.mdb-dataTable thead .sorting_asc:before,
+table.mdb-dataTable thead .sorting_desc:before,
+table.mdb-dataTable thead .sorting_asc_disabled:before,
+table.mdb-dataTable thead .sorting_desc_disabled:before,
+table thead.mdb-dataTable-head .sorting:before,
+table thead.mdb-dataTable-head .sorting_asc:before,
+table thead.mdb-dataTable-head .sorting_desc:before,
+table thead.mdb-dataTable-head .sorting_asc_disabled:before,
+table thead.mdb-dataTable-head .sorting_desc_disabled:before {
+  left: -0.4rem;
+  font-family: "Font Awesome\ 5 Free", sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+  content: "\f062";
+  margin-left: 7px;
+  margin-bottom: 2px;
+}
+
+table.mdb-dataTable thead .sorting_asc:before,
+table.mdb-dataTable thead .sorting_desc:after,
+table thead.mdb-dataTable-head .sorting_asc:before,
+table thead.mdb-dataTable-head .sorting_desc:after {
+  opacity: 1;
+  margin-left: 7px;
+  font-size: 12px;
+  margin-bottom: 2px;
+}

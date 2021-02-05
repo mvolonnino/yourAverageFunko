@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { LoginPage, HomePage } from "./pages";
+import { LoginPage, HomePage, FunkosPage } from "./pages";
 import { useDataLayerValue } from "./context/DataLayer";
 import { auth } from "./fire";
 import "./App.css";
@@ -71,6 +71,7 @@ function App() {
             <Navbar />
             <Switch>
               <Route exact path="/home" component={HomePage} />
+              <Route exact path="/funkos" component={FunkosPage} />
             </Switch>
           </>
         ) : (
