@@ -4,6 +4,7 @@ import "./Card.css";
 import { useDataLayerValue } from "../../context/DataLayer";
 import API from "../../utils/API";
 import noData from "../../assets/noData.jpg";
+import AddModal from "../AddModal/AddModal";
 
 const Card = ({ data, genre }) => {
   const [{ user, authToken, reGetUserFunkos }, dispatch] = useDataLayerValue();
@@ -50,9 +51,7 @@ const Card = ({ data, genre }) => {
           {data?.user ? (
             <button className="addButton">Remove</button>
           ) : (
-            <button className="addButton" onClick={handleAddFunkoPop}>
-              I Have!
-            </button>
+            <AddModal data={data} genre={genre} />
           )}
         </div>
       </div>
