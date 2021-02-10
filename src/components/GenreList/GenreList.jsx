@@ -39,7 +39,6 @@ const GenreList = () => {
         return {
           genre: genre,
           clickEvent: () => handleSearchGenre(genre),
-          position: <MDBLink to={`#${genre}`} />,
         };
       }),
     ],

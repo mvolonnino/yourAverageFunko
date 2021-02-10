@@ -58,6 +58,11 @@ function Home() {
         reGetUserFunkos: false,
       });
     }
+    if (userFunkoPops?.length > 0) {
+      const funkoData = userFunkoPops.map((funkoSet) => funkoSet.funkoData);
+
+      setNumFunkos(flatten(funkoData).length);
+    }
   }, []);
 
   return (
@@ -71,20 +76,20 @@ function Home() {
           </div>
           <div className="row userRow">
             <div className="col-md-6 text-center">
-              <div className="avatar">
+              <div className="avatar align-items-center">
                 <Avatar
                   src={user?.photoUrl || "alt will be used"}
                   alt={user?.displayName}
                 />
-                <EditIcon fontSize="small" />
+                <h4 className="ml-2">{user?.displayName}</h4>
+                {/* <EditIcon fontSize="small" /> */}
               </div>
-              <div className="displayName">
-                <h4>{user?.displayName}</h4>
+              {/* <div className="displayName">
                 <EditIcon fontSize="small" />
-              </div>
+              </div> */}
               <div className="email">
                 <h5>{user?.email}</h5>
-                <EditIcon fontSize="small" />
+                {/* <EditIcon fontSize="small" /> */}
               </div>
             </div>
             <div className="col-md-6 collectionInfo">
