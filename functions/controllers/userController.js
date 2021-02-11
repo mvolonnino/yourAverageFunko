@@ -75,10 +75,38 @@ const addFunkoPopTooUser = async (req, res) => {
   }
 };
 
+const removeFunkoPopFromUser = async (req, res) => {
+  try {
+    const { uuid, uid, genre } = req.body;
+    const userFunkoPopCollection = await firestore
+      .collection("users")
+      .doc(uid)
+      .collection("userFunkoPops")
+      .doc(genre);
+    const userFunkoData = await userFunkoPopCollection.get();
+    const dbFunkoDatadata = userFunkoData.data().funkoData;
+    const newFunkoPopArr = dbFunkoDatadata.filter(
+      (funkoPop) => funkoPop.uuid !== uuid
+    );
+
+    if (newFunkoPopArr.length > 0) {
+      await userFunkoPopCollection.update({
+        funkoData: newFunkoPopArr,
+      });
+      res.status(200).send(newFunkoPopArr);
+    } else {
+      await userFunkoPopCollection.delete();
+      res.status(200).send(newFunkoPopArr);
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).send(error.message);
+  }
+};
+
 const getUserFunkoPops = async (req, res) => {
   try {
     const { uid } = req.params;
-    console.log({ uid });
     const funkoArray = [];
     const userFunkoCollection = await firestore
       .collection("users")
@@ -101,4 +129,5 @@ module.exports = {
   signUpUser,
   addFunkoPopTooUser,
   getUserFunkoPops,
+  removeFunkoPopFromUser,
 };

@@ -91,6 +91,25 @@ const API = {
     );
   },
 
+  deleteFunkoPopFromUser: function (uid, uuid, genre, authToken) {
+    return axios(
+      {
+        method: "DELETE",
+        withCredentials: true,
+        data: {
+          uuid: uuid,
+          uid: uid,
+          genre: genre,
+        },
+        url: "/api/user/deleteFunkoPop",
+        headers: {
+          "auth-token": authToken,
+        },
+      },
+      { signal }
+    );
+  },
+
   getUserFunkoPops: function (uid) {
     return axios(
       {
