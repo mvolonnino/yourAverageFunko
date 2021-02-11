@@ -16,7 +16,7 @@ function Home() {
   ] = useDataLayerValue();
   const [numFunkos, setNumFunkos] = useState();
 
-  console.log({ user, userFunkoPops, dbGenreList, reGetUserFunkos });
+  // console.log({ user, userFunkoPops, dbGenreList, reGetUserFunkos });
 
   const setUserFunkos = (data) => {
     dispatch({
@@ -51,19 +51,19 @@ function Home() {
           setNumFunkos(flatten(funkoData).length);
         })
         .catch((err) => console.error(err));
-    }
-    if (reGetUserFunkos) {
+
       dispatch({
         type: "REGET_USER_FUNKOS",
         reGetUserFunkos: false,
       });
     }
+
     if (userFunkoPops?.length > 0) {
       const funkoData = userFunkoPops.map((funkoSet) => funkoSet.funkoData);
 
       setNumFunkos(flatten(funkoData).length);
     }
-  }, []);
+  }, [reGetUserFunkos]);
 
   return (
     <div className="application container-fluid">

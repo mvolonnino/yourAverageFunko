@@ -3,6 +3,7 @@ import React from "react";
 import "./Card.css";
 import noData from "../../assets/noData.jpg";
 import AddModal from "../AddModal/AddModal";
+import RemoveModal from "../RemoveModal";
 
 const Card = ({ data, genre }) => {
   return (
@@ -21,7 +22,7 @@ const Card = ({ data, genre }) => {
         <div className="footer">
           <hr />
           {data?.user ? (
-            <button className="addButton">Remove</button>
+            <RemoveModal data={data} genre={genre} />
           ) : (
             <AddModal data={data} genre={genre} />
           )}

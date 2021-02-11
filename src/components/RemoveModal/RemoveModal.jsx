@@ -11,92 +11,97 @@ import {
 import { useDataLayerValue } from "../../context/DataLayer";
 import API from "../../utils/API";
 
-const AddModal = ({ data, genre }) => {
+const RemoveModal = ({ data, genre }) => {
   const [state, setState] = useState({
     modal14: false,
   });
   const [status, setStatus] = useState("");
+  const [noGenre, setNoGenre] = useState(false);
   const [{ user, authToken, reGetUserFunkos }, dispatch] = useDataLayerValue();
 
-  const uuid = () => {
-    return Math.floor(Math.random() * Date.now());
-  };
-
-  const handleAddFunkoPop = (e) => {
+  const handleRemoveFunkoPop = (e) => {
     e.preventDefault();
-    const { name, number, image, id } = data;
     const { uid } = user;
+    const { uuid } = data;
 
-    if (!reGetUserFunkos) {
-      dispatch({
-        type: "REGET_USER_FUNKOS",
-        reGetUserFunkos: true,
-      });
-    }
-
-    const funko = {
-      genre: genre,
-      name: name,
-      number: number,
-      image: image,
-      user: true,
-      uuid: uuid(),
-    };
-
-    API.addFunkoPopTooUser(uid, funko, authToken)
+    API.deleteFunkoPopFromUser(uid, uuid, genre, authToken)
       .then((res) => {
-        setStatus(res.status);
-        if (!reGetUserFunkos) {
-          dispatch({
-            type: "REGET_USER_FUNKOS",
-            reGetUserFunkos: true,
-          });
+        if (res.status === 200) {
+          setStatus(res.status);
+        }
+        if (res.data.length === 0) {
+          setNoGenre(true);
         }
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        if (err) {
+          console.error(err);
+          setStatus(400);
+          dispatch({
+            type: "REGET_USER_FUNKOS",
+            reGetUserFunkos: false,
+          });
+        }
+      });
   };
 
   const toggle = (nr) => () => {
     let modalNumber = "modal" + nr;
+    if (status === 200) {
+      if (!reGetUserFunkos) {
+        dispatch({
+          type: "REGET_USER_FUNKOS",
+          reGetUserFunkos: true,
+        });
+      }
+    }
     setState({
       [modalNumber]: !state[modalNumber],
     });
+    setStatus("");
+    setNoGenre(false);
   };
 
   return (
     <MDBContainer>
       <MDBBtn color="primary" onClick={toggle(14)}>
-        I Have!
+        Remove!
       </MDBBtn>
       <MDBModal isOpen={state.modal14} toggle={toggle(14)} centered>
-        <MDBModalHeader toggle={toggle(14)}>{`${data?.name}`}</MDBModalHeader>
+        <MDBModalHeader toggle={toggle(14)}>
+          {noGenre ? "Their is no more funko pops in this genre" : data?.name}
+        </MDBModalHeader>
         {status === 200 ? (
           <MDBModalBody className="text-center alert alert-success m-0">
-            Funko Pop has been added!
+            Funko Pop has been removed!
           </MDBModalBody>
         ) : status === 400 ? (
           <MDBModalBody className="text-center alert alert-danger m-0">
-            400! Funko Pop not added - Close popup and try again
+            400! Funko Pop not removed - Close popup and try again
           </MDBModalBody>
         ) : (
           <MDBModalBody className="text-center">
-            <MDBIcon icon="check" size="4x" className="animated rotateIn" />
+            <MDBIcon icon="trash" size="4x" className="animated rotateIn" />
           </MDBModalBody>
         )}
         {!status ? (
           <MDBModalBody>
-            {`Are you sure you would like to add this funko pop to your collection?`}
+            {`Are you sure you would like to remove this funko pop from your collection?`}
           </MDBModalBody>
         ) : status === 200 ? (
-          <MDBModalBody>{`🥳 Woohoo!! 🥳 `}</MDBModalBody>
+          <MDBModalBody>{`Wow, you really did it... the funko pop is gone 🤯`}</MDBModalBody>
         ) : (
-          status === 400 && <MDBModalBody>{`🤨 Awh Man.. 🥺 `}</MDBModalBody>
+          status === 400 && (
+            <MDBModalBody>{`🤨 Hmm, seems like this funko wants to stay...  `}</MDBModalBody>
+          )
         )}
 
         <MDBModalFooter
-          className={`justify-content-center ${status === 200 && "d-none"}`}
+          className={`justify-content-center ${
+            (status === 200 && "d-none") || (status === 400 && "d-none")
+          }`}
         >
-          <MDBBtn color="secondary" onClick={handleAddFunkoPop}>
+          <MDBBtn color="secondary" onClick={handleRemoveFunkoPop}>
             YES
           </MDBBtn>
           <MDBBtn color="danger" onClick={toggle(14)}>
@@ -108,4 +113,4 @@ const AddModal = ({ data, genre }) => {
   );
 };
 
-export default AddModal;
+export default RemoveModal;
