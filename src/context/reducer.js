@@ -5,6 +5,7 @@ export const initialState = {
   searchedFunkoPops: null,
   dbGenreList: [],
   reGetUserFunkos: false,
+  isLoading: true,
 };
 
 const reducer = (state, action) => {
@@ -40,6 +41,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         reGetUserFunkos: action.reGetUserFunkos,
+      };
+    case "SET_IS_LOADING":
+      return {
+        ...state,
+        isLoading: action.isLoading,
       };
     case "LOGOUT":
       return {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { MDBDataTableV5, MDBLink } from "mdbreact";
+import { MDBDataTableV5 } from "mdbreact";
 import { useDataLayerValue } from "../../context/DataLayer";
 
 import "./GenreList.css";

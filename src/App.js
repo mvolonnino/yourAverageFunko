@@ -1,15 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { LoginPage, HomePage, FunkosPage } from "./pages";
+
+import { LoginPage, HomePage, FunkosPage, ResultsPage } from "./pages";
 import { useDataLayerValue } from "./context/DataLayer";
 import { auth } from "./fire";
 import "./App.css";
 import { Navbar } from "./components";
 import API from "./utils/API";
+import LoadingComponent from "./utils/isLoading";
 
 function App() {
-  const [{ user, authToken }, dispatch] = useDataLayerValue();
-  const [loading, setLoading] = useState(true);
+  const [{ user, authToken, isLoading }, dispatch] = useDataLayerValue();
 
   useEffect(() => {
     auth.onAuthStateChanged((authUser) => {
@@ -39,6 +40,7 @@ function App() {
                   authToken: res.headers["auth-token"],
                 });
               }
+
               dispatch({
                 type: "SET_USER",
                 user: {
@@ -55,12 +57,15 @@ function App() {
         }
       }
 
-      setLoading(false);
+      dispatch({
+        type: "SET_IS_LOADING",
+        isLoading: false,
+      });
     });
   }, [user]);
 
-  if (loading) {
-    return <div className="loader">Your Average Funko</div>;
+  if (isLoading) {
+    return <LoadingComponent />;
   }
 
   return (
@@ -72,6 +77,7 @@ function App() {
             <Switch>
               <Route exact path="/home" component={HomePage} />
               <Route exact path="/funkos" component={FunkosPage} />
+              <Route exact path="/results" component={ResultsPage} />
             </Switch>
           </>
         ) : (

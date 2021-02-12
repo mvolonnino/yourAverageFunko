@@ -24,7 +24,7 @@ const AddModal = ({ data, genre }) => {
 
   const handleAddFunkoPop = (e) => {
     e.preventDefault();
-    const { name, number, image, id } = data;
+    const { name, number, image } = data;
     const { uid } = user;
 
     if (!reGetUserFunkos) {

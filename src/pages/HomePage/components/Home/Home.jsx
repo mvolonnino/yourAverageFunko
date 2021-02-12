@@ -11,12 +11,18 @@ import "./Home.css";
 
 function Home() {
   const [
-    { user, userFunkoPops, dbGenreList, reGetUserFunkos },
+    { user, userFunkoPops, dbGenreList, reGetUserFunkos, searchedFunkoPops },
     dispatch,
   ] = useDataLayerValue();
   const [numFunkos, setNumFunkos] = useState();
 
-  // console.log({ user, userFunkoPops, dbGenreList, reGetUserFunkos });
+  console.log({
+    user,
+    userFunkoPops,
+    dbGenreList,
+    searchedFunkoPops,
+    reGetUserFunkos,
+  });
 
   const setUserFunkos = (data) => {
     dispatch({

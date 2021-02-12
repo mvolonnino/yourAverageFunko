@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import "./Funkos.css";
 import API from "../../../../utils/API";
-import { GenreContainer, GenreList } from "../../../../components";
+import { GenreList } from "../../../../components";
 import { useDataLayerValue } from "../../../../context/DataLayer";
 
 function Funkos() {
@@ -28,33 +28,9 @@ function Funkos() {
     //   .catch((err) => console.error(err));
   }, []);
   return (
-    // <>
-    //   <div className="container genreList">
-    //     <div className="row">
-    //       <div className="col-md-6 genreCol">
-    //         <ul>
-    //           {" "}
-    //           Genres and Series Available
-    //           {dbFunkoData?.map((funkoSet, i) => (
-    //             <li className="series">
-    //               <a href={`#${funkoSet.genre}`}>{funkoSet.genre}</a>
-    //             </li>
-    //           ))}
-    //         </ul>
-    //       </div>
-    //     </div>
-    //   </div>
-    //   <div className="container funkosContainer">
-    //     {dbFunkoData?.map((funkoSet, i) => (
-    //       <GenreContainer funkoSet={funkoSet} key={i} />
-    //     ))}
-    //   </div>
-    // </>
-    <>
-      <div className="container-fluid genreList">
-        <GenreList />
-      </div>
-    </>
+    <div className="container-fluid genreList">
+      <GenreList />
+    </div>
   );
 }
 

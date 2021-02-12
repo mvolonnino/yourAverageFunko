@@ -25,7 +25,6 @@ import API from "../../utils/API";
 const Navbar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [search, setSearch] = useState("");
-  const [dbData, setDbData] = useState([]);
   const [{ user }, dispatch] = useDataLayerValue();
   const history = useHistory();
 
@@ -35,13 +34,25 @@ const Navbar = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
+    dispatch({
+      type: "SET_IS_LOADING",
+      isLoading: true,
+    });
     API.searchFunkoPopData(search)
       .then((res) => {
         const { data } = res;
-        setDbData(data);
+        history.push({
+          pathname: "/results",
+          search: search,
+          state: data,
+        });
         dispatch({
           type: "SET_SEARCHED_FUNKOPOPS",
           searchedFunkoPops: data,
+        });
+        dispatch({
+          type: "SET_IS_LOADING",
+          isLoading: false,
         });
       })
       .catch((err) => console.error(err));
