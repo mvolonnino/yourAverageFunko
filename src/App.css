@@ -14,6 +14,12 @@ input {
   --container: rgb(57, 57, 57);
 }
 
+.loaderHolder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .loader {
   position: absolute;
   margin-left: -200px;
@@ -31,4 +37,10 @@ input {
   vertical-align: bottom;
   animation: dots steps(4, end) 2s infinite;
   width: 0px;
+}
+
+@media only screen and (max-width: 375px) {
+  .loader {
+    margin-left: -150px;
+  }
 }

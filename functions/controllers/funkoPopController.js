@@ -140,7 +140,7 @@ const getFunkoPopQuery = async (req, res, next) => {
   try {
     const query = req.params.query.toLowerCase().trim();
     console.log(query);
-    const data = await firestore.collection("test").get();
+    const data = await firestore.collection("funkoPops").get();
     const funkoArr = [];
     if (data.empty) {
       res.status(200).data([]);
@@ -194,10 +194,9 @@ const getFunkoPopQuery = async (req, res, next) => {
           });
         }
       });
+
       // find name that includes query
-      // console.log(objToSearch);
       objToSearch.notNullNameArr.forEach((funko) => {
-        // console.log(funko);
         const genre = funko.genre;
         let name = {};
         if (isNaN(query)) {
@@ -212,6 +211,7 @@ const getFunkoPopQuery = async (req, res, next) => {
           });
         }
       });
+
       // find number that matches query
       objToSearch.notNullNumbArr.forEach((funko) => {
         const genre = funko.genre;
