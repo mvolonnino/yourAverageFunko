@@ -166,8 +166,6 @@ const getFunkoPopQuery = async (req, res, next) => {
         }
       }
 
-      // console.log(genreMatches, null, 2);
-
       // name & number matching
       const objToSearch = {
         notNullNameArr: [],
