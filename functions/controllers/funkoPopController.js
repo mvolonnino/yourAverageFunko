@@ -69,7 +69,7 @@ const userAddFunkoPop = async (req, res) => {
 
 const getAllFunkoPops = async (req, res, next) => {
   try {
-    const funkoPops = await firestore.collection("test");
+    const funkoPops = await firestore.collection("funkoPops");
     const data = await funkoPops.get();
     const funkoArray = [];
     if (data.empty) {
@@ -140,7 +140,7 @@ const getFunkoPopQuery = async (req, res, next) => {
   try {
     const query = req.params.query.toLowerCase().trim();
     console.log(query);
-    const data = await firestore.collection("funkoPops").get();
+    const data = await firestore.collection("test").get();
     const funkoArr = [];
     if (data.empty) {
       res.status(200).data([]);

@@ -4,6 +4,7 @@ export const initialState = {
   userFunkoPops: null,
   searchedFunkoPops: null,
   dbGenreList: [],
+  dbFunkoPops: [],
   reGetUserFunkos: false,
   isLoading: true,
 };
@@ -26,6 +27,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         userFunkoPops: action.userFunkoPops,
+      };
+    case "SET_DB_FUNKOPOPS":
+      return {
+        ...state,
+        dbFunkoPops: action.dbFunkoPops,
       };
     case "SET_SEARCHED_FUNKOPOPS":
       return {

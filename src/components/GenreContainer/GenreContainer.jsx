@@ -11,7 +11,7 @@ function GenreContainer({ funkoSet }) {
         <MDBAnimation type="fadeInLeft" delay=".1s">
           <span className="anchor" id={funkoSet.genre}></span>
           <small className="genreTitle">{funkoSet.genre}</small>
-          <div className="container-fluid genre">
+          <div className={`container-fluid genre`}>
             {funkoSet?.funkoData?.map((data, i) => {
               return <Card data={data} genre={funkoSet.genre} key={i} />;
             })}

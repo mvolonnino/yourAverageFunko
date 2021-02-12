@@ -41,6 +41,10 @@
   align-items: center;
 }
 
+.navInput {
+  width: 300px !important;
+}
+
 @media only screen and (max-width: 400px) {
   #apppage .animated img {
     max-height: 50vh;

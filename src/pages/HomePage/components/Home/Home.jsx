@@ -11,18 +11,26 @@ import "./Home.css";
 
 function Home() {
   const [
-    { user, userFunkoPops, dbGenreList, reGetUserFunkos, searchedFunkoPops },
+    {
+      user,
+      userFunkoPops,
+      dbGenreList,
+      reGetUserFunkos,
+      searchedFunkoPops,
+      dbFunkoPops,
+    },
     dispatch,
   ] = useDataLayerValue();
   const [numFunkos, setNumFunkos] = useState();
 
-  console.log({
-    user,
-    userFunkoPops,
-    dbGenreList,
-    searchedFunkoPops,
-    reGetUserFunkos,
-  });
+  // console.log({
+  //   user,
+  //   userFunkoPops,
+  //   dbGenreList,
+  //   searchedFunkoPops,
+  //   reGetUserFunkos,
+  //   dbFunkoPops,
+  // });
 
   const setUserFunkos = (data) => {
     dispatch({
@@ -36,6 +44,26 @@ function Home() {
   }
 
   useEffect(() => {
+    if (dbFunkoPops.length === 0) {
+      console.log("fetching db funko pops...");
+      dispatch({
+        type: "SET_IS_LOADING",
+        isLoading: true,
+      });
+      API.getFunkoPopData()
+        .then((res) => {
+          const { data } = res;
+          dispatch({
+            type: "SET_DB_FUNKOPOPS",
+            dbFunkoPops: data,
+          });
+          dispatch({
+            type: "SET_IS_LOADING",
+            isLoading: false,
+          });
+        })
+        .catch((err) => console.error(err));
+    }
     if (dbGenreList.length === 0) {
       console.log("fetching genre list...");
       API.getGenreListData().then((res) => {

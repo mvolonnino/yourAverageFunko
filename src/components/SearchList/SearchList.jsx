@@ -7,7 +7,7 @@ import GenreContainer from "../GenreContainer";
 const SearchList = ({ funkos, genre, name, number }) => {
   const [funkoSet, setFunkoSet] = useState([]);
   let data = {};
-  console.log({ funkos, genre, name, number, funkoSet });
+  // console.log({ funkos, genre, name, number, funkoSet });
 
   const handleSetGenre = async (data) => {
     await setFunkoSet([]);
@@ -105,8 +105,10 @@ const SearchList = ({ funkos, genre, name, number }) => {
         fullPagination
         striped
         searchLabel={"Search to narrow results"}
-        theadColor={"blue"}
+        theadColor={"primary-color-dark"}
         theadTextWhite
+        tbodyColor={"unique-color-dark"}
+        tbodyTextWhite
         responsive
         data={data}
       />

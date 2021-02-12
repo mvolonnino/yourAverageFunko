@@ -21,41 +21,54 @@ import "./Navbar.css";
 import { useDataLayerValue } from "../../context/DataLayer";
 import { auth } from "../../fire";
 import API from "../../utils/API";
+import searchData from "../../utils/searchData";
 
 const Navbar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [search, setSearch] = useState("");
-  const [{ user }, dispatch] = useDataLayerValue();
+  const [{ user, dbFunkoPops }, dispatch] = useDataLayerValue();
   const history = useHistory();
 
   const handleTogglerClick = () => {
     setCollapsed(!collapsed);
   };
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     e.preventDefault();
     dispatch({
       type: "SET_IS_LOADING",
       isLoading: true,
     });
-    API.searchFunkoPopData(search)
-      .then((res) => {
-        const { data } = res;
-        history.push({
-          pathname: "/results",
-          search: search,
-          state: data,
-        });
-        dispatch({
-          type: "SET_SEARCHED_FUNKOPOPS",
-          searchedFunkoPops: data,
-        });
-        dispatch({
-          type: "SET_IS_LOADING",
-          isLoading: false,
-        });
-      })
-      .catch((err) => console.error(err));
+
+    const results = await searchData(dbFunkoPops, search);
+    history.push({
+      pathname: "/results",
+      search: search,
+      state: results,
+    });
+
+    dispatch({
+      type: "SET_IS_LOADING",
+      isLoading: false,
+    });
+    // API.searchFunkoPopData(search)
+    //   .then((res) => {
+    //     const { data } = res;
+    //     history.push({
+    //       pathname: "/results",
+    //       search: search,
+    //       state: data,
+    //     });
+    //     dispatch({
+    //       type: "SET_SEARCHED_FUNKOPOPS",
+    //       searchedFunkoPops: data,
+    //     });
+    //     dispatch({
+    //       type: "SET_IS_LOADING",
+    //       isLoading: false,
+    //     });
+    //   })
+    //   .catch((err) => console.error(err));
   };
 
   const handleLogout = () => {
@@ -88,6 +101,7 @@ const Navbar = () => {
         expand="md"
         fixed="top"
         scrolling
+        hover
       >
         <MDBNavbarBrand className="brand mr-2">
           <MDBDropdown hover size="sm" className="userDropdown">
@@ -105,7 +119,7 @@ const Navbar = () => {
               </MDBDropdownItem>
               <MDBDropdownItem>
                 <MDBNavItem>
-                  <MDBLink to="/home">Profile</MDBLink>
+                  <MDBLink to="/home">My Profile</MDBLink>
                 </MDBNavItem>
               </MDBDropdownItem>
               <MDBDropdownItem>
@@ -124,7 +138,7 @@ const Navbar = () => {
               className="text-white funkosTab"
               onClick={handleTogglerClick}
             >
-              <MDBLink to="/funkos">Funkos</MDBLink>
+              <MDBLink to="/funkos">Search Collections</MDBLink>
             </MDBNavItem>
             <MDBNavItem className="text-white userTab">Users</MDBNavItem>
           </MDBNavbarNav>
@@ -138,9 +152,9 @@ const Navbar = () => {
               >
                 <div className="md-form my-0 navbarSearch">
                   <input
-                    className="form-control mr-sm-2"
+                    className="form-control mr-sm-2 navInput"
                     type="text"
-                    placeholder="Search"
+                    placeholder="Search Series, Name or Number"
                     aria-label="Search"
                     onChange={(e) => setSearch(e.currentTarget.value)}
                   />

@@ -65,8 +65,10 @@ const GenreList = () => {
         fullPagination
         striped
         searchLabel={"Search Genries or Series"}
-        theadColor={"blue"}
         theadTextWhite
+        theadColor={"primary-color-dark"}
+        tbodyTextWhite
+        tbodyColor={"unique-color-dark"}
         responsive
         data={data}
       />

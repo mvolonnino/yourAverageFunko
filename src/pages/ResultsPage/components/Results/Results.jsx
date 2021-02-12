@@ -15,7 +15,6 @@ function Results() {
   });
   const location = useLocation();
   const { search, state } = location;
-  console.log({ search, state, show });
   const searched = search.replace("?", "");
   const searchedQuery = searched.replace("%20", " ");
 
@@ -32,9 +31,9 @@ function Results() {
 
   return (
     <div className="container-fluid resultsContainer">
-      <div className="jumbotron text-center">
+      <div className="jumbotron text-center text-white bg-dark">
         <div className="row justify-content-center">
-          <h4 className="">{`Showing results for : ${searchedQuery}`}</h4>
+          <h5 className="">{`Showing search results for : ${searchedQuery}`}</h5>
         </div>
         <div className="row mt-3">
           <div className="col-md-4">
