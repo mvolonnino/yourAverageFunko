@@ -32,14 +32,16 @@ function searchData(dbData, search) {
     const genre = funko.genre;
     if (funko.funkoData) {
       const funkoDataArr = funko.funkoData;
-      funkoDataArr.forEach((data) => {
-        if (data.name) {
+      funkoDataArr.forEach((data, i) => {
+        // console.log({ i, genre });
+
+        if (data && data.name) {
           objToSearch.notNullNameArr.push({
             funkoData: [data],
             genre: genre,
           });
         }
-        if (data.number) {
+        if (data && data.number) {
           objToSearch.notNullNumbArr.push({
             funkoData: [data],
             genre: genre,
@@ -50,7 +52,7 @@ function searchData(dbData, search) {
   });
 
   // find name that includes search
-  objToSearch.notNullNameArr.forEach((funko) => {
+  objToSearch.notNullNameArr.forEach((funko, i) => {
     const genre = funko.genre;
     let name = {};
     if (isNaN(search)) {

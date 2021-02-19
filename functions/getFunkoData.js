@@ -75,7 +75,7 @@ async function getFunkoData(url, page, i) {
             const matchNumber = title.splitTitle.match(numbers);
             // console.log("matchNumber: ", matchNumber);
             const name = title.splitTitle
-              .split(numbers)
+              .split(matchNumber)
               .filter(Boolean)
               .toString()
               .trim();
@@ -173,11 +173,11 @@ async function getFunkoData(url, page, i) {
             const matchNumber = title.splitTitle.match(numbers);
             // console.log("matchNumber: ", matchNumber);
             const name = title.splitTitle
-              .split(numbers)
+              .split(matchNumber)
               .filter(Boolean)
               .toString()
               .trim();
-            // console.log("name: ", name);
+            console.log("name: ", name);
 
             return {
               number: matchNumber && matchNumber[0],
@@ -268,11 +268,11 @@ async function getFunkoData(url, page, i) {
             const matchNumber = title.splitTitle.match(numbers);
             // console.log("matchNumber: ", matchNumber);
             const name = title.splitTitle
-              .split(numbers)
+              .split(matchNumber)
               .filter(Boolean)
               .toString()
               .trim();
-            // console.log("name: ", name);
+            console.log("name: ", name);
 
             return {
               number: matchNumber && matchNumber[0],
@@ -327,22 +327,22 @@ async function main() {
   });
   const page = await browser.newPage();
 
-  // const scrapedData = [];
-  for (let [i, link] of allLinks.entries()) {
-    const data = await getFunkoData(link, page, i);
-    await firestore.collection("funkoPops").doc(data.genre).set(data);
+  const scrapedData = [];
+  // for (let [i, link] of allLinks.entries()) {
+  //   const data = await getFunkoData(link, page, i);
+  //   await firestore.collection("funkoPops").doc(data.genre).set(data);
 
-    // const data = await getFunkoData(link, page, i);
-    // scrapedData.push(data);
-  }
+  //   // const data = await getFunkoData(link, page, i);
+  //   // scrapedData.push(data);
+  // }
 
-  // const data = await getFunkoData(
-  //   "https://www.cardboardconnection.com/2014-funko-pop-universal-monsters-vinyl-figures",
-  //   page
-  // );
-  // console.log("data: ", data);
-  // scrapedData.push(data);
-  // console.log("main data: ", JSON.stringify(scrapedData, null, 2));
+  const data = await getFunkoData(
+    "https://www.cardboardconnection.com/2014-funko-pop-universal-monsters-vinyl-figures",
+    page
+  );
+  console.log("data: ", data);
+  scrapedData.push(data);
+  console.log("main data: ", JSON.stringify(scrapedData, null, 2));
 }
 
 main();

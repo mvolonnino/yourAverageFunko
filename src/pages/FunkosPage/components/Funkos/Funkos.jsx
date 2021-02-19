@@ -6,8 +6,7 @@ import { GenreList } from "../../../../components";
 import { useDataLayerValue } from "../../../../context/DataLayer";
 
 function Funkos() {
-  const [{ dbGenreList, searchedFunkoPops }, dispatch] = useDataLayerValue();
-  console.log({ dbGenreList, searchedFunkoPops });
+  const [{ dbGenreList }, dispatch] = useDataLayerValue();
 
   useEffect(() => {
     if (dbGenreList.length === 0) {

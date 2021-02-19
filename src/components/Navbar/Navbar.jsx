@@ -101,14 +101,14 @@ const Navbar = () => {
         expand="md"
         fixed="top"
         scrolling
-        hover
+        hover="true"
       >
         <MDBNavbarBrand className="brand mr-2">
-          <MDBDropdown hover size="sm" className="userDropdown">
+          <MDBDropdown size="sm" className="userDropdown">
             <MDBDropdownToggle color="primary" className="navDropdown">
               YAF
               <Avatar
-                src={user?.photoUrl || "alt will be used"}
+                src={user?.photoURL || "alt will be used"}
                 alt={user?.displayName}
                 className="userAvatar"
               />
@@ -134,13 +134,12 @@ const Navbar = () => {
         <MDBCollapse isOpen={collapsed} navbar>
           <MDBNavbarNav left>
             <MDBNavItem className="text-black-50 dividerTab">|</MDBNavItem>
-            <MDBNavItem
-              className="text-white funkosTab"
-              onClick={handleTogglerClick}
-            >
+            <MDBNavItem className="text-white ">
               <MDBLink to="/funkos">Search Collections</MDBLink>
             </MDBNavItem>
-            <MDBNavItem className="text-white userTab">Users</MDBNavItem>
+            <MDBNavItem className="text-white ">
+              <MDBLink to="/users">Users</MDBLink>
+            </MDBNavItem>
           </MDBNavbarNav>
 
           <MDBNavbarNav right>

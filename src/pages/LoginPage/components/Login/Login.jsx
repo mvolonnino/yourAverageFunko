@@ -39,63 +39,57 @@ function Login() {
 
   const handleSignUp = (e) => {
     e.preventDefault();
+    if (userObj.displayName) {
+      auth
+        .createUserWithEmailAndPassword(userObj.email, userObj.password)
+        .then((res) => {
+          // signed up
+          const { displayName } = userObj;
+          const { uid, email, photoURL, phoneNumber, providerData } = res.user;
 
-    auth
-      .createUserWithEmailAndPassword(userObj.email, userObj.password)
-      .then((user) => {
-        // signed up
-        const {
-          uid,
-          email,
-          photoURL,
-          phoneNumber,
-          providerData,
-        } = auth.currentUser;
-
-        auth.currentUser
-          .updateProfile({
-            displayName: userObj.displayName,
-          })
-          .then(() => {
-            const { displayName } = auth.currentUser;
-            API.signUpUser({
-              uid,
-              displayName,
-              email,
-              photoURL,
-              phoneNumber,
-              providerData,
+          auth.currentUser
+            .updateProfile({
+              displayName: userObj.displayName,
             })
-              .then((res) => {
-                if (res.headers["auth-token"]) {
-                  setToken(res.headers["auth-token"]);
-                  history.push("/home");
-                }
+            .then(() => {
+              API.signUpUser({
+                uid,
+                displayName,
+                email,
+                photoURL,
+                phoneNumber,
+                providerData,
               })
-              .catch((error) => {
-                console.error(error);
-              });
-
-            dispatch({
-              type: "SET_USER",
-              user: {
-                uid: uid,
-                displayName: displayName,
-                email: email,
-                photoUrl: photoURL,
-                phoneNumber: phoneNumber,
-                providerId: providerData[0].providerId,
-              },
+                .then((res) => {
+                  if (res.headers["auth-token"]) {
+                    setToken(res.headers["auth-token"]);
+                    history.push("/home");
+                  }
+                  dispatch({
+                    type: "SET_USER",
+                    user: {
+                      uid: uid,
+                      displayName: displayName,
+                      email: email,
+                      photoURL: photoURL,
+                      phoneNumber: phoneNumber,
+                      providerId: providerData[0].providerId,
+                    },
+                  });
+                })
+                .catch((error) => {
+                  console.error(error);
+                });
+            })
+            .catch((error) => {
+              console.error({ error });
             });
-          })
-          .catch((error) => {
-            console.error({ error });
-          });
-      })
-      .catch((error) => {
-        const { code, message } = error;
-        console.error({ code, message });
-      });
+        })
+        .catch((error) => {
+          const { code, message } = error;
+          console.error({ code, message });
+        });
+    } else alert("Display Name needs to be filled out");
   };
 
   const handleSignIn = (e) => {

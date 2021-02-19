@@ -69,7 +69,7 @@ const userAddFunkoPop = async (req, res) => {
 
 const getAllFunkoPops = async (req, res, next) => {
   try {
-    const funkoPops = await firestore.collection("funkoPops");
+    const funkoPops = await firestore.collection("test");
     const data = await funkoPops.get();
     const funkoArray = [];
     if (data.empty) {
@@ -89,7 +89,7 @@ const getAllFunkoPops = async (req, res, next) => {
 // whenever new genre is added to db, need to turn this to get the new list of all the genres in an array to add it back to its on doc in the db
 const getAndPostGenreList = async (req, res) => {
   try {
-    const genres = await firestore.collection("test");
+    const genres = await firestore.collection("funkoPops");
     const data = await genres.get();
     const genreArray = [];
     data.forEach((doc) => {
@@ -174,7 +174,8 @@ const getFunkoPopQuery = async (req, res, next) => {
         numbMatches: [],
       };
 
-      funkoArr.forEach((funko) => {
+      funkoArr.forEach((funko, i) => {
+        console.log(i);
         const genre = funko.genre;
         if (funko.funkoData) {
           const funkoDataArr = funko.funkoData;
@@ -196,7 +197,8 @@ const getFunkoPopQuery = async (req, res, next) => {
       });
 
       // find name that includes query
-      objToSearch.notNullNameArr.forEach((funko) => {
+      objToSearch.notNullNameArr.forEach((funko, i) => {
+        console.log(i);
         const genre = funko.genre;
         let name = {};
         if (isNaN(query)) {

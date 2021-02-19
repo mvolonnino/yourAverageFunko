@@ -4,5 +4,5 @@ export { default as Navbar } from "./Navbar";
 export { default as GenreList } from "./GenreList";
 export { default as AddModal } from "./AddModal";
 export { default as RemoveModal } from "./RemoveModal";
-export { default as NameContainer } from "./NameContainer";
 export { default as SearchList } from "./SearchList";
+export { default as UsersList } from "./UsersList";

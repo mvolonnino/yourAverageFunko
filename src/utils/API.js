@@ -18,7 +18,7 @@ const API = {
           uid: uid,
           displayName: displayName,
           email: email,
-          photoUrl: photoURL,
+          photoURL: photoURL,
           phoneNumber: phoneNumber,
           providerId: providerData[0].providerId,
         },
@@ -116,6 +116,17 @@ const API = {
         method: "GET",
         withCredentials: true,
         url: `/api/user/getUserFunkoPops/${uid}`,
+      },
+      { signal }
+    );
+  },
+
+  getAllUsers: function () {
+    return axios(
+      {
+        method: "GET",
+        withCredentials: true,
+        url: "/api/user/getAll",
       },
       { signal }
     );

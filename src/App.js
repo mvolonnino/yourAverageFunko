@@ -1,7 +1,13 @@
 import { useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
-import { LoginPage, HomePage, FunkosPage, ResultsPage } from "./pages";
+import {
+  LoginPage,
+  HomePage,
+  FunkosPage,
+  ResultsPage,
+  UsersPage,
+} from "./pages";
 import { useDataLayerValue } from "./context/DataLayer";
 import { auth } from "./fire";
 import "./App.css";
@@ -15,45 +21,47 @@ function App() {
   useEffect(() => {
     auth.onAuthStateChanged((authUser) => {
       if (authUser) {
-        const {
-          uid,
-          displayName,
-          email,
-          photoURL,
-          phoneNumber,
-          providerData,
-        } = authUser;
-
         if (!user) {
-          API.signUpUser({
+          const {
             uid,
             displayName,
             email,
             photoURL,
             phoneNumber,
             providerData,
-          }).then((res) => {
-            if (res.status === 200) {
-              if (!authToken) {
+          } = authUser;
+
+          if (displayName) {
+            API.signUpUser({
+              uid,
+              displayName,
+              email,
+              photoURL,
+              phoneNumber,
+              providerData,
+            }).then((res) => {
+              if (res.status === 200) {
+                if (!authToken) {
+                  dispatch({
+                    type: "SET_AUTH_TOKEN",
+                    authToken: res.headers["auth-token"],
+                  });
+                }
+
                 dispatch({
-                  type: "SET_AUTH_TOKEN",
-                  authToken: res.headers["auth-token"],
+                  type: "SET_USER",
+                  user: {
+                    uid: uid,
+                    displayName: displayName,
+                    email: email,
+                    photoURL: photoURL,
+                    phoneNumber: phoneNumber,
+                    providerId: providerData[0].providerId,
+                  },
                 });
               }
-
-              dispatch({
-                type: "SET_USER",
-                user: {
-                  uid: uid,
-                  displayName: displayName,
-                  email: email,
-                  photoUrl: photoURL,
-                  phoneNumber: phoneNumber,
-                  providerId: providerData[0].providerId,
-                },
-              });
-            }
-          });
+            });
+          }
         }
       }
 
@@ -62,7 +70,7 @@ function App() {
         isLoading: false,
       });
     });
-  }, [user]);
+  }, []);
 
   if (isLoading) {
     return <LoadingComponent />;
@@ -78,6 +86,7 @@ function App() {
               <Route exact path="/home" component={HomePage} />
               <Route exact path="/funkos" component={FunkosPage} />
               <Route exact path="/results" component={ResultsPage} />
+              <Route exact path="/users" component={UsersPage} />
             </Switch>
           </>
         ) : (

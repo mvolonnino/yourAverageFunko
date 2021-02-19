@@ -7,6 +7,7 @@ export const initialState = {
   dbFunkoPops: [],
   reGetUserFunkos: false,
   isLoading: true,
+  users: [],
 };
 
 const reducer = (state, action) => {
@@ -17,6 +18,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         user: action.user,
+      };
+    case "SET_USERS":
+      return {
+        ...state,
+        users: action.users,
       };
     case "SET_AUTH_TOKEN":
       return {

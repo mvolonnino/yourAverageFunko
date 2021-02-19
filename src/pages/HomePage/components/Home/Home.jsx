@@ -11,14 +11,7 @@ import "./Home.css";
 
 function Home() {
   const [
-    {
-      user,
-      userFunkoPops,
-      dbGenreList,
-      reGetUserFunkos,
-      searchedFunkoPops,
-      dbFunkoPops,
-    },
+    { user, userFunkoPops, dbGenreList, reGetUserFunkos, dbFunkoPops, users },
     dispatch,
   ] = useDataLayerValue();
   const [numFunkos, setNumFunkos] = useState();
@@ -27,9 +20,9 @@ function Home() {
   //   user,
   //   userFunkoPops,
   //   dbGenreList,
-  //   searchedFunkoPops,
   //   reGetUserFunkos,
   //   dbFunkoPops,
+  //   users,
   // });
 
   const setUserFunkos = (data) => {
@@ -74,7 +67,11 @@ function Home() {
         });
       });
     }
-    if (userFunkoPops?.length === 0 || !userFunkoPops || reGetUserFunkos) {
+    if (
+      (userFunkoPops?.length === 0 && reGetUserFunkos) ||
+      !userFunkoPops ||
+      reGetUserFunkos
+    ) {
       console.log("fetching user funko pops...");
       API.getUserFunkoPops(user.uid)
         .then((res) => {
@@ -97,6 +94,19 @@ function Home() {
 
       setNumFunkos(flatten(funkoData).length);
     }
+
+    if (users.length === 0) {
+      console.log("fetching all users...");
+      API.getAllUsers()
+        .then((res) => {
+          const { data } = res;
+          dispatch({
+            type: "SET_USERS",
+            users: data,
+          });
+        })
+        .catch((err) => console.error(err));
+    }
   }, [reGetUserFunkos]);
 
   return (
@@ -112,7 +122,7 @@ function Home() {
             <div className="col-md-6 text-center">
               <div className="avatar align-items-center">
                 <Avatar
-                  src={user?.photoUrl || "alt will be used"}
+                  src={user?.photoURL || "alt will be used"}
                   alt={user?.displayName}
                 />
                 <h4 className="ml-2">{user?.displayName}</h4>

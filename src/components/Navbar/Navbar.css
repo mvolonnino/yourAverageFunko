@@ -42,7 +42,11 @@
 }
 
 .navInput {
-  width: 300px !important;
+  width: 225px !important;
+}
+
+.navInput::placeholder {
+  font-size: 12px;
 }
 
 @media only screen and (max-width: 400px) {

@@ -3,10 +3,15 @@ const User = require("../models/user");
 const FunkoPop = require("../models/funkoPop");
 const firestore = firebase.firestore();
 const jwt = require("jsonwebtoken");
+const admin = require("firebase-admin");
 
 const signUpUser = async (req, res, next) => {
   try {
     const user = req.body;
+    console.log({ user });
+    const timestamp = admin.firestore.Timestamp.now();
+    const formatTime = timestamp.toDate();
+
     const uidDoc = await firestore.collection("users").doc(user.uid);
     const data = await uidDoc.get();
     if (data.exists) {
@@ -18,7 +23,7 @@ const signUpUser = async (req, res, next) => {
       );
       res.header("auth-token", token).send(token);
     } else {
-      await uidDoc.set({ user });
+      await uidDoc.set(Object.assign({ user }, { signedUp: formatTime }));
       const token = jwt.sign(
         {
           uid: user.uid,
@@ -28,6 +33,7 @@ const signUpUser = async (req, res, next) => {
       res.header("auth-token", token).send(token);
     }
   } catch (error) {
+    console.log(error);
     res.status(400).send(error.message);
   }
 };
@@ -125,9 +131,34 @@ const getUserFunkoPops = async (req, res) => {
   }
 };
 
+const getAllUsers = async (req, res) => {
+  try {
+    const userRef = await firestore.collection("users");
+    const queryRef = await userRef.orderBy("signedUp").get();
+    const userArr = [];
+    queryRef.forEach((doc) => {
+      const displayName = doc.data().user.displayName;
+      const photoURL = doc.data().user.photoURL;
+      const time = doc.data().signedUp.toDate();
+      const signedUp = time.toLocaleDateString();
+      const user = {
+        displayName: displayName,
+        photoURL: photoURL,
+        signedUp: signedUp,
+      };
+
+      userArr.push(user);
+    });
+    res.status(200).send(userArr);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
 module.exports = {
   signUpUser,
   addFunkoPopTooUser,
   getUserFunkoPops,
   removeFunkoPopFromUser,
+  getAllUsers,
 };

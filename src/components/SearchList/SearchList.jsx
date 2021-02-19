@@ -73,7 +73,7 @@ const SearchList = ({ funkos, genre, name, number }) => {
             image: (
               <img
                 src={funkoSet.funkoData[0].image}
-                alt={`${funkoSet.funkoData[0].name} thumbnail`}
+                alt={`funko thumbnail`}
                 className="searchListImg"
               />
             ),
