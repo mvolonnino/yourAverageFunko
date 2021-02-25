@@ -8,6 +8,7 @@ import Avatar from "@material-ui/core/Avatar";
 
 const UsersList = () => {
   const [{ users }] = useDataLayerValue();
+
   const data = {
     columns: [
       {
@@ -34,7 +35,7 @@ const UsersList = () => {
           signedUp: user.signedUp,
           image: (
             <Avatar
-              src={user?.photoURL || "alt will be used"}
+              src={user?.photoURL}
               alt={user?.displayName}
               className="userPhoto"
             />

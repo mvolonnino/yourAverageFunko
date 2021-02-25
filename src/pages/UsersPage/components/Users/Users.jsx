@@ -1,12 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import "./Users.css";
 import { useDataLayerValue } from "../../../../context/DataLayer";
 import { UsersList } from "../../../../components";
+import API from "../../../../utils/API.js";
 
 function Users() {
-  const [{ users }] = useDataLayerValue();
-  console.log({ users });
+  const [{ users }, dispatch] = useDataLayerValue();
+
+  useEffect(() => {
+    if (users.length === 0) {
+      console.log("fetching all users...");
+      API.getAllUsers()
+        .then((res) => {
+          const { data } = res;
+          dispatch({
+            type: "SET_USERS",
+            users: data,
+          });
+        })
+        .catch((err) => console.error(err));
+    }
+  }, []);
 
   return (
     <div className="container-fluid usersContainer">

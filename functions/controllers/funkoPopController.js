@@ -108,10 +108,7 @@ const getAndPostGenreList = async (req, res) => {
 
 const getAllGenres = async (req, res) => {
   try {
-    const allGenres = await firestore
-      .collection("funkoPops")
-      .doc("allGenres")
-      .get();
+    const allGenres = await firestore.collection("test").doc("allGenres").get();
     const data = allGenres.data();
     res.status(200).send(data);
   } catch (error) {

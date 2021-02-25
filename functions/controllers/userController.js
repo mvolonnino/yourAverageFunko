@@ -38,6 +38,29 @@ const signUpUser = async (req, res, next) => {
   }
 };
 
+const signInUser = async (req, res) => {
+  try {
+    const user = req.body;
+    console.log({ user });
+
+    const uidDoc = await firestore.collection("users").doc(user.uid);
+    const data = await uidDoc.get();
+    if (data.exists) {
+      const token = jwt.sign(
+        {
+          uid: data.data().user.uid,
+        },
+        process.env.TOKEN_SECRET
+      );
+      res.header("auth-token", token).send(token);
+    } else {
+      res.status(400).send("No User Records");
+    }
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
 const addFunkoPopTooUser = async (req, res) => {
   try {
     const { uid, funko } = req.body;
@@ -157,6 +180,7 @@ const getAllUsers = async (req, res) => {
 
 module.exports = {
   signUpUser,
+  signInUser,
   addFunkoPopTooUser,
   getUserFunkoPops,
   removeFunkoPopFromUser,

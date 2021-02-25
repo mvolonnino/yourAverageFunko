@@ -5,24 +5,33 @@ import { useDataLayerValue } from "../../context/DataLayer";
 import "./GenreList.css";
 import API from "../../utils/API";
 import GenreContainer from "../GenreContainer";
+import getFunkoDataByGenre from "../../utils/getFunkoDataByGenre";
 
 const GenreList = () => {
-  const [{ dbGenreList }] = useDataLayerValue();
+  const [{ dbGenreList, dbFunkoPops }] = useDataLayerValue();
   const [funkoSet, setFunkoSet] = useState([]);
   const [showNoFunkoSet, setShowNoFunkoSet] = useState(true);
-  console.log({ funkoSet });
 
   const handleSearchGenre = (event) => {
     setFunkoSet([]);
     const query = event;
-    console.log(`fetching picked genre => ${query}`);
-    API.getPickedGenre(query)
-      .then((res) => {
-        const { data } = res;
+    if (dbFunkoPops.length === 0) {
+      console.log(`fetching picked genre => ${query}`);
+      API.getPickedGenre(query)
+        .then((res) => {
+          const { data } = res;
+          setFunkoSet(data);
+          setShowNoFunkoSet(false);
+        })
+        .catch((err) => console.error(err));
+    } else {
+      const data = getFunkoDataByGenre(dbFunkoPops, query);
+      // timeout to allow for funkoSet to be reset to [] and show animation of picking new genre to client
+      setTimeout(() => {
         setFunkoSet(data);
-        setShowNoFunkoSet(false);
-      })
-      .catch((err) => console.error(err));
+      }, 100);
+      setShowNoFunkoSet(false);
+    }
   };
 
   const data = {

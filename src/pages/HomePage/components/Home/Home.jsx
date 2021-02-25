@@ -5,7 +5,9 @@ import { MDBAnimation } from "mdbreact";
 import { useDataLayerValue } from "../../../../context/DataLayer";
 import funkoBrand from "../../../../img/funkoBrand.png";
 import API from "../../../../utils/API";
+import flatten from "../../../../utils/flatten.js";
 import { GenreContainer } from "../../../../components";
+import getAllGenres from "../../../../utils/getAllGenres";
 
 import "./Home.css";
 
@@ -15,6 +17,7 @@ function Home() {
     dispatch,
   ] = useDataLayerValue();
   const [numFunkos, setNumFunkos] = useState();
+  const [loading, setLoading] = useState(true);
 
   // console.log({
   //   user,
@@ -25,68 +28,65 @@ function Home() {
   //   users,
   // });
 
-  const setUserFunkos = (data) => {
-    dispatch({
-      type: "SET_USER_FUNKOPOPS",
-      userFunkoPops: data,
-    });
-  };
-
-  function flatten(arr) {
-    return [].concat(...arr);
-  }
-
   useEffect(() => {
-    if (dbFunkoPops.length === 0) {
+    if (dbFunkoPops.length === 0 && loading) {
       console.log("fetching db funko pops...");
-      dispatch({
-        type: "SET_IS_LOADING",
-        isLoading: true,
-      });
       API.getFunkoPopData()
         .then((res) => {
           const { data } = res;
-          dispatch({
-            type: "SET_DB_FUNKOPOPS",
-            dbFunkoPops: data,
-          });
-          dispatch({
-            type: "SET_IS_LOADING",
-            isLoading: false,
-          });
+          if (data !== undefined) {
+            dispatch({
+              type: "SET_DB_FUNKOPOPS",
+              dbFunkoPops: data,
+            });
+            console.log("setting genre list...");
+            const genreList = getAllGenres(data);
+            dispatch({
+              dbGenreList: genreList,
+              type: "SET_DB_GENRELIST",
+            });
+          }
+          setLoading(false);
         })
-        .catch((err) => console.error(err));
+        .catch((error) => console.error(error));
     }
-    if (dbGenreList.length === 0) {
-      console.log("fetching genre list...");
-      API.getGenreListData().then((res) => {
-        const { data } = res;
-        dispatch({
-          type: "SET_DB_GENRELIST",
-          dbGenreList: data.genreList,
-        });
-      });
-    }
-    if (
-      (userFunkoPops?.length === 0 && reGetUserFunkos) ||
-      !userFunkoPops ||
-      reGetUserFunkos
-    ) {
+    // if (dbGenreList.length === 0) {
+    //   console.log("fetching genre list...");
+    //   console.log(dbGenreList);
+    //   API.getGenreListData().then((res) => {
+    //     const { data } = res;
+    //     dispatch({
+    //       type: "SET_DB_GENRELIST",
+    //       dbGenreList: data.genreList,
+    //     });
+    //   });
+    // }
+  }, [loading]);
+
+  useEffect(() => {
+    if ((userFunkoPops?.length === 0 || reGetUserFunkos) && loading) {
       console.log("fetching user funko pops...");
       API.getUserFunkoPops(user.uid)
         .then((res) => {
+          setLoading(false);
           const { data } = res;
-          setUserFunkos(data);
-          const funkoData = data.map((funkoSet) => funkoSet.funkoData);
+          if (data) {
+            dispatch({
+              type: "SET_USER_FUNKOPOPS",
+              userFunkoPops: data,
+            });
+            const funkoData = data.map((funkoSet) => funkoSet.funkoData);
 
-          setNumFunkos(flatten(funkoData).length);
+            setNumFunkos(flatten(funkoData).length);
+          }
+          if (reGetUserFunkos) {
+            dispatch({
+              type: "REGET_USER_FUNKOS",
+              reGetUserFunkos: false,
+            });
+          }
         })
         .catch((err) => console.error(err));
-
-      dispatch({
-        type: "REGET_USER_FUNKOS",
-        reGetUserFunkos: false,
-      });
     }
 
     if (userFunkoPops?.length > 0) {
@@ -94,11 +94,14 @@ function Home() {
 
       setNumFunkos(flatten(funkoData).length);
     }
+  }, [reGetUserFunkos]);
 
-    if (users.length === 0) {
+  useEffect(() => {
+    if (users.length === 0 && loading) {
       console.log("fetching all users...");
       API.getAllUsers()
         .then((res) => {
+          setLoading(false);
           const { data } = res;
           dispatch({
             type: "SET_USERS",
@@ -107,7 +110,7 @@ function Home() {
         })
         .catch((err) => console.error(err));
     }
-  }, [reGetUserFunkos]);
+  }, []);
 
   return (
     <div className="application container-fluid">
@@ -121,10 +124,7 @@ function Home() {
           <div className="row userRow">
             <div className="col-md-6 text-center">
               <div className="avatar align-items-center">
-                <Avatar
-                  src={user?.photoURL || "alt will be used"}
-                  alt={user?.displayName}
-                />
+                <Avatar src={user?.photoURL} alt={user?.displayName} />
                 <h4 className="ml-2">{user?.displayName}</h4>
                 {/* <EditIcon fontSize="small" /> */}
               </div>
@@ -143,7 +143,7 @@ function Home() {
               </div>
               <div className="funkoData col-md-6 text-white text-center">
                 <p>Funko Pops in your collection</p>
-                {numFunkos}
+                {numFunkos || 0}
               </div>
             </div>
           </div>

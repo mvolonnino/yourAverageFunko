@@ -12,12 +12,15 @@ import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { auth, gProvider, fProvider } from "../../../../fire";
 import { useDataLayerValue } from "../../../../context/DataLayer";
+import { AlertError } from "../../../../components";
 import API from "../../../../utils/API";
+import chooseProvider from "../../../../utils/chooseProvider.js";
 
 function Login() {
   const [{ authToken }, dispatch] = useDataLayerValue();
   const [elementsObj, setElementsObj] = useState({});
   const [userObj, setUserObj] = useState({});
+  const [err, setErr] = useState("");
   const history = useHistory();
 
   const addSignUpMode = () => {
@@ -26,6 +29,16 @@ function Login() {
 
   const remSignUpMode = () => {
     elementsObj.container.classList.remove("sign-up-mode");
+  };
+
+  const handleChange = (e, type) => {
+    if (err) {
+      setErr("");
+    }
+    setUserObj({
+      ...userObj,
+      [type]: e.target.value,
+    });
   };
 
   const setToken = (token) => {
@@ -39,11 +52,15 @@ function Login() {
 
   const handleSignUp = (e) => {
     e.preventDefault();
+    if (err) {
+      console.log("hit");
+      setErr("");
+    }
     if (userObj.displayName) {
       auth
         .createUserWithEmailAndPassword(userObj.email, userObj.password)
         .then((res) => {
-          // signed up
+          // signed up to firebase authentication
           const { displayName } = userObj;
           const { uid, email, photoURL, phoneNumber, providerData } = res.user;
 
@@ -52,6 +69,7 @@ function Login() {
               displayName: userObj.displayName,
             })
             .then(() => {
+              // signup user to firestore
               API.signUpUser({
                 uid,
                 displayName,
@@ -59,44 +77,56 @@ function Login() {
                 photoURL,
                 phoneNumber,
                 providerData,
-              })
-                .then((res) => {
-                  if (res.headers["auth-token"]) {
-                    setToken(res.headers["auth-token"]);
-                    history.push("/home");
-                  }
-                  dispatch({
-                    type: "SET_USER",
-                    user: {
-                      uid: uid,
-                      displayName: displayName,
-                      email: email,
-                      photoURL: photoURL,
-                      phoneNumber: phoneNumber,
-                      providerId: providerData[0].providerId,
-                    },
-                  });
-                })
-                .catch((error) => {
-                  console.error(error);
-                });
-            })
-            .catch((error) => {
-              console.error({ error });
+              }).then((res) => {
+                if (res.headers["auth-token"]) {
+                  setToken(res.headers["auth-token"]);
+                  history.push("/home");
+                }
+              });
             });
         })
         .catch((error) => {
           const { code, message } = error;
           console.error({ code, message });
+          setErr(message);
         });
-    } else alert("Display Name needs to be filled out");
+    } else setErr("Display Name needs to be filled out");
   };
 
   const handleSignIn = (e) => {
     e.preventDefault();
+    const { email, password } = userObj;
+
+    if (err) {
+      setErr("");
+    }
+
+    if (email && password) {
+      auth
+        .signInWithEmailAndPassword(email, password)
+        .then((res) => {
+          console.log(res);
+          const { uid } = res.user;
+          localStorage.setItem("userSignedIn", JSON.stringify(uid));
+          history.push("/home");
+        })
+        .catch((error) => {
+          const { code, message } = error;
+          console.error({ code, message });
+          setErr(message);
+        });
+    } else setErr("Email and Password must be filled out");
+  };
+
+  const handleAuthLogin = (e) => {
+    e.preventDefault();
+    const { value } = e.currentTarget;
+    const type = chooseProvider(value);
+
     auth
-      .signInWithEmailAndPassword(userObj.email, userObj.password)
-      .then(() => {
+      .signInWithPopup(type)
+      .then((res) => {
+        const { isNewUser } = res.additionalUserInfo;
         const {
           uid,
           displayName,
@@ -106,102 +136,43 @@ function Login() {
           providerData,
         } = auth.currentUser;
 
-        API.signUpUser({
-          uid,
-          displayName,
-          email,
-          photoURL,
-          phoneNumber,
-          providerData,
-        })
-          .then((res) => {
+        // set user signing in to local storage for when authOnChange fires from firebase, we can check to see if the user is new or not
+        localStorage.setItem("userSignedIn", JSON.stringify(uid));
+
+        if (isNewUser) {
+          API.signUpUser({
+            uid,
+            displayName,
+            email,
+            photoURL,
+            phoneNumber,
+            providerData,
+          }).then((res) => {
             if (res.headers["auth-token"]) {
-              setToken(res.headers["auth-token"]);
               history.push("/home");
+              setToken(res.headers["auth-token"]);
+              dispatch({
+                type: "SET_USER",
+                user: {
+                  uid,
+                  displayName,
+                  email,
+                  photoURL,
+                  phoneNumber,
+                  providerId: providerData[0].providerId,
+                },
+              });
             }
-          })
-          .catch((error) => {
-            console.error(error);
           });
+        } else {
+          history.push("/home");
+        }
       })
       .catch((error) => {
         const { code, message } = error;
         console.error({ code, message });
+        setErr(message);
       });
-  };
-
-  const handleAuthLogin = (e) => {
-    e.preventDefault();
-    switch (e.currentTarget.value) {
-      case "google":
-        auth
-          .signInWithPopup(gProvider)
-          .then(() => {
-            const {
-              uid,
-              displayName,
-              email,
-              photoURL,
-              phoneNumber,
-              providerData,
-            } = auth.currentUser;
-
-            API.signUpUser({
-              uid,
-              displayName,
-              email,
-              photoURL,
-              phoneNumber,
-              providerData,
-            })
-              .then((res) => {
-                if (res.headers["auth-token"]) {
-                  setToken(res.headers["auth-token"]);
-                  history.push("/home");
-                }
-              })
-              .catch((error) => {
-                console.error(error);
-              });
-          })
-          .catch((err) => alert(err.message));
-        break;
-      case "facebook":
-        auth
-          .signInWithPopup(fProvider)
-          .then(() => {
-            const {
-              uid,
-              displayName,
-              email,
-              photoURL,
-              phoneNumber,
-              providerData,
-            } = auth.currentUser;
-
-            API.signUpUser({
-              uid,
-              displayName,
-              email,
-              photoURL,
-              phoneNumber,
-              providerData,
-            })
-              .then((res) => {
-                if (res.headers["auth-token"]) {
-                  setToken(res.headers["auth-token"]);
-                  history.push("/home");
-                }
-              })
-              .catch((error) => {
-                console.error(error);
-              });
-          })
-          .catch((err) => alert(err.message));
-        break;
-      default:
-        return;
-    }
   };
 
   useEffect(() => {
@@ -221,9 +192,7 @@ function Login() {
               <input
                 type="email"
                 placeholder="Email"
-                onChange={(e) =>
-                  setUserObj({ ...userObj, email: e.target.value })
-                }
+                onChange={(e) => handleChange(e, "email")}
               />
               <div className="icon">
                 <FontAwesomeIcon icon={faEnvelope} />
@@ -233,14 +202,13 @@ function Login() {
               <input
                 type="password"
                 placeholder="Password"
-                onChange={(e) =>
-                  setUserObj({ ...userObj, password: e.target.value })
-                }
+                onChange={(e) => handleChange(e, "password")}
               />
               <div className="icon">
                 <FontAwesomeIcon icon={faLock} />
               </div>
             </div>
+            {err && <AlertError err={err} />}
             <button
               type="submit"
               value="Login"
@@ -275,9 +243,7 @@ function Login() {
               <input
                 type="text"
                 placeholder="Display Name"
-                onChange={(e) =>
-                  setUserObj({ ...userObj, displayName: e.target.value })
-                }
+                onChange={(e) => handleChange(e, "displayName")}
               />
               <div className="icon">
                 <FontAwesomeIcon icon={faUser} />
@@ -287,9 +253,7 @@ function Login() {
               <input
                 type="text"
                 placeholder="Email"
-                onChange={(e) =>
-                  setUserObj({ ...userObj, email: e.target.value })
-                }
+                onChange={(e) => handleChange(e, "email")}
               />
               <div className="icon">
                 <FontAwesomeIcon icon={faEnvelope} />
@@ -299,14 +263,13 @@ function Login() {
               <input
                 type="password"
                 placeholder="Password"
-                onChange={(e) =>
-                  setUserObj({ ...userObj, password: e.target.value })
-                }
+                onChange={(e) => handleChange(e, "password")}
               />
               <div className="icon">
                 <FontAwesomeIcon icon={faLock} />
               </div>
             </div>
+            {err && <AlertError err={err} />}
             <button
               type="submit"
               value="Sign up"

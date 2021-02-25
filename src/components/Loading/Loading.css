@@ -1,0 +1,31 @@
+.loaderHolder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader {
+  position: absolute;
+  margin-left: -200px;
+  top: 50%;
+  left: 50%;
+  font-family: "ZCOOL KuaiLe", cursive;
+  font-size: 40px;
+  color: var(--primary);
+}
+
+.loader::after {
+  content: "\2026";
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  animation: dots steps(4, end) 2s infinite;
+  width: 0px;
+}
+
+@media only screen and (max-width: 375px) {
+  .loader {
+    margin-left: -150px;
+    font-size: 30px;
+  }
+}

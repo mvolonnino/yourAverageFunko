@@ -29,6 +29,32 @@ const API = {
     );
   },
 
+  signInUser: function ({
+    uid,
+    displayName,
+    email,
+    photoURL,
+    phoneNumber,
+    providerData,
+  }) {
+    return axios(
+      {
+        method: "POST",
+        data: {
+          uid: uid,
+          displayName: displayName,
+          email: email,
+          photoURL: photoURL,
+          phoneNumber: phoneNumber,
+          providerId: providerData[0].providerId,
+        },
+        withCredentials: true,
+        url: "/api/user/signin",
+      },
+      { signal }
+    );
+  },
+
   getFunkoPopData: function () {
     return axios(
       {

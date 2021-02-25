@@ -10,7 +10,7 @@ function Funkos() {
 
   useEffect(() => {
     if (dbGenreList.length === 0) {
-      console.log("funkos.jsx - fetching genre list...");
+      console.log("fetching genre list...");
       API.getGenreListData().then((res) => {
         const { data } = res;
         dispatch({
@@ -26,6 +26,7 @@ function Funkos() {
     //   })
     //   .catch((err) => console.error(err));
   }, []);
+
   return (
     <div className="container-fluid genreList">
       <GenreList />

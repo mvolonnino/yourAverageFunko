@@ -24,54 +24,50 @@ import API from "../../utils/API";
 import searchData from "../../utils/searchData";
 
 const Navbar = () => {
+  const [{ user, dbFunkoPops }, dispatch] = useDataLayerValue();
   const [collapsed, setCollapsed] = useState(false);
   const [search, setSearch] = useState("");
-  const [{ user, dbFunkoPops }, dispatch] = useDataLayerValue();
+  const [loading, setLoading] = useState(false);
   const history = useHistory();
 
   const handleTogglerClick = () => {
     setCollapsed(!collapsed);
   };
 
-  const handleSearch = async (e) => {
+  const handleSearch = (e) => {
     e.preventDefault();
-    dispatch({
-      type: "SET_IS_LOADING",
-      isLoading: true,
-    });
-
-    const results = await searchData(dbFunkoPops, search);
-    history.push({
-      pathname: "/results",
-      search: search,
-      state: results,
-    });
-
-    dispatch({
-      type: "SET_IS_LOADING",
-      isLoading: false,
-    });
-    // API.searchFunkoPopData(search)
-    //   .then((res) => {
-    //     const { data } = res;
-    //     history.push({
-    //       pathname: "/results",
-    //       search: search,
-    //       state: data,
-    //     });
-    //     dispatch({
-    //       type: "SET_SEARCHED_FUNKOPOPS",
-    //       searchedFunkoPops: data,
-    //     });
-    //     dispatch({
-    //       type: "SET_IS_LOADING",
-    //       isLoading: false,
-    //     });
-    //   })
-    //   .catch((err) => console.error(err));
+    setLoading(true);
+    if (dbFunkoPops.length === 0) {
+      console.log("fetching db funko pops...");
+      API.getFunkoPopData()
+        .then((res) => {
+          setLoading(false);
+          const { data } = res;
+          dispatch({
+            type: "SET_DB_FUNKOPOPS",
+            dbFunkoPops: data,
+          });
+          const results = searchData(data, search);
+          history.push({
+            pathname: "/results",
+            search: search,
+            state: results,
+          });
+        })
+        .catch((error) => console.error(error));
+    } else {
+      setLoading(false);
+      const results = searchData(dbFunkoPops, search);
+      history.push({
+        pathname: "/results",
+        search: search,
+        state: results,
+      });
+    }
   };
 
   const handleLogout = () => {
+    localStorage.removeItem("userSignedIn");
     auth
       .signOut()
       .then(() => {
@@ -108,7 +104,7 @@ const Navbar = () => {
             <MDBDropdownToggle color="primary" className="navDropdown">
               YAF
               <Avatar
-                src={user?.photoURL || "alt will be used"}
+                src={user?.photoURL}
                 alt={user?.displayName}
                 className="userAvatar"
               />
@@ -154,6 +150,7 @@ const Navbar = () => {
                     className="form-control mr-sm-2 navInput"
                     type="text"
                     placeholder="Search Series, Name or Number"
+                    value={search && search}
                     aria-label="Search"
                     onChange={(e) => setSearch(e.currentTarget.value)}
                   />

@@ -1,12 +1,11 @@
 export const initialState = {
   user: null,
   authToken: null,
-  userFunkoPops: null,
-  searchedFunkoPops: null,
+  userFunkoPops: [],
+  searchedFunkoPops: [],
   dbGenreList: [],
   dbFunkoPops: [],
-  reGetUserFunkos: false,
-  isLoading: true,
+  reGetUserFunkos: true,
   users: [],
 };
 
@@ -53,11 +52,6 @@ const reducer = (state, action) => {
       return {
         ...state,
         reGetUserFunkos: action.reGetUserFunkos,
-      };
-    case "SET_IS_LOADING":
-      return {
-        ...state,
-        isLoading: action.isLoading,
       };
     case "LOGOUT":
       return {

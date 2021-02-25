@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const {
   signUpUser,
+  signInUser,
   addFunkoPopTooUser,
   getUserFunkoPops,
   removeFunkoPopFromUser,
@@ -9,6 +10,7 @@ const {
 const verifyToken = require("../verifyToken");
 
 router.post("/signup", signUpUser);
+router.post("/signin", signInUser);
 router.post("/addFunkoPop", verifyToken, addFunkoPopTooUser);
 
 router.get("/getUserFunkoPops/:uid", getUserFunkoPops);
