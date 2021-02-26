@@ -8,6 +8,7 @@ import API from "../../../../utils/API";
 import flatten from "../../../../utils/flatten.js";
 import { GenreContainer } from "../../../../components";
 import getAllGenres from "../../../../utils/getAllGenres";
+import { Loading } from "../../../../components";
 
 import "./Home.css";
 
@@ -110,59 +111,77 @@ function Home() {
         })
         .catch((err) => console.error(err));
     }
+
+    if (
+      users.length > 0 &&
+      userFunkoPops.length > 0 &&
+      dbFunkoPops.length > 0 &&
+      loading
+    ) {
+      setLoading(false);
+    }
   }, []);
 
   return (
-    <div className="application container-fluid">
-      <MDBAnimation type="fadeInDownBig" delay=".2s">
-        <div className="jumbotron bg-dark">
-          <div className="row imageRow">
-            <div className="col-md-8 text-center">
-              <img src={funkoBrand} alt="" className="funkoBrand" />
-            </div>
-          </div>
-          <div className="row userRow">
-            <div className="col-md-6 text-center">
-              <div className="avatar align-items-center">
-                <Avatar src={user?.photoURL} alt={user?.displayName} />
-                <h4 className="ml-2">{user?.displayName}</h4>
-                {/* <EditIcon fontSize="small" /> */}
-              </div>
-              {/* <div className="displayName">
+    <>
+      {loading ? (
+        <Loading />
+      ) : (
+        <>
+          <div className="application container-fluid">
+            <MDBAnimation type="fadeInDownBig" delay=".2s">
+              <div className="jumbotron bg-dark">
+                <div className="row imageRow">
+                  <div className="col-md-8 text-center">
+                    <img src={funkoBrand} alt="" className="funkoBrand" />
+                  </div>
+                </div>
+                <div className="row userRow">
+                  <div className="col-md-6 text-center">
+                    <div className="avatar align-items-center">
+                      <Avatar src={user?.photoURL} alt={user?.displayName} />
+                      <h4 className="ml-2">{user?.displayName}</h4>
+                      {/* <EditIcon fontSize="small" /> */}
+                    </div>
+                    {/* <div className="displayName">
                 <EditIcon fontSize="small" />
               </div> */}
-              <div className="email">
-                <h5>{user?.email}</h5>
-                {/* <EditIcon fontSize="small" /> */}
+                    <div className="email">
+                      <h5>{user?.email}</h5>
+                      {/* <EditIcon fontSize="small" /> */}
+                    </div>
+                  </div>
+                  <div className="col-md-6 collectionInfo">
+                    <div className="funkoGenre col-md-6 text-white text-center">
+                      <p>Series/Genres in your collection</p>
+                      {userFunkoPops?.length}
+                    </div>
+                    <div className="funkoData col-md-6 text-white text-center">
+                      <p>Funko Pops in your collection</p>
+                      {numFunkos || 0}
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="col-md-6 collectionInfo">
-              <div className="funkoGenre col-md-6 text-white text-center">
-                <p>Series/Genres in your collection</p>
-                {userFunkoPops?.length}
-              </div>
-              <div className="funkoData col-md-6 text-white text-center">
-                <p>Funko Pops in your collection</p>
-                {numFunkos || 0}
-              </div>
-            </div>
+            </MDBAnimation>
+            {userFunkoPops?.map((funkoSet, i) => (
+              <GenreContainer funkoSet={funkoSet} key={i} />
+            ))}
+            {userFunkoPops?.length === 0 && (
+              <>
+                <MDBAnimation type="fadeInDown" delay=".2s">
+                  <div className="noUserFunkos text-center">
+                    You new here? We don't seem to have any saved funko pops for
+                    you.. head to the 'Funkos' tab to look through our
+                    collections
+                  </div>
+                </MDBAnimation>
+              </>
+            )}
           </div>
-        </div>
-      </MDBAnimation>
-      {userFunkoPops?.map((funkoSet, i) => (
-        <GenreContainer funkoSet={funkoSet} key={i} />
-      ))}
-      {userFunkoPops?.length === 0 && (
-        <>
-          <MDBAnimation type="fadeInDown" delay=".2s">
-            <div className="noUserFunkos text-center">
-              You new here? We don't seem to have any saved funko pops for you..
-              head to the 'Funkos' tab to look through our collections
-            </div>
-          </MDBAnimation>
         </>
       )}
-    </div>
+    </>
   );
 }
 
