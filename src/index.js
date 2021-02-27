@@ -4,20 +4,19 @@ import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { DataLayer } from "./context/DataLayer";
-import reducer, { initialState } from "./context/reducer";
 
 // bootstrap
 import "bootstrap/dist/css/bootstrap.min.css";
 import "mdbreact/dist/css/mdb.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import { UserProvider } from "./context/User/UserContext";
 
 ReactDOM.render(
-  <DataLayer initialState={initialState} reducer={reducer}>
+  <UserProvider>
     <BrowserRouter>
       <App />
     </BrowserRouter>
-  </DataLayer>,
+  </UserProvider>,
   document.getElementById("root")
 );
 

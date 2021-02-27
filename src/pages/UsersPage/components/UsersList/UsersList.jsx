@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 import { MDBDataTableV5 } from "mdbreact";
-import { useDataLayerValue } from "../../context/DataLayer";
 
 import "./UsersList.css";
-import API from "../../utils/API";
 import Avatar from "@material-ui/core/Avatar";
+import { UsersContext } from "../../../../context/Users/UsersContext";
 
 const UsersList = () => {
-  const [{ users }] = useDataLayerValue();
+  const { usersState } = useContext(UsersContext);
+  const { users } = usersState;
 
   const data = {
     columns: [

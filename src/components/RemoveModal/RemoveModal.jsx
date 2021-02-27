@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   MDBContainer,
   MDBBtn,
@@ -8,16 +8,17 @@ import {
   MDBModalFooter,
   MDBIcon,
 } from "mdbreact";
-import { useDataLayerValue } from "../../context/DataLayer";
 import API from "../../utils/API";
+import { UserContext } from "../../context/User/UserContext";
 
 const RemoveModal = ({ data, genre }) => {
+  const { userState, userDispatch } = useContext(UserContext);
+  const { user, authToken, getUserFunkos } = userState;
+  const [status, setStatus] = useState("");
+  const [noGenre, setNoGenre] = useState(false);
   const [state, setState] = useState({
     modal14: false,
   });
-  const [status, setStatus] = useState("");
-  const [noGenre, setNoGenre] = useState(false);
-  const [{ user, authToken, reGetUserFunkos }, dispatch] = useDataLayerValue();
 
   const handleRemoveFunkoPop = (e) => {
     e.preventDefault();
@@ -37,9 +38,9 @@ const RemoveModal = ({ data, genre }) => {
         if (err) {
           console.error(err);
           setStatus(400);
-          dispatch({
-            type: "REGET_USER_FUNKOS",
-            reGetUserFunkos: false,
+          userDispatch({
+            type: "GET_USER_FUNKOS",
+            getUserFunkos: false,
           });
         }
       });
@@ -48,10 +49,10 @@ const RemoveModal = ({ data, genre }) => {
   const toggle = (nr) => () => {
     let modalNumber = "modal" + nr;
     if (status === 200) {
-      if (!reGetUserFunkos) {
-        dispatch({
-          type: "REGET_USER_FUNKOS",
-          reGetUserFunkos: true,
+      if (!getUserFunkos) {
+        userDispatch({
+          type: "GET_USER_FUNKOS",
+          getUserFunkos: true,
         });
       }
     }

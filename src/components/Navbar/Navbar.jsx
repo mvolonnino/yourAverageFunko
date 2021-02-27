@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   MDBNavbar,
   MDBNavbarBrand,
@@ -18,13 +18,17 @@ import SearchIcon from "@material-ui/icons/Search";
 import { useHistory } from "react-router-dom";
 
 import "./Navbar.css";
-import { useDataLayerValue } from "../../context/DataLayer";
 import { auth } from "../../fire";
 import API from "../../utils/API";
 import searchData from "../../utils/searchData";
+import { UserContext } from "../../context/User/UserContext";
+import { FunkosContext } from "../../context/Funkos/FunkosContext";
 
 const Navbar = () => {
-  const [{ user, dbFunkoPops }, dispatch] = useDataLayerValue();
+  const { userState, userDispatch } = useContext(UserContext);
+  const { funkoState, funkoDispatch } = useContext(FunkosContext);
+  const { user } = userState;
+  const { dbFunkoPops } = funkoState;
   const [collapsed, setCollapsed] = useState(false);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
@@ -43,7 +47,7 @@ const Navbar = () => {
         .then((res) => {
           setLoading(false);
           const { data } = res;
-          dispatch({
+          funkoDispatch({
             type: "SET_DB_FUNKOPOPS",
             dbFunkoPops: data,
           });
@@ -72,7 +76,7 @@ const Navbar = () => {
       .signOut()
       .then(() => {
         history.push("/");
-        dispatch({
+        userDispatch({
           type: "LOGOUT",
         });
       })

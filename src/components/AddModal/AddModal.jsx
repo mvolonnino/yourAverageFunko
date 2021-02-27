@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   MDBContainer,
   MDBBtn,
@@ -8,15 +8,16 @@ import {
   MDBModalFooter,
   MDBIcon,
 } from "mdbreact";
-import { useDataLayerValue } from "../../context/DataLayer";
 import API from "../../utils/API";
+import { UserContext } from "../../context/User/UserContext";
 
 const AddModal = ({ data, genre }) => {
+  const { userState, userDispatch } = useContext(UserContext);
+  const { user, authToken, getUserFunkos } = userState;
+  const [status, setStatus] = useState("");
   const [state, setState] = useState({
     modal14: false,
   });
-  const [status, setStatus] = useState("");
-  const [{ user, authToken, reGetUserFunkos }, dispatch] = useDataLayerValue();
 
   const uuid = () => {
     return Math.floor(Math.random() * Date.now());
@@ -27,10 +28,10 @@ const AddModal = ({ data, genre }) => {
     const { name, number, image } = data;
     const { uid } = user;
 
-    if (!reGetUserFunkos) {
-      dispatch({
-        type: "REGET_USER_FUNKOS",
-        reGetUserFunkos: true,
+    if (!getUserFunkos) {
+      userDispatch({
+        type: "GET_USER_FUNKOS",
+        getUserFunkos: true,
       });
     }
 
@@ -46,10 +47,10 @@ const AddModal = ({ data, genre }) => {
     API.addFunkoPopTooUser(uid, funko, authToken)
       .then((res) => {
         setStatus(res.status);
-        if (!reGetUserFunkos) {
-          dispatch({
-            type: "REGET_USER_FUNKOS",
-            reGetUserFunkos: true,
+        if (!getUserFunkos) {
+          userDispatch({
+            type: "GET_USER_FUNKOS",
+            getUserFunkos: true,
           });
         }
       })

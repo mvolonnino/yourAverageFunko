@@ -1,12 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 
 import "./Users.css";
-import { useDataLayerValue } from "../../../../context/DataLayer";
-import { UsersList } from "../../../../components";
+import { UsersList } from "../index";
 import API from "../../../../utils/API.js";
+import { UsersContext } from "../../../../context/Users/UsersContext";
 
 function Users() {
-  const [{ users }, dispatch] = useDataLayerValue();
+  const { usersState, usersDispatch } = useContext(UsersContext);
+  const { users } = usersState;
 
   useEffect(() => {
     if (users.length === 0) {
@@ -14,7 +15,7 @@ function Users() {
       API.getAllUsers()
         .then((res) => {
           const { data } = res;
-          dispatch({
+          usersDispatch({
             type: "SET_USERS",
             users: data,
           });

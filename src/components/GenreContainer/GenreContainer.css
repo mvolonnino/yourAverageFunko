@@ -24,3 +24,8 @@ ul {
   display: flex;
   justify-content: center;
 }
+
+.infoOnFunkoSet {
+  display: flex;
+  justify-content: space-between;
+}

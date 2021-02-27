@@ -1,19 +1,20 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 
 import "./Funkos.css";
 import API from "../../../../utils/API";
 import { GenreList } from "../../../../components";
-import { useDataLayerValue } from "../../../../context/DataLayer";
+import { FunkosContext } from "../../../../context/Funkos/FunkosContext";
 
 function Funkos() {
-  const [{ dbGenreList }, dispatch] = useDataLayerValue();
+  const { funkoState, funkoDispatch } = useContext(FunkosContext);
+  const { dbGenreList } = funkoState;
 
   useEffect(() => {
     if (dbGenreList.length === 0) {
       console.log("fetching genre list...");
       API.getGenreListData().then((res) => {
         const { data } = res;
-        dispatch({
+        funkoDispatch({
           type: "SET_DB_GENRELIST",
           dbGenreList: data.genreList,
         });

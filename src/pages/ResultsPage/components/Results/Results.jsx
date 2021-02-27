@@ -2,11 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 import "./Results.css";
-// import { useDataLayerValue } from "../../../../context/DataLayer";
-import { SearchList } from "../../../../components";
+import { ResultsList } from "../index";
 
 function Results() {
-  // const [{ searchedFunkoPops }] = useDataLayerValue();
   const [show, setShow] = useState({
     genre: false,
     name: false,
@@ -91,9 +89,9 @@ function Results() {
           Please select from the buttons above to view funko pops
         </div>
       )}
-      {show.genre && <SearchList funkos={state.genre} genre={true} />}
-      {show.name && <SearchList funkos={state.name} name={true} />}
-      {show.number && <SearchList funkos={state.number} number={true} />}
+      {show.genre && <ResultsList funkos={state.genre} genre={true} />}
+      {show.name && <ResultsList funkos={state.name} name={true} />}
+      {show.number && <ResultsList funkos={state.number} number={true} />}
     </div>
   );
 }

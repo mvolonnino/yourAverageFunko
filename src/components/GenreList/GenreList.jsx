@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { MDBDataTableV5 } from "mdbreact";
-import { useDataLayerValue } from "../../context/DataLayer";
 
 import "./GenreList.css";
 import API from "../../utils/API";
 import GenreContainer from "../GenreContainer";
 import getFunkoDataByGenre from "../../utils/getFunkoDataByGenre";
+import { FunkosContext } from "../../context/Funkos/FunkosContext";
 
 const GenreList = () => {
-  const [{ dbGenreList, dbFunkoPops }] = useDataLayerValue();
+  const { funkoState } = useContext(FunkosContext);
+  const { dbGenreList, dbFunkoPops } = funkoState;
   const [funkoSet, setFunkoSet] = useState([]);
   const [showNoFunkoSet, setShowNoFunkoSet] = useState(true);
 

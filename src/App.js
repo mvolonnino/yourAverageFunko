@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import {
   LoginPage,
@@ -8,15 +9,20 @@ import {
   ResultsPage,
   UsersPage,
 } from "./pages";
-import { useDataLayerValue } from "./context/DataLayer";
 import { auth } from "./fire";
 import "./App.css";
 import { Navbar, Loading } from "./components";
 import API from "./utils/API";
-import { useHistory } from "react-router-dom";
+import { UserContext } from "./context/User/UserContext";
+import { FunkosProvider } from "./context/Funkos/FunkosContext";
+import { UsersProvider } from "./context/Users/UsersContext";
+
+// context
 
 function App() {
-  const [{ user, authToken }, dispatch] = useDataLayerValue();
+  const { userState, userDispatch } = useContext(UserContext);
+  const { user, authToken } = userState;
+  // const [{ user, authToken }, dispatch] = useDataLayerValue();
   const [loading, setLoading] = useState(false);
   const history = useHistory();
 
@@ -24,7 +30,6 @@ function App() {
     auth.onAuthStateChanged((authUser) => {
       if (authUser) {
         const localSignIn = JSON.parse(localStorage.getItem("userSignedIn"));
-        const { creationTime, lastSignInTime } = authUser.metadata;
         if (!user) {
           const {
             uid,
@@ -34,7 +39,6 @@ function App() {
             phoneNumber,
             providerData,
           } = authUser;
-
           if (displayName && localSignIn) {
             setLoading(true);
             // hit this login to get JWT from back end to be able to save funkos
@@ -51,12 +55,12 @@ function App() {
                 if (res.status === 200) {
                   history.push("/home");
                   if (!authToken) {
-                    dispatch({
+                    userDispatch({
                       type: "SET_AUTH_TOKEN",
                       authToken: res.headers["auth-token"],
                     });
                   }
-                  dispatch({
+                  userDispatch({
                     type: "SET_USER",
                     user: {
                       uid: uid,
@@ -82,15 +86,17 @@ function App() {
         {loading ? (
           <Loading />
         ) : user ? (
-          <>
+          <FunkosProvider>
             <Navbar />
-            <Switch>
-              <Route exact path="/home" component={HomePage} />
-              <Route exact path="/funkos" component={FunkosPage} />
-              <Route exact path="/results" component={ResultsPage} />
-              <Route exact path="/users" component={UsersPage} />
-            </Switch>
-          </>
+            <UsersProvider>
+              <Switch>
+                <Route exact path="/home" component={HomePage} />
+                <Route exact path="/funkos" component={FunkosPage} />
+                <Route exact path="/results" component={ResultsPage} />
+                <Route exact path="/users" component={UsersPage} />
+              </Switch>
+            </UsersProvider>
+          </FunkosProvider>
         ) : (
           <Route exact path="/" component={LoginPage} />
         )}

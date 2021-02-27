@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 
 import "./Login.css";
@@ -10,14 +10,15 @@ import { faLock } from "@fortawesome/free-solid-svg-icons";
 import { faFacebookF } from "@fortawesome/free-brands-svg-icons";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
-import { auth, gProvider, fProvider } from "../../../../fire";
-import { useDataLayerValue } from "../../../../context/DataLayer";
+import { auth } from "../../../../fire";
 import { AlertError } from "../../../../components";
 import API from "../../../../utils/API";
 import chooseProvider from "../../../../utils/chooseProvider.js";
+import { UserContext } from "../../../../context/User/UserContext";
 
 function Login() {
-  const [{ authToken }, dispatch] = useDataLayerValue();
+  const { userState, userDispatch } = useContext(UserContext);
+  const { authToken } = userState;
   const [elementsObj, setElementsObj] = useState({});
   const [userObj, setUserObj] = useState({});
   const [err, setErr] = useState("");
@@ -43,8 +44,8 @@ function Login() {
 
   const setToken = (token) => {
     if (!authToken) {
-      dispatch({
-        type: "SET_AUTH_TOKEN",
+      userDispatch({
+        type: "SET_AUTHTOKEN",
         authToken: token,
       });
     }
@@ -86,6 +87,7 @@ function Login() {
             });
         })
         .catch((error) => {
+          console.log(error);
           const { code, message } = error;
           console.error({ code, message });
           setErr(message);
@@ -151,7 +153,7 @@ function Login() {
             if (res.headers["auth-token"]) {
               history.push("/home");
               setToken(res.headers["auth-token"]);
-              dispatch({
+              userDispatch({
                 type: "SET_USER",
                 user: {
                   uid,

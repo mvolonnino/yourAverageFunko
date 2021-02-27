@@ -69,7 +69,7 @@ const userAddFunkoPop = async (req, res) => {
 
 const getAllFunkoPops = async (req, res, next) => {
   try {
-    const funkoPops = await firestore.collection("funkoPops");
+    const funkoPops = await firestore.collection("test");
     const data = await funkoPops.get();
     const funkoArray = [];
     if (data.empty) {
@@ -108,10 +108,7 @@ const getAndPostGenreList = async (req, res) => {
 
 const getAllGenres = async (req, res) => {
   try {
-    const allGenres = await firestore
-      .collection("funkoPops")
-      .doc("allGenres")
-      .get();
+    const allGenres = await firestore.collection("test").doc("allGenres").get();
     const data = allGenres.data();
     res.status(200).send(data);
   } catch (error) {
@@ -123,7 +120,7 @@ const getPickedGenre = async (req, res) => {
   try {
     const genre = req.params.genre;
     const dbGenre = await firestore
-      .collection("funkoPops")
+      .collection("test")
       .where("genre", "==", genre)
       .get();
 

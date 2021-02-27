@@ -1,30 +1,33 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import EditIcon from "@material-ui/icons/Edit";
 import { MDBAnimation } from "mdbreact";
-import { useDataLayerValue } from "../../../../context/DataLayer";
 import funkoBrand from "../../../../img/funkoBrand.png";
 import API from "../../../../utils/API";
 import flatten from "../../../../utils/flatten.js";
 import { GenreContainer } from "../../../../components";
 import getAllGenres from "../../../../utils/getAllGenres";
 import { Loading } from "../../../../components";
+import { UserContext } from "../../../../context/User/UserContext";
+import { FunkosContext } from "../../../../context/Funkos/FunkosContext";
+import { UsersContext } from "../../../../context/Users/UsersContext";
 
 import "./Home.css";
 
 function Home() {
-  const [
-    { user, userFunkoPops, dbGenreList, reGetUserFunkos, dbFunkoPops, users },
-    dispatch,
-  ] = useDataLayerValue();
+  const { userState, userDispatch } = useContext(UserContext);
+  const { funkoState, funkoDispatch } = useContext(FunkosContext);
+  const { usersState, usersDispatch } = useContext(UsersContext);
+  const { user, userFunkoPops, getUserFunkos } = userState;
+  const { dbFunkoPops } = funkoState;
+  const { users } = usersState;
   const [numFunkos, setNumFunkos] = useState();
   const [loading, setLoading] = useState(true);
 
   // console.log({
   //   user,
   //   userFunkoPops,
-  //   dbGenreList,
-  //   reGetUserFunkos,
+  //   getUserFunkos,
   //   dbFunkoPops,
   //   users,
   // });
@@ -36,43 +39,32 @@ function Home() {
         .then((res) => {
           const { data } = res;
           if (data !== undefined) {
-            dispatch({
+            funkoDispatch({
               type: "SET_DB_FUNKOPOPS",
               dbFunkoPops: data,
             });
             console.log("setting genre list...");
             const genreList = getAllGenres(data);
-            dispatch({
-              dbGenreList: genreList,
+            funkoDispatch({
               type: "SET_DB_GENRELIST",
+              dbGenreList: genreList,
             });
           }
           setLoading(false);
         })
         .catch((error) => console.error(error));
     }
-    // if (dbGenreList.length === 0) {
-    //   console.log("fetching genre list...");
-    //   console.log(dbGenreList);
-    //   API.getGenreListData().then((res) => {
-    //     const { data } = res;
-    //     dispatch({
-    //       type: "SET_DB_GENRELIST",
-    //       dbGenreList: data.genreList,
-    //     });
-    //   });
-    // }
   }, [loading]);
 
   useEffect(() => {
-    if ((userFunkoPops?.length === 0 || reGetUserFunkos) && loading) {
+    if ((userFunkoPops?.length === 0 && loading) || getUserFunkos) {
       console.log("fetching user funko pops...");
       API.getUserFunkoPops(user.uid)
         .then((res) => {
           setLoading(false);
           const { data } = res;
           if (data) {
-            dispatch({
+            userDispatch({
               type: "SET_USER_FUNKOPOPS",
               userFunkoPops: data,
             });
@@ -80,10 +72,10 @@ function Home() {
 
             setNumFunkos(flatten(funkoData).length);
           }
-          if (reGetUserFunkos) {
-            dispatch({
-              type: "REGET_USER_FUNKOS",
-              reGetUserFunkos: false,
+          if (getUserFunkos) {
+            userDispatch({
+              type: "GET_USER_FUNKOS",
+              getUserFunkos: false,
             });
           }
         })
@@ -95,7 +87,7 @@ function Home() {
 
       setNumFunkos(flatten(funkoData).length);
     }
-  }, [reGetUserFunkos]);
+  }, [getUserFunkos]);
 
   useEffect(() => {
     if (users.length === 0 && loading) {
@@ -104,7 +96,7 @@ function Home() {
         .then((res) => {
           setLoading(false);
           const { data } = res;
-          dispatch({
+          usersDispatch({
             type: "SET_USERS",
             users: data,
           });

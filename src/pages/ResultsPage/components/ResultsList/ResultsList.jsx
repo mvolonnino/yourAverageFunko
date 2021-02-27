@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { MDBDataTableV5 } from "mdbreact";
 
-import "./SearchList.css";
-import GenreContainer from "../GenreContainer";
+import "./ResultsList.css";
+import GenreContainer from "../../../../components/GenreContainer";
 
-const SearchList = ({ funkos, genre, name, number }) => {
+const ResultsList = ({ funkos, genre, name, number }) => {
   const [funkoSet, setFunkoSet] = useState([]);
   let data = {};
   // console.log({ funkos, genre, name, number, funkoSet });
@@ -119,4 +119,4 @@ const SearchList = ({ funkos, genre, name, number }) => {
   );
 };
 
-export default SearchList;
+export default ResultsList;
