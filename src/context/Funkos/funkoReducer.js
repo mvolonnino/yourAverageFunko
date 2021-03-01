@@ -4,7 +4,7 @@ export const funkoInitState = {
 };
 
 const funkoReducer = (state, action) => {
-  console.log("funkoReducer -> ", action);
+  console.log("funkoReducer -> ", { action });
 
   switch (action.type) {
     case "SET_DB_FUNKOPOPS":

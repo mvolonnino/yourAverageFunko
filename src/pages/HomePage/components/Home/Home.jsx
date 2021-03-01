@@ -64,7 +64,7 @@ function Home() {
         console.log("fetching user funko pops...");
         getUserFunkoPops(uid).then((res) => {
           setLoading(false);
-          if (res.length > 0) {
+          if (res) {
             userDispatch({
               type: "SET_USER_FUNKOPOPS",
               userFunkoPops: res,

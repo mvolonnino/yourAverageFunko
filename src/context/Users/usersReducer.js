@@ -3,7 +3,7 @@ export const usersInitState = {
 };
 
 const usersReducer = (state, action) => {
-  console.log("usersReducer -> ", action);
+  console.log("usersReducer -> ", { action });
 
   switch (action.type) {
     case "SET_USERS":

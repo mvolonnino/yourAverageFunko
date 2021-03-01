@@ -20,7 +20,6 @@ import { UserContext, FunkosProvider, UsersProvider } from "./context";
 function App() {
   const { userState, userDispatch } = useContext(UserContext);
   const { user, authToken } = userState;
-  // const [{ user, authToken }, dispatch] = useDataLayerValue();
   const [loading, setLoading] = useState(false);
   const history = useHistory();
 

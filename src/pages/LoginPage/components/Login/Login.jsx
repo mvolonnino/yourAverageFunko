@@ -64,6 +64,8 @@ function Login() {
           const { displayName } = userObj;
           const { uid, email, photoURL, phoneNumber, providerData } = res.user;
 
+          localStorage.setItem("userSignedIn", JSON.stringify(uid));
+
           auth.currentUser
             .updateProfile({
               displayName: userObj.displayName,
@@ -81,6 +83,17 @@ function Login() {
                 if (res.headers["auth-token"]) {
                   setToken(res.headers["auth-token"]);
                   history.push("/home");
+                  userDispatch({
+                    type: "SET_USER",
+                    user: {
+                      uid,
+                      displayName,
+                      email,
+                      photoURL,
+                      phoneNumber,
+                      providerId: providerData[0].providerId,
+                    },
+                  });
                 }
               });
             });

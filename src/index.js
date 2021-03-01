@@ -5,11 +5,12 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
+import { UserProvider } from "./context";
+
 // bootstrap
 import "bootstrap/dist/css/bootstrap.min.css";
 import "mdbreact/dist/css/mdb.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import { UserProvider } from "./context";
 
 ReactDOM.render(
   <UserProvider>

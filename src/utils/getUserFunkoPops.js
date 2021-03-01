@@ -4,7 +4,7 @@ const getUserFunkoPops = (uid) => {
   const data = API.getUserFunkoPops(uid)
     .then((res) => {
       const { data } = res;
-      if (data.length > 0) {
+      if (data) {
         return data;
       } else {
         throw new Error("Error retrieving User funkopops. Please try again");
