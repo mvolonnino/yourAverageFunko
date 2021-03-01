@@ -1,9 +1,9 @@
 import React, { useEffect, useContext } from "react";
 
 import "./Funkos.css";
-import API from "../../../../utils/API";
+import { getAllGenres } from "../../../../utils";
 import { GenreList } from "../../../../components";
-import { FunkosContext } from "../../../../context/Funkos/FunkosContext";
+import { FunkosContext } from "../../../../context";
 
 function Funkos() {
   const { funkoState, funkoDispatch } = useContext(FunkosContext);
@@ -12,20 +12,17 @@ function Funkos() {
   useEffect(() => {
     if (dbGenreList.length === 0) {
       console.log("fetching genre list...");
-      API.getGenreListData().then((res) => {
-        const { data } = res;
-        funkoDispatch({
-          type: "SET_DB_GENRELIST",
-          dbGenreList: data.genreList,
+      try {
+        getAllGenres().then((res) => {
+          funkoDispatch({
+            type: "SET_DB_GENRELIST",
+            dbGenreList: res,
+          });
         });
-      });
+      } catch (error) {
+        console.error(error);
+      }
     }
-    // API.getFunkoPopData()
-    //   .then((res) => {
-    //     const { data } = res;
-    //     setDBFunkoData(data);
-    //   })
-    //   .catch((err) => console.error(err));
   }, []);
 
   return (

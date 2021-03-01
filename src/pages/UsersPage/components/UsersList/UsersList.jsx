@@ -3,7 +3,7 @@ import { MDBDataTableV5 } from "mdbreact";
 
 import "./UsersList.css";
 import Avatar from "@material-ui/core/Avatar";
-import { UsersContext } from "../../../../context/Users/UsersContext";
+import { UsersContext } from "../../../../context";
 
 const UsersList = () => {
   const { usersState } = useContext(UsersContext);

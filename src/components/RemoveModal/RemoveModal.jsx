@@ -8,8 +8,8 @@ import {
   MDBModalFooter,
   MDBIcon,
 } from "mdbreact";
-import API from "../../utils/API";
-import { UserContext } from "../../context/User/UserContext";
+import { API } from "../../utils";
+import { UserContext } from "../../context";
 
 const RemoveModal = ({ data, genre }) => {
   const { userState, userDispatch } = useContext(UserContext);
@@ -38,10 +38,6 @@ const RemoveModal = ({ data, genre }) => {
         if (err) {
           console.error(err);
           setStatus(400);
-          userDispatch({
-            type: "GET_USER_FUNKOS",
-            getUserFunkos: false,
-          });
         }
       });
   };

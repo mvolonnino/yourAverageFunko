@@ -2,10 +2,9 @@ import React, { useState, useEffect, useContext } from "react";
 import { MDBDataTableV5 } from "mdbreact";
 
 import "./GenreList.css";
-import API from "../../utils/API";
 import GenreContainer from "../GenreContainer";
-import getFunkoDataByGenre from "../../utils/getFunkoDataByGenre";
-import { FunkosContext } from "../../context/Funkos/FunkosContext";
+import { getFunkoDataByGenre, getPickedGenre } from "../../utils";
+import { FunkosContext } from "../../context";
 
 const GenreList = () => {
   const { funkoState } = useContext(FunkosContext);
@@ -15,18 +14,21 @@ const GenreList = () => {
 
   const handleSearchGenre = (event) => {
     setFunkoSet([]);
-    const query = event;
+    const genre = event;
     if (dbFunkoPops.length === 0) {
-      console.log(`fetching picked genre => ${query}`);
-      API.getPickedGenre(query)
-        .then((res) => {
-          const { data } = res;
-          setFunkoSet(data);
-          setShowNoFunkoSet(false);
-        })
-        .catch((err) => console.error(err));
+      console.log(`fetching picked genre => ${genre}`);
+      try {
+        getPickedGenre(genre).then((res) => {
+          if (res) {
+            setFunkoSet(res);
+            setShowNoFunkoSet(false);
+          }
+        });
+      } catch (error) {
+        console.error(error);
+      }
     } else {
-      const data = getFunkoDataByGenre(dbFunkoPops, query);
+      const data = getFunkoDataByGenre(dbFunkoPops, genre);
       // timeout to allow for funkoSet to be reset to [] and show animation of picking new genre to client
       setTimeout(() => {
         setFunkoSet(data);

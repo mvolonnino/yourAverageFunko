@@ -3,14 +3,16 @@ import Avatar from "@material-ui/core/Avatar";
 import EditIcon from "@material-ui/icons/Edit";
 import { MDBAnimation } from "mdbreact";
 import funkoBrand from "../../../../img/funkoBrand.png";
-import API from "../../../../utils/API";
-import flatten from "../../../../utils/flatten.js";
+import {
+  flatten,
+  getAllGenres,
+  getFunkoPopData,
+  getUserFunkoPops,
+  getAllUsers,
+} from "../../../../utils";
 import { GenreContainer } from "../../../../components";
-import getAllGenres from "../../../../utils/getAllGenres";
 import { Loading } from "../../../../components";
-import { UserContext } from "../../../../context/User/UserContext";
-import { FunkosContext } from "../../../../context/Funkos/FunkosContext";
-import { UsersContext } from "../../../../context/Users/UsersContext";
+import { UserContext, FunkosContext, UsersContext } from "../../../../context";
 
 import "./Home.css";
 
@@ -34,54 +36,52 @@ function Home() {
 
   useEffect(() => {
     if (dbFunkoPops.length === 0 && loading) {
-      console.log("fetching db funko pops...");
-      API.getFunkoPopData()
-        .then((res) => {
-          const { data } = res;
-          if (data !== undefined) {
-            funkoDispatch({
-              type: "SET_DB_FUNKOPOPS",
-              dbFunkoPops: data,
-            });
-            console.log("setting genre list...");
-            const genreList = getAllGenres(data);
-            funkoDispatch({
-              type: "SET_DB_GENRELIST",
-              dbGenreList: genreList,
-            });
-          }
+      try {
+        console.log("fetching db funko pops...");
+        getFunkoPopData().then((res) => {
+          funkoDispatch({
+            type: "SET_DB_FUNKOPOPS",
+            dbFunkoPops: res,
+          });
+          const genreList = getAllGenres(res);
+          funkoDispatch({
+            type: "SET_DB_GENRELIST",
+            dbGenreList: genreList,
+          });
+
           setLoading(false);
-        })
-        .catch((error) => console.error(error));
+        });
+      } catch (error) {
+        console.error(error);
+      }
     }
   }, [loading]);
 
   useEffect(() => {
+    const { uid } = user;
     if ((userFunkoPops?.length === 0 && loading) || getUserFunkos) {
-      console.log("fetching user funko pops...");
-      API.getUserFunkoPops(user.uid)
-        .then((res) => {
+      try {
+        console.log("fetching user funko pops...");
+        getUserFunkoPops(uid).then((res) => {
           setLoading(false);
-          const { data } = res;
-          if (data) {
+          if (res.length > 0) {
             userDispatch({
               type: "SET_USER_FUNKOPOPS",
-              userFunkoPops: data,
+              userFunkoPops: res,
             });
-            const funkoData = data.map((funkoSet) => funkoSet.funkoData);
+          }
 
-            setNumFunkos(flatten(funkoData).length);
-          }
-          if (getUserFunkos) {
-            userDispatch({
-              type: "GET_USER_FUNKOS",
-              getUserFunkos: false,
-            });
-          }
-        })
-        .catch((err) => console.error(err));
+          userDispatch({
+            type: "GET_USER_FUNKOS",
+            getUserFunkos: false,
+          });
+        });
+      } catch (error) {
+        console.error(error);
+      }
     }
 
+    // getting the # of funkos in user collection
     if (userFunkoPops?.length > 0) {
       const funkoData = userFunkoPops.map((funkoSet) => funkoSet.funkoData);
 
@@ -91,17 +91,19 @@ function Home() {
 
   useEffect(() => {
     if (users.length === 0 && loading) {
-      console.log("fetching all users...");
-      API.getAllUsers()
-        .then((res) => {
-          setLoading(false);
-          const { data } = res;
-          usersDispatch({
-            type: "SET_USERS",
-            users: data,
-          });
-        })
-        .catch((err) => console.error(err));
+      try {
+        console.log("fetching all users...");
+        getAllUsers().then((res) => {
+          if (res.length > 0) {
+            usersDispatch({
+              type: "SET_USERS",
+              users: res,
+            });
+          }
+        });
+      } catch (error) {
+        console.error(error);
+      }
     }
 
     if (

@@ -8,8 +8,8 @@ import {
   MDBModalFooter,
   MDBIcon,
 } from "mdbreact";
-import API from "../../utils/API";
-import { UserContext } from "../../context/User/UserContext";
+import { API } from "../../utils";
+import { UserContext } from "../../context";
 
 const AddModal = ({ data, genre }) => {
   const { userState, userDispatch } = useContext(UserContext);
@@ -27,13 +27,6 @@ const AddModal = ({ data, genre }) => {
     e.preventDefault();
     const { name, number, image } = data;
     const { uid } = user;
-
-    if (!getUserFunkos) {
-      userDispatch({
-        type: "GET_USER_FUNKOS",
-        getUserFunkos: true,
-      });
-    }
 
     const funko = {
       genre: genre,

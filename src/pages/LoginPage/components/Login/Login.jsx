@@ -12,9 +12,8 @@ import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { auth } from "../../../../fire";
 import { AlertError } from "../../../../components";
-import API from "../../../../utils/API";
-import chooseProvider from "../../../../utils/chooseProvider.js";
-import { UserContext } from "../../../../context/User/UserContext";
+import { API, chooseProvider } from "../../../../utils";
+import { UserContext } from "../../../../context";
 
 function Login() {
   const { userState, userDispatch } = useContext(UserContext);
@@ -138,7 +137,7 @@ function Login() {
           providerData,
         } = auth.currentUser;
 
-        // set user signing in to local storage for when authOnChange fires from firebase, we can check to see if the user is new or not
+        // set user signing in to local storage for when authOnChange fires from firebase, we can check to see if the user is has signed in before making him not a new user
         localStorage.setItem("userSignedIn", JSON.stringify(uid));
 
         if (isNewUser) {

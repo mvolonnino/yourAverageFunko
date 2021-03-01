@@ -6,7 +6,7 @@ export const userInitState = {
 };
 
 const userReducer = (state, action) => {
-  console.log("userReducer -> ", action);
+  console.log("userReducer -> ", { state, action });
 
   switch (action.type) {
     case "SET_USER":

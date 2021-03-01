@@ -2,8 +2,8 @@ import React, { useEffect, useContext } from "react";
 
 import "./Users.css";
 import { UsersList } from "../index";
-import API from "../../../../utils/API.js";
-import { UsersContext } from "../../../../context/Users/UsersContext";
+import { getAllUsers } from "../../../../utils";
+import { UsersContext } from "../../../../context";
 
 function Users() {
   const { usersState, usersDispatch } = useContext(UsersContext);
@@ -11,16 +11,17 @@ function Users() {
 
   useEffect(() => {
     if (users.length === 0) {
-      console.log("fetching all users...");
-      API.getAllUsers()
-        .then((res) => {
-          const { data } = res;
+      try {
+        console.log("fetching all users...");
+        getAllUsers().then((res) => {
           usersDispatch({
             type: "SET_USERS",
-            users: data,
+            users: res,
           });
-        })
-        .catch((err) => console.error(err));
+        });
+      } catch (error) {
+        console.error(error);
+      }
     }
   }, []);
 

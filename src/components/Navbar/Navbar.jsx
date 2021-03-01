@@ -19,10 +19,8 @@ import { useHistory } from "react-router-dom";
 
 import "./Navbar.css";
 import { auth } from "../../fire";
-import API from "../../utils/API";
-import searchData from "../../utils/searchData";
-import { UserContext } from "../../context/User/UserContext";
-import { FunkosContext } from "../../context/Funkos/FunkosContext";
+import { searchData, getFunkoPopData } from "../../utils";
+import { UserContext, FunkosContext } from "../../context";
 
 const Navbar = () => {
   const { userState, userDispatch } = useContext(UserContext);
@@ -43,15 +41,15 @@ const Navbar = () => {
     setLoading(true);
     if (dbFunkoPops.length === 0) {
       console.log("fetching db funko pops...");
-      API.getFunkoPopData()
+      getFunkoPopData()
         .then((res) => {
           setLoading(false);
-          const { data } = res;
           funkoDispatch({
             type: "SET_DB_FUNKOPOPS",
-            dbFunkoPops: data,
+            dbFunkoPops: res,
           });
-          const results = searchData(data, search);
+
+          const results = searchData(res, search);
           history.push({
             pathname: "/results",
             search: search,

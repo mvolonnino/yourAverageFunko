@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { MDBDataTableV5 } from "mdbreact";
 
 import "./ResultsList.css";
-import GenreContainer from "../../../../components/GenreContainer";
+import { GenreContainer } from "../../../../components";
 
 const ResultsList = ({ funkos, genre, name, number }) => {
   const [funkoSet, setFunkoSet] = useState([]);
