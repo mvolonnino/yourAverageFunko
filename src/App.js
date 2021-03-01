@@ -12,10 +12,8 @@ import {
 import { auth } from "./fire";
 import "./App.css";
 import { Navbar, Loading } from "./components";
-import API from "./utils/API";
-import { UserContext } from "./context/User/UserContext";
-import { FunkosProvider } from "./context/Funkos/FunkosContext";
-import { UsersProvider } from "./context/Users/UsersContext";
+import { API } from "./utils";
+import { UserContext, FunkosProvider, UsersProvider } from "./context";
 
 // context
 
