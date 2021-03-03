@@ -12,7 +12,12 @@ import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { auth } from "../../../../fire";
 import { AlertError } from "../../../../components";
-import { API, chooseProvider } from "../../../../utils";
+import {
+  API,
+  chooseProvider,
+  createNewUser,
+  signInWithProvider,
+} from "../../../../utils";
 import { UserContext } from "../../../../context";
 
 function Login() {
@@ -25,10 +30,12 @@ function Login() {
 
   const addSignUpMode = () => {
     elementsObj.container.classList.add("sign-up-mode");
+    setErr("");
   };
 
   const remSignUpMode = () => {
     elementsObj.container.classList.remove("sign-up-mode");
+    setErr("");
   };
 
   const handleChange = (e, type) => {
@@ -50,61 +57,35 @@ function Login() {
     }
   };
 
-  const handleSignUp = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
+    const { displayName, email, password } = userObj;
     if (err) {
-      console.log("hit");
       setErr("");
     }
-    if (userObj.displayName) {
-      auth
-        .createUserWithEmailAndPassword(userObj.email, userObj.password)
-        .then((res) => {
-          // signed up to firebase authentication
-          const { displayName } = userObj;
-          const { uid, email, photoURL, phoneNumber, providerData } = res.user;
-
-          localStorage.setItem("userSignedIn", JSON.stringify(uid));
-
-          auth.currentUser
-            .updateProfile({
-              displayName: userObj.displayName,
-            })
-            .then(() => {
-              // signup user to firestore
-              API.signUpUser({
-                uid,
-                displayName,
-                email,
-                photoURL,
-                phoneNumber,
-                providerData,
-              }).then((res) => {
-                if (res.headers["auth-token"]) {
-                  setToken(res.headers["auth-token"]);
-                  history.push("/home");
-                  userDispatch({
-                    type: "SET_USER",
-                    user: {
-                      uid,
-                      displayName,
-                      email,
-                      photoURL,
-                      phoneNumber,
-                      providerId: providerData[0].providerId,
-                    },
-                  });
-                }
-              });
+    if (displayName && email && password) {
+      const backendServer = await fetch("/status");
+      const { status } = backendServer;
+      if (status === 200) {
+        createNewUser(userObj)
+          .then((res) => {
+            history.push("/home");
+            const { data } = res.config;
+            const authToken = res.data;
+            const user = JSON.parse(data);
+            setToken(authToken);
+            userDispatch({
+              type: "SET_USER",
+              user,
             });
-        })
-        .catch((error) => {
-          console.log(error);
-          const { code, message } = error;
-          console.error({ code, message });
-          setErr(message);
-        });
-    } else setErr("Display Name needs to be filled out");
+          })
+          .catch((error) => {
+            console.error({ error });
+            const { message } = error;
+            setErr(message);
+          });
+      } else setErr(backendServer.statusText);
+    } else setErr("All fields need to be filled out!");
   };
 
   const handleSignIn = (e) => {
@@ -135,51 +116,20 @@ function Login() {
   const handleAuthLogin = (e) => {
     e.preventDefault();
     const { value } = e.currentTarget;
-    const type = chooseProvider(value);
+    const provider = chooseProvider(value);
 
-    auth
-      .signInWithPopup(type)
+    signInWithProvider(provider)
       .then((res) => {
-        const { isNewUser } = res.additionalUserInfo;
-        const {
-          uid,
-          displayName,
-          email,
-          photoURL,
-          phoneNumber,
-          providerData,
-        } = auth.currentUser;
-
-        // set user signing in to local storage for when authOnChange fires from firebase, we can check to see if the user is has signed in before making him not a new user
-        localStorage.setItem("userSignedIn", JSON.stringify(uid));
-
-        if (isNewUser) {
-          API.signUpUser({
-            uid,
-            displayName,
-            email,
-            photoURL,
-            phoneNumber,
-            providerData,
-          }).then((res) => {
-            if (res.headers["auth-token"]) {
-              history.push("/home");
-              setToken(res.headers["auth-token"]);
-              userDispatch({
-                type: "SET_USER",
-                user: {
-                  uid,
-                  displayName,
-                  email,
-                  photoURL,
-                  phoneNumber,
-                  providerId: providerData[0].providerId,
-                },
-              });
-            }
-          });
-        } else {
+        if (res.newUser) {
           history.push("/home");
+          const { data } = res.res.config;
+          const user = JSON.parse(data);
+          const authToken = res.res.data;
+          setToken(authToken);
+          userDispatch({
+            type: "SET_USER",
+            user,
+          });
         }
       })
       .catch((error) => {

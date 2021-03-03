@@ -21,6 +21,9 @@ app.use(
 );
 app.use(bodyParser.json());
 
+// health check
+app.get("/status", (req, res, next) => res.sendStatus(200));
+
 // IMPORT ROUTES
 const funkoPopRoutes = require("./routes/funkoPop-routes");
 const userRoutes = require("./routes/userAuth-routes");

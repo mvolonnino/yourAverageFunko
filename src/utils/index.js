@@ -8,3 +8,5 @@ export { default as searchData } from "./searchData";
 export { default as getUserFunkoPops } from "./getUserFunkoPops";
 export { default as getAllUsers } from "./getAllUsers";
 export { default as getPickedGenre } from "./getPickedGenre";
+export { default as createNewUser } from "./createNewUser";
+export { default as signInWithProvider } from "./signInWithProvider";
