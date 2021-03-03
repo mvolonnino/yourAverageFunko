@@ -78,27 +78,25 @@ function App() {
   }, [auth]);
 
   return (
-    <Router>
-      <div className="app">
-        {loading ? (
-          <Loading />
-        ) : user ? (
-          <FunkosProvider>
-            <Navbar />
-            <UsersProvider>
-              <Switch>
-                <Route exact path="/home" component={HomePage} />
-                <Route exact path="/funkos" component={FunkosPage} />
-                <Route exact path="/results" component={ResultsPage} />
-                <Route exact path="/users" component={UsersPage} />
-              </Switch>
-            </UsersProvider>
-          </FunkosProvider>
-        ) : (
-          <Route exact path="/" component={LoginPage} />
-        )}
-      </div>
-    </Router>
+    <div className="app">
+      {loading ? (
+        <Loading />
+      ) : user ? (
+        <FunkosProvider>
+          <Navbar />
+          <UsersProvider>
+            <Switch>
+              <Route exact path="/home" component={HomePage} />
+              <Route exact path="/funkos" component={FunkosPage} />
+              <Route exact path="/results" component={ResultsPage} />
+              <Route exact path="/users" component={UsersPage} />
+            </Switch>
+          </UsersProvider>
+        </FunkosProvider>
+      ) : (
+        <Route exact path="/" component={LoginPage} />
+      )}
+    </div>
   );
 }
 
