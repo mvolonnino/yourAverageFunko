@@ -11,7 +11,7 @@ import {
 import { API } from "../../utils";
 import { UserContext } from "../../context";
 
-const AddModal = ({ data, genre }) => {
+const WantModal = ({ data, genre }) => {
   const { userState, userDispatch } = useContext(UserContext);
   const { user, authToken, getUserFunkos } = userState;
   const [status, setStatus] = useState("");
@@ -33,7 +33,7 @@ const AddModal = ({ data, genre }) => {
       name: name,
       number: number,
       image: image,
-      user: true,
+      want: true,
       uuid: uuid(),
     };
 
@@ -59,14 +59,14 @@ const AddModal = ({ data, genre }) => {
 
   return (
     <MDBContainer>
-      <MDBBtn color="primary" onClick={toggle(14)}>
-        Have!
+      <MDBBtn color="secondary" onClick={toggle(14)}>
+        Want!
       </MDBBtn>
       <MDBModal isOpen={state.modal14} toggle={toggle(14)} centered>
         <MDBModalHeader toggle={toggle(14)}>{`${data?.name}`}</MDBModalHeader>
         {status === 200 ? (
           <MDBModalBody className="text-center alert alert-success m-0">
-            Funko Pop has been added to your collection!
+            Funko Pop has been added to your want list!
           </MDBModalBody>
         ) : status === 400 ? (
           <MDBModalBody className="text-center alert alert-danger m-0">
@@ -79,7 +79,7 @@ const AddModal = ({ data, genre }) => {
         )}
         {!status ? (
           <MDBModalBody>
-            {`Are you sure you would like to add this funko pop to your collection?`}
+            {`Are you sure you would like to add this funko pop to your want list?`}
           </MDBModalBody>
         ) : status === 200 ? (
           <MDBModalBody>{`🥳 Woohoo!! 🥳 `}</MDBModalBody>
@@ -102,4 +102,4 @@ const AddModal = ({ data, genre }) => {
   );
 };
 
-export default AddModal;
+export default WantModal;

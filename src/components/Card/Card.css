@@ -25,6 +25,12 @@ p {
   left: 0;
 }
 
+.handleBtns {
+  display: flex;
+  width: 100%;
+  padding: 0;
+}
+
 .addButton {
   width: 90px;
   height: 50px;

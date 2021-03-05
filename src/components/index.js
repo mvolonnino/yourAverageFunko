@@ -3,6 +3,7 @@ export { default as GenreContainer } from "./GenreContainer";
 export { default as Navbar } from "./Navbar";
 export { default as GenreList } from "./GenreList";
 export { default as AddModal } from "./AddModal";
+export { default as WantModal } from "./WantModal";
 export { default as RemoveModal } from "./RemoveModal";
 export { default as AlertError } from "./AlertError";
 export { default as Loading } from "./Loading";

@@ -2,8 +2,7 @@ import React from "react";
 
 import "./Card.css";
 import noData from "../../assets/noData.jpg";
-import AddModal from "../AddModal/AddModal";
-import RemoveModal from "../RemoveModal";
+import { AddModal, WantModal, RemoveModal } from "../index";
 
 const Card = ({ data, genre }) => {
   return (
@@ -24,7 +23,10 @@ const Card = ({ data, genre }) => {
           {data?.user ? (
             <RemoveModal data={data} genre={genre} />
           ) : (
-            <AddModal data={data} genre={genre} />
+            <div className="handleBtns">
+              <AddModal data={data} genre={genre} />
+              <WantModal data={data} genre={genre} />
+            </div>
           )}
         </div>
       </div>
