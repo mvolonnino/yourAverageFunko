@@ -20,13 +20,26 @@ const Card = ({ data, genre }) => {
         <p className="name">{data?.name}</p>
         <div className="footer">
           <hr />
-          {data?.user ? (
-            <RemoveModal data={data} genre={genre} />
-          ) : (
+          {!data?.user && !data.want && (
             <div className="handleBtns">
               <AddModal data={data} genre={genre} />
               <WantModal data={data} genre={genre} />
             </div>
+          )}
+          {data?.user && <RemoveModal data={data} genre={genre} />}
+          {data?.want && (
+            <>
+              <div className="handleBtns">
+                <div className="alreadyHave">
+                  <small>Already have this pop?</small>
+                  <AddModal data={data} genre={genre} move={true} />
+                </div>
+                <div className="noWant">
+                  <small>Don't want anymore?</small>
+                  <RemoveModal data={data} genre={genre} wantList={true} />
+                </div>
+              </div>
+            </>
           )}
         </div>
       </div>

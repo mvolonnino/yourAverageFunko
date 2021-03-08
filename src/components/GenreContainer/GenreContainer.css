@@ -25,6 +25,10 @@ ul {
   justify-content: center;
 }
 
+.genreTitle {
+  margin-right: 5px;
+}
+
 .infoOnFunkoSet {
   display: flex;
   justify-content: space-between;

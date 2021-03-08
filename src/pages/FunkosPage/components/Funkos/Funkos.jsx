@@ -27,6 +27,7 @@ function Funkos() {
 
   return (
     <div className="container-fluid genreList">
+      <h1 className="text-center">Collections and Series of Funko Pops!</h1>
       <GenreList />
     </div>
   );

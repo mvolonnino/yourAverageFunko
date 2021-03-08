@@ -11,9 +11,9 @@ import {
 import { API } from "../../utils";
 import { UserContext } from "../../context";
 
-const RemoveModal = ({ data, genre }) => {
+const RemoveModal = ({ data, genre, wantList }) => {
   const { userState, userDispatch } = useContext(UserContext);
-  const { user, authToken, getUserFunkos } = userState;
+  const { user, authToken, getUserFunkos, getUserWantFunkos } = userState;
   const [status, setStatus] = useState("");
   const [noGenre, setNoGenre] = useState(false);
   const [state, setState] = useState({
@@ -25,30 +25,52 @@ const RemoveModal = ({ data, genre }) => {
     const { uid } = user;
     const { uuid } = data;
 
-    API.deleteFunkoPopFromUser(uid, uuid, genre, authToken)
-      .then((res) => {
-        if (res.status === 200) {
-          setStatus(res.status);
-        }
-        if (res.data.length === 0) {
-          setNoGenre(true);
-        }
-      })
-      .catch((err) => {
-        if (err) {
-          console.error(err);
-          setStatus(400);
-        }
-      });
+    if (wantList) {
+      const { uuid } = data;
+      API.deleteFunkoPopFromWant(uid, uuid, genre, authToken)
+        .then((res) => {
+          if (res.status === 200) {
+            setStatus(res.status);
+          }
+          if (res.data.length === 0) {
+            setNoGenre(true);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      API.deleteFunkoPopFromUser(uid, uuid, genre, authToken)
+        .then((res) => {
+          if (res.status === 200) {
+            setStatus(res.status);
+          }
+          if (res.data.length === 0) {
+            setNoGenre(true);
+          }
+        })
+        .catch((err) => {
+          if (err) {
+            console.error(err);
+            setStatus(400);
+          }
+        });
+    }
   };
 
   const toggle = (nr) => () => {
     let modalNumber = "modal" + nr;
     if (status === 200) {
-      if (!getUserFunkos) {
+      if (!wantList && !getUserFunkos) {
         userDispatch({
           type: "GET_USER_FUNKOS",
           getUserFunkos: true,
+        });
+      }
+      if (wantList && !getUserWantFunkos) {
+        userDispatch({
+          type: "GET_USER_WANTFUNKOS",
+          getUserWantFunkos: true,
         });
       }
     }
@@ -61,7 +83,7 @@ const RemoveModal = ({ data, genre }) => {
 
   return (
     <MDBContainer>
-      <MDBBtn color="primary" onClick={toggle(14)}>
+      <MDBBtn color="danger" onClick={toggle(14)}>
         Remove!
       </MDBBtn>
       <MDBModal isOpen={state.modal14} toggle={toggle(14)} centered>
@@ -81,7 +103,13 @@ const RemoveModal = ({ data, genre }) => {
             <MDBIcon icon="trash" size="4x" className="animated rotateIn" />
           </MDBModalBody>
         )}
-        {!status ? (
+
+        {wantList && !status ? (
+          <MDBModalBody>
+            Are you sure you would like to remove this funko pop from your want
+            list?
+          </MDBModalBody>
+        ) : !wantList && !status ? (
           <MDBModalBody>
             {`Are you sure you would like to remove this funko pop from your collection?`}
           </MDBModalBody>

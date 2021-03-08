@@ -136,12 +136,42 @@ const API = {
     );
   },
 
+  deleteFunkoPopFromWant: function (uid, uuid, genre, authToken) {
+    return axios(
+      {
+        method: "DELETE",
+        withCredentials: true,
+        data: {
+          uuid,
+          uid,
+          genre,
+        },
+        url: "/api/user/deleteFromWant",
+        headers: {
+          "auth-token": authToken,
+        },
+      },
+      { signal }
+    );
+  },
+
   getUserFunkoPops: function (uid) {
     return axios(
       {
         method: "GET",
         withCredentials: true,
         url: `/api/user/getUserFunkoPops/${uid}`,
+      },
+      { signal }
+    );
+  },
+
+  getUserWantList: function (uid) {
+    return axios(
+      {
+        method: "GET",
+        withCredentials: true,
+        url: `/api/user/getUserWantList/${uid}`,
       },
       { signal }
     );

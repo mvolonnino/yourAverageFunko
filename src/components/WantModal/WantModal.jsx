@@ -13,7 +13,7 @@ import { UserContext } from "../../context";
 
 const WantModal = ({ data, genre }) => {
   const { userState, userDispatch } = useContext(UserContext);
-  const { user, authToken, getUserFunkos } = userState;
+  const { user, authToken, getUserWantFunkos } = userState;
   const [status, setStatus] = useState("");
   const [state, setState] = useState({
     modal14: false,
@@ -40,10 +40,10 @@ const WantModal = ({ data, genre }) => {
     API.addFunkoPopTooUser(uid, funko, authToken)
       .then((res) => {
         setStatus(res.status);
-        if (!getUserFunkos) {
+        if (!getUserWantFunkos) {
           userDispatch({
-            type: "GET_USER_FUNKOS",
-            getUserFunkos: true,
+            type: "GET_USER_WANTFUNKOS",
+            getUserWantFunkos: true,
           });
         }
       })

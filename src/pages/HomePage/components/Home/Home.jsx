@@ -8,7 +8,9 @@ import {
   getAllGenres,
   getFunkoPopData,
   getUserFunkoPops,
+  getUserWantList,
   getAllUsers,
+  API,
 } from "../../../../utils";
 import { GenreContainer } from "../../../../components";
 import { Loading } from "../../../../components";
@@ -20,11 +22,20 @@ function Home() {
   const { userState, userDispatch } = useContext(UserContext);
   const { funkoState, funkoDispatch } = useContext(FunkosContext);
   const { usersState, usersDispatch } = useContext(UsersContext);
-  const { user, userFunkoPops, getUserFunkos } = userState;
+  const {
+    user,
+    userFunkoPops,
+    getUserFunkos,
+    userWantList,
+    getUserWantFunkos,
+  } = userState;
   const { dbFunkoPops } = funkoState;
   const { users } = usersState;
   const [numFunkos, setNumFunkos] = useState();
+  const [numWantFunkos, setNumWantFunkos] = useState();
   const [loading, setLoading] = useState(true);
+  const [showWantList, setShowWantList] = useState(false);
+  const [showCollection, setShowCollection] = useState(true);
 
   // console.log({
   //   user,
@@ -33,6 +44,36 @@ function Home() {
   //   dbFunkoPops,
   //   users,
   // });
+
+  const handleShowCollection = () => {
+    setShowCollection(true);
+    setShowWantList(false);
+  };
+
+  const handleWantList = () => {
+    // make api call to get user want list
+    if (getUserWantFunkos) {
+      try {
+        getUserWantList(user.uid).then((res) => {
+          userDispatch({
+            type: "GET_USER_WANTFUNKOS",
+            getUserWantFunkos: false,
+          });
+
+          if (res) {
+            userDispatch({
+              type: "SET_USER_WANTLIST",
+              userWantList: res,
+            });
+          }
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    setShowWantList(true);
+    setShowCollection(false);
+  };
 
   useEffect(() => {
     if (dbFunkoPops.length === 0 && loading) {
@@ -81,13 +122,15 @@ function Home() {
       }
     }
 
-    // getting the # of funkos in user collection
-    if (userFunkoPops?.length > 0) {
+    // getting the # of funkos in user collection/want list
+    if (showCollection && userFunkoPops?.length > 0) {
       const funkoData = userFunkoPops.map((funkoSet) => funkoSet.funkoData);
 
       setNumFunkos(flatten(funkoData).length);
+    } else {
+      setNumFunkos(0);
     }
-  }, [getUserFunkos]);
+  }, [showCollection, getUserFunkos]);
 
   useEffect(() => {
     if (users.length === 0 && loading) {
@@ -116,6 +159,19 @@ function Home() {
     }
   }, []);
 
+  useEffect(() => {
+    if (showWantList && getUserWantFunkos) {
+      handleWantList();
+    }
+    if (showWantList && userWantList?.length > 0) {
+      const funkoData = userWantList.map((funkoSet) => funkoSet.funkoData);
+
+      setNumWantFunkos(flatten(funkoData).length);
+    } else {
+      setNumWantFunkos(0);
+    }
+  }, [showWantList, getUserWantFunkos]);
+
   return (
     <>
       {loading ? (
@@ -124,7 +180,7 @@ function Home() {
         <>
           <div className="application container-fluid">
             <MDBAnimation type="fadeInDownBig" delay=".2s">
-              <div className="jumbotron bg-dark">
+              <div className="jumbotron bg-dark text-white">
                 <div className="row imageRow">
                   <div className="col-md-8 text-center">
                     <img src={funkoBrand} alt="" className="funkoBrand" />
@@ -145,23 +201,53 @@ function Home() {
                       {/* <EditIcon fontSize="small" /> */}
                     </div>
                   </div>
-                  <div className="col-md-6 collectionInfo">
-                    <div className="funkoGenre col-md-6 text-white text-center">
-                      <p>Series/Genres in your collection</p>
-                      {userFunkoPops?.length}
+                  {showWantList && (
+                    <div className="col-md-6 collectionInfo">
+                      <div className="funkoGenre col-md-6 text-center">
+                        <p>Series/Genres in your want list</p>
+                        {userWantList?.length}
+                      </div>
+                      <div className="funkoData col-md-6 text-center">
+                        <p>Funko Pops in your want list</p>
+                        {numWantFunkos}
+                      </div>
                     </div>
-                    <div className="funkoData col-md-6 text-white text-center">
-                      <p>Funko Pops in your collection</p>
-                      {numFunkos || 0}
+                  )}
+                  {showCollection && (
+                    <div className="col-md-6 collectionInfo">
+                      <div className="funkoGenre col-md-6 text-center">
+                        <p>Series/Genres in your collection</p>
+                        {userFunkoPops?.length}
+                      </div>
+                      <div className="funkoData col-md-6 text-center">
+                        <p>Funko Pops in your collection</p>
+                        {numFunkos}
+                      </div>
                     </div>
+                  )}
+                </div>
+                <div className="userPopLists">
+                  <div
+                    className={`btn ${showCollection ? "active" : "notActive"}`}
+                    onClick={handleShowCollection}
+                  >
+                    Your Collection
+                  </div>
+                  <div
+                    className={`btn ${showWantList ? "active" : "notActive"}`}
+                    onClick={handleWantList}
+                  >
+                    Want List
                   </div>
                 </div>
               </div>
             </MDBAnimation>
-            {userFunkoPops?.map((funkoSet, i) => (
-              <GenreContainer funkoSet={funkoSet} key={i} />
-            ))}
-            {userFunkoPops?.length === 0 && (
+            {showCollection &&
+              userFunkoPops?.map((funkoSet, i) => (
+                <GenreContainer funkoSet={funkoSet} key={i} />
+              ))}
+
+            {userFunkoPops?.length === 0 && showCollection && (
               <>
                 <MDBAnimation type="fadeInDown" delay=".2s">
                   <div className="noUserFunkos text-center">
@@ -171,6 +257,21 @@ function Home() {
                   </div>
                 </MDBAnimation>
               </>
+            )}
+
+            {showWantList &&
+              userWantList?.map((funkoSet, i) => (
+                <GenreContainer funkoSet={funkoSet} key={i} />
+              ))}
+
+            {userWantList?.length === 0 && showWantList && (
+              <MDBAnimation type="fadeInDown" delay=".2s">
+                <div className="noWantList text-center">
+                  Hmm, doesn't seem like you have any funko pops in your want
+                  list! Search some funkos that you don't have and add them to
+                  see them here.
+                </div>
+              </MDBAnimation>
             )}
           </div>
         </>

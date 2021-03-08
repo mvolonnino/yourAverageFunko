@@ -2,7 +2,9 @@ export const userInitState = {
   user: null,
   authToken: null,
   userFunkoPops: [],
+  userWantList: [],
   getUserFunkos: true,
+  getUserWantFunkos: true,
 };
 
 const userReducer = (state, action) => {
@@ -28,6 +30,16 @@ const userReducer = (state, action) => {
       return {
         ...state,
         getUserFunkos: action.getUserFunkos,
+      };
+    case "GET_USER_WANTFUNKOS":
+      return {
+        ...state,
+        getUserWantFunkos: action.getUserWantFunkos,
+      };
+    case "SET_USER_WANTLIST":
+      return {
+        ...state,
+        userWantList: action.userWantList,
       };
     case "LOGOUT":
       return userInitState;

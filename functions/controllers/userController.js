@@ -65,7 +65,6 @@ const addFunkoPopTooUser = async (req, res) => {
   try {
     const { uid, funko } = req.body;
     const funkoPop = new FunkoPop(funko);
-    console.log(funkoPop);
     if (funkoPop.error) {
       res.status(422).send({ funkoPop });
     } else {
@@ -89,12 +88,14 @@ const addFunkoPopTooUser = async (req, res) => {
           await userFunkoPopCollection.update({
             funkoData: newFunkoData,
           });
+          console.log("funko pop added to collection: ", funkoPop);
           res.status(200).send({
             genre: funkoPop.genre,
             funkoData: newFunkoData,
           });
         } else {
           await userFunkoPopCollection.set(funkoPop);
+          console.log("funko pop added to collection: ", funkoPop);
           res.status(200).send(funkoPop);
         }
         // want list collection
@@ -102,7 +103,7 @@ const addFunkoPopTooUser = async (req, res) => {
         const wantFunkoPopCollection = await firestore
           .collection("users")
           .doc(uid)
-          .collection("wantFunkoPops")
+          .collection("userWantList")
           .doc(funkoPop.genre);
         const wantFunkoData = await wantFunkoPopCollection.get();
         if (wantFunkoData.exists) {
@@ -115,9 +116,11 @@ const addFunkoPopTooUser = async (req, res) => {
           await wantFunkoPopCollection.update({
             funkoData: newFunkoData,
           });
+          console.log("funko pop added to want list: ", funkoPop);
           res.status(200).send(funkoPop);
         } else {
           await wantFunkoPopCollection.set(funkoPop);
+          console.log("funko pop added to want list: ", funkoPop);
           res.status(200).send(funkoPop);
         }
       } else {
@@ -132,25 +135,63 @@ const addFunkoPopTooUser = async (req, res) => {
 const removeFunkoPopFromUser = async (req, res) => {
   try {
     const { uuid, uid, genre } = req.body;
+    console.log("remove funko pop from collection: ", uuid);
     const userFunkoPopCollection = await firestore
       .collection("users")
       .doc(uid)
       .collection("userFunkoPops")
       .doc(genre);
     const userFunkoData = await userFunkoPopCollection.get();
-    const dbFunkoDatadata = userFunkoData.data().funkoData;
-    const newFunkoPopArr = dbFunkoDatadata.filter(
-      (funkoPop) => funkoPop.uuid !== uuid
-    );
-
-    if (newFunkoPopArr.length > 0) {
-      await userFunkoPopCollection.update({
-        funkoData: newFunkoPopArr,
-      });
-      res.status(200).send(newFunkoPopArr);
+    if (userFunkoData.exists) {
+      const dbFunkoDatadata = userFunkoData.data().funkoData;
+      const newFunkoPopArr = dbFunkoDatadata.filter(
+        (funkoPop) => funkoPop.uuid !== uuid
+      );
+      if (newFunkoPopArr.length > 0) {
+        await userFunkoPopCollection.update({
+          funkoData: newFunkoPopArr,
+        });
+        res.status(200).send(newFunkoPopArr);
+      } else {
+        await userFunkoPopCollection.delete();
+        res.status(200).send(newFunkoPopArr);
+      }
     } else {
-      await userFunkoPopCollection.delete();
-      res.status(200).send(newFunkoPopArr);
+      res.status(200).send([]);
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(400).send(error.message);
+  }
+};
+
+const removeFunkoPopFromWant = async (req, res) => {
+  try {
+    const { uuid, uid, genre } = req.body;
+    console.log("remove funko pop from want list: ", uuid);
+    const userWantCollection = await firestore
+      .collection("users")
+      .doc(uid)
+      .collection("userWantList")
+      .doc(genre);
+    const userFunkoData = await userWantCollection.get();
+    if (userFunkoData.exists) {
+      const dbFunkoData = userFunkoData.data().funkoData;
+      const newFunkoPopArr = dbFunkoData.filter(
+        (funkoPop) => funkoPop.uuid !== uuid
+      );
+
+      if (newFunkoPopArr.length > 0) {
+        await userWantCollection.update({
+          funkoData: newFunkoPopArr,
+        });
+        res.status(200).send(newFunkoPopArr);
+      } else {
+        await userWantCollection.delete();
+        res.status(200).send(newFunkoPopArr);
+      }
+    } else {
+      res.status(200).send([]);
     }
   } catch (error) {
     console.log(error);
@@ -179,6 +220,27 @@ const getUserFunkoPops = async (req, res) => {
   }
 };
 
+const getUserWantList = async (req, res) => {
+  try {
+    const { uid } = req.params;
+    const funkoArray = [];
+    const userWantList = await firestore
+      .collection("users")
+      .doc(uid)
+      .collection("userWantList")
+      .get();
+    userWantList.forEach((doc) => {
+      if (doc.exists) {
+        const funkoPop = doc.data();
+        funkoArray.push(funkoPop);
+      }
+    });
+    res.status(200).send(funkoArray);
+  } catch (error) {
+    console.log({ error });
+    res.status(400).send(error.message);
+  }
+};
 const getAllUsers = async (req, res) => {
   try {
     const userRef = await firestore.collection("users");
@@ -208,6 +270,8 @@ module.exports = {
   signInUser,
   addFunkoPopTooUser,
   getUserFunkoPops,
+  getUserWantList,
   removeFunkoPopFromUser,
+  removeFunkoPopFromWant,
   getAllUsers,
 };

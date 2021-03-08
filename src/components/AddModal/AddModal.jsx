@@ -11,7 +11,7 @@ import {
 import { API } from "../../utils";
 import { UserContext } from "../../context";
 
-const AddModal = ({ data, genre }) => {
+const AddModal = ({ data, genre, move }) => {
   const { userState, userDispatch } = useContext(UserContext);
   const { user, authToken, getUserFunkos } = userState;
   const [status, setStatus] = useState("");
@@ -45,6 +45,19 @@ const AddModal = ({ data, genre }) => {
             type: "GET_USER_FUNKOS",
             getUserFunkos: true,
           });
+        }
+        if (move) {
+          const { uuid } = data;
+          API.deleteFunkoPopFromWant(uid, uuid, genre, authToken)
+            .then((res) => {
+              userDispatch({
+                type: "GET_USER_WANTFUNKOS",
+                getUserWantFunkos: true,
+              });
+            })
+            .catch((error) => {
+              console.error(error);
+            });
         }
       })
       .catch((err) => console.error(err));
