@@ -71,6 +71,7 @@ function Home() {
         console.error(error);
       }
     }
+
     setShowWantList(true);
     setShowCollection(false);
   };
@@ -170,7 +171,7 @@ function Home() {
     } else {
       setNumWantFunkos(0);
     }
-  }, [showWantList, getUserWantFunkos]);
+  }, [showWantList, getUserWantFunkos, userWantList]);
 
   return (
     <>
