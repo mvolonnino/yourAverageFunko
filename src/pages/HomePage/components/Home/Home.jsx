@@ -51,27 +51,6 @@ function Home() {
   };
 
   const handleWantList = () => {
-    // make api call to get user want list
-    if (getUserWantFunkos) {
-      try {
-        getUserWantList(user.uid).then((res) => {
-          userDispatch({
-            type: "GET_USER_WANTFUNKOS",
-            getUserWantFunkos: false,
-          });
-
-          if (res) {
-            userDispatch({
-              type: "SET_USER_WANTLIST",
-              userWantList: res,
-            });
-          }
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
     setShowWantList(true);
     setShowCollection(false);
   };
@@ -162,7 +141,23 @@ function Home() {
 
   useEffect(() => {
     if (showWantList && getUserWantFunkos) {
-      handleWantList();
+      try {
+        getUserWantList(user.uid).then((res) => {
+          userDispatch({
+            type: "GET_USER_WANTFUNKOS",
+            getUserWantFunkos: false,
+          });
+
+          if (res) {
+            userDispatch({
+              type: "SET_USER_WANTLIST",
+              userWantList: res,
+            });
+          }
+        });
+      } catch (error) {
+        console.error(error);
+      }
     }
     if (showWantList && userWantList?.length > 0) {
       const funkoData = userWantList.map((funkoSet) => funkoSet.funkoData);
