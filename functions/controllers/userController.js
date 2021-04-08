@@ -241,6 +241,29 @@ const getUserWantList = async (req, res) => {
     res.status(400).send(error.message);
   }
 };
+
+const updateUserPhoto = async (req, res) => {
+  try {
+    const { uid, fileUpload } = req.body;
+    const user = await firestore.collection("users").doc(uid);
+
+    const userData = await user.get();
+
+    console.log(userData.data());
+    let data = userData.data().user;
+    data.photoURL = fileUpload;
+    console.log({ data });
+
+    user.update({
+      user: data,
+    });
+    res.status(200).send(data);
+  } catch (error) {
+    console.log({ error });
+    res.status(400).send(error.message);
+  }
+};
+
 const getAllUsers = async (req, res) => {
   try {
     const userRef = await firestore.collection("users");
@@ -251,16 +274,95 @@ const getAllUsers = async (req, res) => {
       const photoURL = doc.data().user.photoURL;
       const time = doc.data().signedUp.toDate();
       const signedUp = time.toLocaleDateString();
+      const uid = doc.data().user.uid;
       const user = {
         displayName: displayName,
         photoURL: photoURL,
         signedUp: signedUp,
+        uid: uid,
       };
 
       userArr.push(user);
     });
     res.status(200).send(userArr);
   } catch (error) {
+    res.status(400).send(error.message);
+  }
+};
+
+// NOT IN USE
+const getSelectedUser = async (req, res) => {
+  try {
+    const { uid } = req.params;
+    const { collection, wantList } = req.body;
+    console.log({ collection, wantList });
+    const userRef = await firestore.collection("users").doc(uid);
+
+    const userFunkoPops = await userRef.collection("userFunkoPops").get();
+
+    const userWantList = await userRef.collection("userWantList").get();
+
+    const selectedUserFunkoPopArr = [];
+    const selectedUserWantListArr = [];
+
+    // funkopops in user collection
+    userFunkoPops.forEach((doc) => {
+      const funkoSet = doc.data();
+      selectedUserFunkoPopArr.push(funkoSet);
+    });
+    console.log(selectedUserFunkoPopArr);
+
+    // funkopops in user want list
+    userWantList.forEach((doc) => {
+      const funkoSet = doc.data();
+      selectedUserWantListArr.push(funkoSet);
+    });
+
+    res.status(200).send({ selectedUserFunkoPopArr, selectedUserWantListArr });
+  } catch (error) {
+    console.log({ error });
+    res.status(400).send(error.message);
+  }
+};
+
+const getSelectedUserCollection = async (req, res) => {
+  try {
+    const { uid } = req.params;
+    const userRef = await firestore.collection("users").doc(uid);
+    const userFunkoPops = await userRef.collection("userFunkoPops").get();
+
+    const selectedUserFunkoPopsArr = [];
+    userFunkoPops.forEach((doc) => {
+      if (doc.exists) {
+        const funkoSet = doc.data();
+        selectedUserFunkoPopsArr.push(funkoSet);
+      }
+    });
+
+    res.status(200).send(selectedUserFunkoPopsArr);
+  } catch (error) {
+    console.log({ error });
+    res.status(400).send(error.message);
+  }
+};
+
+const getSelectedUserWantList = async (req, res) => {
+  try {
+    const { uid } = req.params;
+    const userRef = await firestore.collection("users").doc(uid);
+    const userWantList = await userRef.collection("userWantList").get();
+
+    const selectedUserWantListArr = [];
+    userWantList.forEach((doc) => {
+      if (doc.exists) {
+        const funkoSet = doc.data();
+        selectedUserWantListArr.push(funkoSet);
+      }
+    });
+
+    res.status(200).send(selectedUserWantListArr);
+  } catch (error) {
+    console.log({ error });
     res.status(400).send(error.message);
   }
 };
@@ -273,5 +375,9 @@ module.exports = {
   getUserWantList,
   removeFunkoPopFromUser,
   removeFunkoPopFromWant,
+  updateUserPhoto,
   getAllUsers,
+  getSelectedUser,
+  getSelectedUserCollection,
+  getSelectedUserWantList,
 };

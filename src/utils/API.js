@@ -177,12 +177,64 @@ const API = {
     );
   },
 
+  uploadUserPhoto: function (uid, authToken, fileUpload) {
+    return axios(
+      {
+        method: "POST",
+        data: {
+          uid,
+          fileUpload,
+        },
+        headers: {
+          "auth-token": authToken,
+        },
+        url: "/api/user/uploadPhoto",
+      },
+      { signal }
+    );
+  },
+
   getAllUsers: function () {
     return axios(
       {
         method: "GET",
         withCredentials: true,
         url: "/api/user/getAll",
+      },
+      { signal }
+    );
+  },
+
+  // NOT IN USE -> USING 2 DIFFERENT FUNCTIONS NOW INCASE USER DOESNT WANT TO LOOK AT BOTH COLLECTIONS TO KEEP COST DOWN
+  getSelectedUser: function (uid) {
+    console.log(uid);
+    return axios(
+      {
+        method: "GET",
+        withCredentials: true,
+        url: `/api/user/getSelectedUser/${uid}`,
+      },
+      { signal }
+    );
+  },
+
+  getSelectedUserCollection: function (uid) {
+    return axios(
+      {
+        method: "GET",
+        withCredentials: true,
+        url: `/api/user/getSelectedUserCollection/${uid}`,
+      },
+      { signal }
+    );
+  },
+
+  getSelectedUserWantList: function (uid) {
+    return axios(
+      {
+        method: "GET",
+        withCredentials: true,
+        url: `/api/user/getSelectedUserWantList/${uid}`,
       },
       { signal }
     );

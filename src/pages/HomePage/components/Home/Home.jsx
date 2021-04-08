@@ -17,6 +17,7 @@ import { Loading } from "../../../../components";
 import { UserContext, FunkosContext, UsersContext } from "../../../../context";
 
 import "./Home.css";
+import { ImagePreview } from "../index";
 
 function Home() {
   const { userState, userDispatch } = useContext(UserContext);
@@ -36,7 +37,7 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [showWantList, setShowWantList] = useState(false);
   const [showCollection, setShowCollection] = useState(true);
-
+  const [updatePhoto, setUpdatePhoto] = useState(false);
   // console.log({
   //   user,
   //   userFunkoPops,
@@ -53,6 +54,10 @@ function Home() {
   const handleWantList = () => {
     setShowWantList(true);
     setShowCollection(false);
+  };
+
+  const handleUpdatePhoto = () => {
+    setUpdatePhoto(!updatePhoto);
   };
 
   useEffect(() => {
@@ -187,7 +192,7 @@ function Home() {
                     <div className="avatar align-items-center">
                       <Avatar src={user?.photoURL} alt={user?.displayName} />
                       <h4 className="ml-2">{user?.displayName}</h4>
-                      {/* <EditIcon fontSize="small" /> */}
+                      <EditIcon fontSize="small" onClick={handleUpdatePhoto} />
                     </div>
                     {/* <div className="displayName">
                 <EditIcon fontSize="small" />
@@ -238,6 +243,19 @@ function Home() {
                 </div>
               </div>
             </MDBAnimation>
+
+            {/* uplaod new photo for avatar */}
+
+            {updatePhoto && (
+              <MDBAnimation type="fadeInDown" delay=".2s">
+                <ImagePreview
+                  uid={userState.user.uid}
+                  authToken={userState.authToken}
+                  setUpdatePhoto={setUpdatePhoto}
+                />
+              </MDBAnimation>
+            )}
+
             {showCollection &&
               userFunkoPops?.map((funkoSet, i) => (
                 <GenreContainer funkoSet={funkoSet} key={i} />

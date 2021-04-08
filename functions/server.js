@@ -3,7 +3,6 @@ const serviceAccount = require("./permissions.json");
 const functions = require("firebase-functions");
 const express = require("express");
 const cors = require("cors");
-const bodyParser = require("body-parser");
 const config = require("./congif");
 const logger = require("morgan");
 // const { main } = require("./getFunkoData");
@@ -12,14 +11,14 @@ const app = express();
 
 // MIDDLEWARES
 app.use(logger("dev"));
-app.use(express.json());
+app.use(express.json({ limit: "100kb" }));
+app.use(express.urlencoded({ limit: "100kb", extended: true }));
 app.use(
   cors({
     origin: "http://localhost:3000",
     credentials: true,
   })
 );
-app.use(bodyParser.json());
 
 // health check
 app.get("/status", (req, res, next) => res.sendStatus(200));

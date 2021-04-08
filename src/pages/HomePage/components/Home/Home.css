@@ -5,6 +5,7 @@
   flex-direction: column;
   padding: 2rem 0 !important;
   margin-top: 100px;
+  z-index: 10;
 }
 
 .imageRow {
