@@ -102,17 +102,18 @@ const MessageModal = ({
       >
         <MDBModalHeader
           toggle={(toggle(14), handleClick)}
+          className="text-white unique-color-dark "
         >{`Messages between ${messageBetween}`}</MDBModalHeader>
 
-        <MDBModalBody className="chatModalBody">
-          <ReactScrollableFeed>
+        <MDBModalBody className="chatModalBody unique-color-dark">
+          <ReactScrollableFeed className="unique-color-dark">
             {messages.map((messageObj) => {
               const { message, displayName, timestamp, photoURL } = messageObj;
               const date = new Date(timestamp).toLocaleDateString();
               const time = new Date(timestamp).toLocaleTimeString();
 
               return (
-                <MDBModalBody key={timestamp}>
+                <div key={timestamp}>
                   <div
                     className={`message ${
                       messageBetween !== displayName && "message_sender"
@@ -139,17 +140,17 @@ const MessageModal = ({
                     <span className="anchor" id={timestamp}></span>
                   </div>
                   {/* <hr className="chatLine" /> */}
-                </MDBModalBody>
+                </div>
               );
             })}
           </ReactScrollableFeed>
         </MDBModalBody>
 
-        <MDBModalFooter className={`justify-content-center`}>
+        <MDBModalFooter className={`justify-content-center unique-color-dark`}>
           <input
             type="text"
             placeholder="say something.."
-            className="messageInput"
+            className="messageInput unique-color-dark"
             value={userMessage}
             onChange={(e) => handleInputChange(e)}
           />

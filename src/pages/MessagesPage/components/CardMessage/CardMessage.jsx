@@ -72,7 +72,7 @@ const CardMessage = ({ messages, users, chatId }) => {
   }, [messages]);
 
   return (
-    <div className="card myCard">
+    <div className="card myCard unique-color-dark mb-1 text-white">
       {showMessages ? (
         <MessageModal
           handleClick={handleClick}

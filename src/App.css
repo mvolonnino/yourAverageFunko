@@ -13,3 +13,7 @@ input {
   --purple: #7510f7;
   --container: rgb(57, 57, 57);
 }
+
+body::-webkit-scrollbar-track {
+  color: aqua;
+}

@@ -151,11 +151,17 @@ const UserModal = ({ selectedUser, setSelectedUser }) => {
 
   return (
     <MDBContainer>
-      <MDBModal isOpen={state.modal14} toggle={toggle(14)} centered>
+      <MDBModal
+        isOpen={state.modal14}
+        toggle={toggle(14)}
+        centered
+        className="userModal"
+      >
         <MDBModalHeader
           toggle={toggle(14)}
+          className="unique-color-dark text-white"
         >{`Average Funko User: ${displayName}`}</MDBModalHeader>
-        <MDBModalBody>
+        <MDBModalBody className="userModalBody">
           {loading ? (
             <div className="modalHeight">
               <Loading />
@@ -163,10 +169,16 @@ const UserModal = ({ selectedUser, setSelectedUser }) => {
           ) : (
             <>
               <div className="haveOrWant text-center">
-                <button className="btn" onClick={getUserCollection}>
+                <button
+                  className="btn unique-color-dark text-white"
+                  onClick={getUserCollection}
+                >
                   Collection
                 </button>
-                <button className="btn" onClick={getUserWantList}>
+                <button
+                  className="btn unique-color-dark text-white"
+                  onClick={getUserWantList}
+                >
                   Want List
                 </button>
               </div>
@@ -188,13 +200,13 @@ const UserModal = ({ selectedUser, setSelectedUser }) => {
             </>
           )}
         </MDBModalBody>
-        <MDBModalFooter className="userFooter">
+        <MDBModalFooter className="userFooter unique-color-dark">
           <input
             type="text"
             placeholder="Say something..."
             onChange={(e) => hanldeInputChange(e)}
             value={message}
-            className="chatInput"
+            className="chatInput unique-color-dark"
           />
           <MDBBtn color="secondary" onClick={handleSendMessage}>
             Send Message

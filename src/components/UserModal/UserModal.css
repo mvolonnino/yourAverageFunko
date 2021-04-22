@@ -9,7 +9,17 @@
   padding: 5px;
 }
 
+.chatInput:focus {
+  border: none;
+  outline: none;
+  color: white;
+}
 .userFooter {
   display: flex;
   justify-content: space-evenly !important;
+}
+
+.userModalBody {
+  max-height: calc(100vh - 250px);
+  overflow-y: auto;
 }

@@ -1,4 +1,5 @@
 import { useEffect, useContext } from "react";
+import { MDBAnimation } from "mdbreact";
 
 import "./Messages.css";
 import { API } from "../../../../utils";
@@ -26,8 +27,8 @@ const Messages = () => {
   }, []);
 
   return (
-    <div className="messagesContainer">
-      <h1>My Messages</h1>
+    <div className="container messagesContainer">
+      <h1 className="text-center m-5">My Messages</h1>
       {chats?.map((chat, i) => {
         const { id, messages, users, seen } = chat;
         return (
