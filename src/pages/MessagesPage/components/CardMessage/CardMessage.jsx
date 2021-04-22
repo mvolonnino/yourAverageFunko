@@ -1,21 +1,13 @@
 import { useContext, useState, useEffect } from "react";
-import Avatar from "@material-ui/core/Avatar";
-import _ from "lodash";
+import { useHistory } from "react-router-dom";
 
 import "./CardMessage.css";
 import { UserContext } from "../../../../context";
 import { MessageModal, NewMessageAlert } from "../../components";
 import db from "../../../../fire";
 
-const CardMessage = ({
-  messages,
-  users,
-  chatId,
-  setChats,
-  chats,
-  index,
-  seen,
-}) => {
+const CardMessage = ({ messages, users, chatId }) => {
+  const history = useHistory();
   const { userState } = useContext(UserContext);
   const { uid } = userState.user;
   const [showMessages, setShowMessages] = useState(false);
@@ -43,14 +35,12 @@ const CardMessage = ({
             })
             .then(() => {
               setMessageAlert(false);
+              history.push({
+                state: false,
+              });
             });
         });
     }
-  };
-
-  const updateChats = (data, index, chats) => {
-    chats[index] = data;
-    return [chats];
   };
 
   useEffect(() => {
@@ -73,13 +63,16 @@ const CardMessage = ({
           setMsgs(data.messages);
           if (!seen[uid]) {
             setMessageAlert(true);
+            history.push({
+              state: true,
+            });
           }
         }
       });
-  }, []);
+  }, [messages]);
 
   return (
-    <div className="card">
+    <div className="card myCard">
       {showMessages ? (
         <MessageModal
           handleClick={handleClick}

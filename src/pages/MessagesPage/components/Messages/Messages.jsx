@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useContext } from "react";
 
 import "./Messages.css";
 import { API } from "../../../../utils";
@@ -6,10 +6,9 @@ import { UserContext } from "../../../../context";
 import { CardMessage } from "../../components";
 
 const Messages = () => {
-  const [chats, setChats] = useState([]);
-  const { userState } = useContext(UserContext);
+  const { userState, userDispatch } = useContext(UserContext);
   const { uid } = userState.user;
-  const { authToken } = userState;
+  const { authToken, chats } = userState;
 
   useEffect(() => {
     if (chats.length === 0) {
@@ -17,7 +16,10 @@ const Messages = () => {
       API.getUserMessages(authToken, uid)
         .then((res) => {
           const { data } = res;
-          setChats(data);
+          userDispatch({
+            type: "SET_CHATS",
+            chats: data,
+          });
         })
         .catch((err) => console.error(err));
     }
@@ -29,18 +31,15 @@ const Messages = () => {
       {chats?.map((chat, i) => {
         const { id, messages, users, seen } = chat;
         return (
-          <CardMessage
-            key={id}
-            messages={messages}
-            users={users}
-            chatId={id}
-            setChats={setChats}
-            chats={chats}
-            index={i}
-            seen={seen}
-          />
+          <CardMessage key={id} messages={messages} users={users} chatId={id} />
         );
       })}
+      {chats.length === 0 ? (
+        <div className="justify-content-center">
+          Looks like you have no messages yet, check out our other users and
+          send a message to see them here!
+        </div>
+      ) : null}
     </div>
   );
 };

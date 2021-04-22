@@ -207,7 +207,6 @@ const API = {
 
   // NOT IN USE -> USING 2 DIFFERENT FUNCTIONS NOW INCASE USER DOESNT WANT TO LOOK AT BOTH COLLECTIONS TO KEEP COST DOWN
   getSelectedUser: function (uid) {
-    console.log(uid);
     return axios(
       {
         method: "GET",

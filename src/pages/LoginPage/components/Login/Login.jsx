@@ -51,7 +51,7 @@ function Login() {
   const setToken = (token) => {
     if (!authToken) {
       userDispatch({
-        type: "SET_AUTHTOKEN",
+        type: "SET_AUTH_TOKEN",
         authToken: token,
       });
     }
@@ -100,7 +100,6 @@ function Login() {
       auth
         .signInWithEmailAndPassword(email, password)
         .then((res) => {
-          console.log(res);
           const { uid } = res.user;
           localStorage.setItem("userSignedIn", JSON.stringify(uid));
           history.push("/home");

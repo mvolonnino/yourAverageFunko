@@ -12,7 +12,6 @@ import Avatar from "@material-ui/core/Avatar";
 import { MDBTooltip } from "mdb-react-ui-kit";
 import ReactScrollableFeed from "react-scrollable-feed";
 import firebase from "firebase";
-import db from "../../../../fire";
 
 import "./MessageModal.css";
 import { API } from "../../../../utils";
@@ -25,7 +24,6 @@ const MessageModal = ({
   messageBetween,
   users,
   chatId,
-  setAddlistener,
 }) => {
   const { userState } = useContext(UserContext);
   const { user, authToken } = userState;
@@ -47,7 +45,6 @@ const MessageModal = ({
     setState({
       [modalNumber]: !state[modalNumber],
     });
-    setAddlistener(false);
   };
 
   const handleInputChange = (e) => {

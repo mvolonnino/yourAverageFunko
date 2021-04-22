@@ -5,6 +5,7 @@ export const userInitState = {
   userWantList: [],
   getUserFunkos: true,
   getUserWantFunkos: true,
+  chats: [],
 };
 
 const userReducer = (state, action) => {
@@ -40,6 +41,11 @@ const userReducer = (state, action) => {
       return {
         ...state,
         userWantList: action.userWantList,
+      };
+    case "SET_CHATS":
+      return {
+        ...state,
+        chats: action.chats,
       };
     case "LOGOUT":
       return userInitState;

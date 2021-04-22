@@ -8,8 +8,7 @@ import {
   MDBModalFooter,
   MDBIcon,
 } from "mdbreact";
-import { MDBTooltip } from "mdb-react-ui-kit";
-import { API, uuid } from "../../utils";
+import { API } from "../../utils";
 import { UserContext } from "../../context";
 import {
   GenreContainer,

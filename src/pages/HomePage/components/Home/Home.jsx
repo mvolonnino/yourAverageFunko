@@ -2,6 +2,8 @@ import React, { useEffect, useState, useContext } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import EditIcon from "@material-ui/icons/Edit";
 import { MDBAnimation } from "mdbreact";
+import { useHistory } from "react-router-dom";
+
 import funkoBrand from "../../../../img/funkoBrand.png";
 import {
   flatten,
@@ -15,11 +17,12 @@ import {
 import { GenreContainer } from "../../../../components";
 import { Loading } from "../../../../components";
 import { UserContext, FunkosContext, UsersContext } from "../../../../context";
-
+import db from "../../../../fire";
 import "./Home.css";
 import { ImagePreview } from "../index";
 
 function Home() {
+  const history = useHistory();
   const { userState, userDispatch } = useContext(UserContext);
   const { funkoState, funkoDispatch } = useContext(FunkosContext);
   const { usersState, usersDispatch } = useContext(UsersContext);
@@ -29,7 +32,10 @@ function Home() {
     getUserFunkos,
     userWantList,
     getUserWantFunkos,
+    chats,
+    authToken,
   } = userState;
+  const { uid } = user;
   const { dbFunkoPops } = funkoState;
   const { users } = usersState;
   const [numFunkos, setNumFunkos] = useState();
@@ -38,13 +44,6 @@ function Home() {
   const [showWantList, setShowWantList] = useState(false);
   const [showCollection, setShowCollection] = useState(true);
   const [updatePhoto, setUpdatePhoto] = useState(false);
-  // console.log({
-  //   user,
-  //   userFunkoPops,
-  //   getUserFunkos,
-  //   dbFunkoPops,
-  //   users,
-  // });
 
   const handleShowCollection = () => {
     setShowCollection(true);
@@ -84,7 +83,6 @@ function Home() {
   }, [loading]);
 
   useEffect(() => {
-    const { uid } = user;
     if ((userFunkoPops?.length === 0 && loading) || getUserFunkos) {
       try {
         console.log("fetching user funko pops...");
@@ -143,6 +141,47 @@ function Home() {
       setLoading(false);
     }
   }, []);
+
+  useEffect(() => {
+    if (authToken) {
+      console.log("fetching user messages...");
+      API.getUserMessages(authToken, uid)
+        .then((res) => {
+          const { data } = res;
+          userDispatch({
+            type: "SET_CHATS",
+            chats: data,
+          });
+
+          data.map((chat) => {
+            const { seen, id } = chat;
+
+            console.log("subscriping to chats id...", id);
+            db.collection("chats")
+              .doc(id)
+              .onSnapshot((snapshot) => {
+                const data = { ...snapshot.data(), id: id };
+                if (data) {
+                  const { seen } = data;
+
+                  if (!seen[uid]) {
+                    history.push({
+                      state: true,
+                    });
+                  }
+                }
+              });
+
+            if (!seen[uid]) {
+              history.push({
+                state: true,
+              });
+            }
+          });
+        })
+        .catch((err) => console.error(err));
+    }
+  }, [authToken]);
 
   useEffect(() => {
     if (showWantList && getUserWantFunkos) {

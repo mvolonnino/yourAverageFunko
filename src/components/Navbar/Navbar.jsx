@@ -15,12 +15,13 @@ import {
 } from "mdbreact";
 import Avatar from "@material-ui/core/Avatar";
 import SearchIcon from "@material-ui/icons/Search";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 
 import "./Navbar.css";
 import { auth } from "../../fire";
 import { searchData, getFunkoPopData } from "../../utils";
 import { UserContext, FunkosContext } from "../../context";
+import { NewMessageAlert } from "../../pages/MessagesPage/components";
 
 const Navbar = () => {
   const { userState, userDispatch } = useContext(UserContext);
@@ -31,6 +32,8 @@ const Navbar = () => {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const history = useHistory();
+  const location = useLocation();
+  const messageAlert = location.state;
 
   const handleTogglerClick = () => {
     setCollapsed(!collapsed);
@@ -108,8 +111,9 @@ const Navbar = () => {
               <Avatar
                 src={user?.photoURL}
                 alt={user?.displayName}
-                className="userAvatar"
+                className="userAvatar mr-2"
               />
+              {messageAlert === true ? <NewMessageAlert /> : null}
             </MDBDropdownToggle>
             <MDBDropdownMenu>
               <MDBDropdownItem>
@@ -122,7 +126,9 @@ const Navbar = () => {
               </MDBDropdownItem>
               <MDBDropdownItem>
                 <MDBNavItem>
-                  <MDBLink to="/messages">My Messages</MDBLink>
+                  <MDBLink to="/messages">{`My Messages ${
+                    messageAlert === true ? "(new)" : ""
+                  }`}</MDBLink>
                 </MDBNavItem>
               </MDBDropdownItem>
               <MDBDropdownItem>
