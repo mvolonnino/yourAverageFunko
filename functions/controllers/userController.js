@@ -4,6 +4,7 @@ const FunkoPop = require("../models/funkoPop");
 const firestore = firebase.firestore();
 const jwt = require("jsonwebtoken");
 const admin = require("firebase-admin");
+// const checkForChat = require("../helpers/checkForChat");
 
 const signUpUser = async (req, res, next) => {
   try {
@@ -295,7 +296,6 @@ const getSelectedUser = async (req, res) => {
   try {
     const { uid } = req.params;
     const { collection, wantList } = req.body;
-    console.log({ collection, wantList });
     const userRef = await firestore.collection("users").doc(uid);
 
     const userFunkoPops = await userRef.collection("userFunkoPops").get();
@@ -310,7 +310,6 @@ const getSelectedUser = async (req, res) => {
       const funkoSet = doc.data();
       selectedUserFunkoPopArr.push(funkoSet);
     });
-    console.log(selectedUserFunkoPopArr);
 
     // funkopops in user want list
     userWantList.forEach((doc) => {
@@ -367,6 +366,110 @@ const getSelectedUserWantList = async (req, res) => {
   }
 };
 
+const sendMessageToChat = async (req, res) => {
+  try {
+    const { chatMessage, uids, users, chatId, selUserUID, userUID } = req.body;
+    let newMessages = [];
+    // let newSeenArr = [];
+
+    if (!chatId) {
+      const userID = users[0].uid;
+      const selUserID = users[1].uid;
+      const bothIDs = `${userID}||${selUserID}`;
+
+      const chatRef = await firestore.collection("chats");
+      const chatDocs = await chatRef
+        .where("uids", "array-contains", bothIDs)
+        .get();
+
+      if (chatDocs.empty) {
+        const doc = {
+          messages: [chatMessage],
+          uids: uids,
+          users: users,
+          lastMessageSent: chatMessage.timestamp,
+          seen: {
+            [userUID]: true,
+            [selUserUID]: false,
+          },
+        };
+
+        await firestore.collection("chats").add(doc);
+
+        newMessages.push(doc, chatMessage);
+        console.log("added Doc => ", doc);
+      }
+
+      chatDocs.forEach(async (doc) => {
+        const docID = doc.id;
+        let { messages } = doc.data();
+        messages.push(chatMessage);
+        newMessages.push(messages, chatMessage);
+        await firestore
+          .collection("chats")
+          .doc(docID)
+          .update({
+            messages,
+            lastMessageSent: chatMessage.timestamp,
+            seen: {
+              [userUID]: true,
+              [selUserUID]: false,
+            },
+          });
+        console.log("added messages => ", messages);
+      });
+    } else {
+      const chatDocs = await firestore.collection("chats").doc(chatId).get();
+
+      let { messages } = chatDocs.data();
+      messages.push(chatMessage);
+      newMessages.push(messages, chatMessage);
+      await firestore
+        .collection("chats")
+        .doc(chatId)
+        .update({
+          messages,
+          lastMessageSent: chatMessage.timestamp,
+          seen: {
+            [userUID]: true,
+            [selUserUID]: false,
+          },
+        });
+      console.log("added messages => ", messages);
+    }
+    res.status(200).send(newMessages);
+  } catch (error) {
+    console.log({ error });
+    res.status(400).send(error.message);
+  }
+};
+
+const getUserMessages = async (req, res) => {
+  try {
+    const { uid } = req.params;
+    const chatRef = await firestore.collection("chats");
+    let chatsArr = [];
+    const chatDocs = await chatRef
+      .where("uids", "array-contains", uid)
+      .orderBy("lastMessageSent", "desc")
+      .get();
+
+    chatDocs.forEach((doc) => {
+      const data = {
+        ...doc.data(),
+        id: doc.id,
+      };
+      chatsArr.push(data);
+    });
+
+    console.log(chatsArr);
+    res.status(200).send(chatsArr);
+  } catch (error) {
+    console.log({ error });
+    res.status(400).send(error.message);
+  }
+};
+
 module.exports = {
   signUpUser,
   signInUser,
@@ -380,4 +483,6 @@ module.exports = {
   getSelectedUser,
   getSelectedUserCollection,
   getSelectedUserWantList,
+  sendMessageToChat,
+  getUserMessages,
 };

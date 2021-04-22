@@ -8,6 +8,7 @@ import {
   FunkosPage,
   ResultsPage,
   UsersPage,
+  MessagesPage,
 } from "./pages";
 import { auth } from "./fire";
 import "./App.css";
@@ -90,6 +91,7 @@ function App() {
               <Route exact path="/funkos" component={FunkosPage} />
               <Route exact path="/results" component={ResultsPage} />
               <Route exact path="/users" component={UsersPage} />
+              <Route exact path="/messages" component={MessagesPage} />
             </Switch>
           </UsersProvider>
         </FunkosProvider>

@@ -239,6 +239,43 @@ const API = {
       { signal }
     );
   },
+
+  sendMessageToChat: function ({
+    authToken,
+    uids,
+    chatMessage,
+    users,
+    chatId,
+    userUID,
+    selUserUID,
+  }) {
+    return axios({
+      method: "POST",
+      data: {
+        uids,
+        chatMessage,
+        users,
+        chatId,
+        userUID,
+        selUserUID,
+      },
+      url: "/api/user/sendMessage",
+      headers: {
+        "auth-token": authToken,
+      },
+    });
+  },
+
+  getUserMessages: function (authToken, uid) {
+    return axios({
+      method: "GET",
+      withCredentials: true,
+      url: `/api/user/getUserMessages/${uid}`,
+      headers: {
+        "auth-token": authToken,
+      },
+    });
+  },
 };
 
 export default API;

@@ -121,6 +121,11 @@ const Navbar = () => {
                 </MDBNavItem>
               </MDBDropdownItem>
               <MDBDropdownItem>
+                <MDBNavItem>
+                  <MDBLink to="/messages">My Messages</MDBLink>
+                </MDBNavItem>
+              </MDBDropdownItem>
+              <MDBDropdownItem>
                 <MDBNavItem className="logoutText" onClick={handleLogout}>
                   Logout
                 </MDBNavItem>

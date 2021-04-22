@@ -1,0 +1,168 @@
+/* .otherSender {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+}
+
+.myMessages {
+  flex-direction: row-reverse;
+  display: flex;
+  align-items: center;
+  padding: 15px;
+}
+
+.otherSender .userInfo {
+  margin-right: 20px;
+}
+
+.otherSender .messageText {
+  margin-right: 10px;
+  border: 1px solid var(--purple);
+  border-radius: 10px;
+  padding: 10px;
+  background-color: var(--purple);
+  color: whitesmoke;
+}
+
+.myMessages .userInfo {
+  margin-left: 20px;
+}
+
+.myMessages .messageText {
+  text-align: right;
+  margin-left: 10px;
+  border: 1px solid var(--primary-color);
+  border-radius: 10px;
+  padding: 10px;
+  background-color: var(--primary-color);
+  color: whitesmoke;
+}
+
+.time {
+  display: flex;
+  justify-content: flex-end;
+  flex: 0.1;
+}
+
+.whitesmoke .messageText {
+  flex: 1;
+}
+
+.timeTooltip {
+  z-index: 10000 !important;
+  justify-content: flex-end;
+}
+
+
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.chatDisplayName {
+  font-size: 10px;
+}
+
+.chatLine {
+  margin: 0;
+}
+
+.chatModalBody {
+  padding: 0 !important;
+} */
+
+.chatModalBody {
+  max-height: calc(100vh - 400px);
+  overflow-y: auto;
+}
+
+.messageInput {
+  border: none;
+  height: 35px;
+  width: 100%;
+  padding: 5px;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+}
+
+.timeTooltip {
+  z-index: 10000 !important;
+  justify-content: flex-end;
+}
+
+.message {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: fit-content;
+  justify-content: space-between;
+  margin: 15px;
+}
+
+.message > p {
+  background-color: var(--purple);
+  font-size: medium;
+  padding: 15px;
+  border-radius: 20px;
+  margin: 10px;
+  margin-right: auto;
+  color: whitesmoke;
+}
+
+.time {
+  color: gray;
+  position: absolute;
+  font-size: 12px;
+  bottom: -10px;
+  right: 10px;
+}
+
+.chatDisplayName {
+  color: gray;
+  position: absolute;
+  font-size: 8px;
+  top: -5px;
+  order: 0;
+}
+
+.message_sender {
+  margin-left: auto;
+}
+
+.message_sender > .message_photo {
+  order: 1;
+  margin: 15px;
+}
+
+.message_photo {
+  order: 0;
+}
+
+.message_sender > p {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.message_sender > .chatDisplayName {
+  color: gray;
+  position: absolute;
+  font-size: 8px;
+  top: -5px;
+  right: 5px;
+}
+
+.message_sender .time {
+  color: gray;
+  position: absolute;
+  font-size: 12px;
+  bottom: -10px;
+  left: 20px;
+}

@@ -1,0 +1,7 @@
+.greenIcon {
+  color: green !important;
+}
+
+.toolTip {
+  z-index: 10000 !important;
+}

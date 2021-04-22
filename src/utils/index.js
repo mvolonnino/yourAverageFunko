@@ -11,3 +11,4 @@ export { default as getPickedGenre } from "./getPickedGenre";
 export { default as createNewUser } from "./createNewUser";
 export { default as signInWithProvider } from "./signInWithProvider";
 export { default as getUserWantList } from "./getUserWantList";
+export { default as uuid } from "./uuid";

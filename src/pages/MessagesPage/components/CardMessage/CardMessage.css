@@ -1,0 +1,19 @@
+.messageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lastMessage {
+  font-size: 12px;
+}
+
+.messageText {
+  margin-bottom: 0;
+  margin-right: 10px;
+}
+
+.messageAlerts {
+  display: flex;
+  align-items: center;
+}

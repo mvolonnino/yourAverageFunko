@@ -8,3 +8,4 @@ export { default as RemoveModal } from "./RemoveModal";
 export { default as UserModal } from "./UserModal";
 export { default as AlertError } from "./AlertError";
 export { default as Loading } from "./Loading";
+export { default as IconSent } from "./IconSent";
