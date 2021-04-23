@@ -30,19 +30,19 @@ Since there really is no current Funko Pop API readily available, I was tasked w
 
 _FUNKO POP SEARCHING_
 
-    A user can use the 'search collection' feature that will allow them to sift through all the series/genres in our database and look to try and collect all the funko pops in that one collection.
+- A user can use the 'search collection' feature that will allow them to sift through all the series/genres in our database and look to try and collect all the funko pops in that one collection.
 
-    Or, if the user wants to look up all the funko pops that pertain to 'Thor', they can just use the search feature by name, and have all the funko pops that deal with Thor to look through.
+- Or, if the user wants to look up all the funko pops that pertain to 'Thor', they can just use the search feature by name, and have all the funko pops that deal with Thor to look through.
 
-    My personal favorite though, searching a random funko pop number and being able to see all funkos that come up with that same number! That is a fun way to find different pops just based on a goofy stat like the funko pop number.
+- My personal favorite though, searching a random funko pop number and being able to see all funkos that come up with that same number! That is a fun way to find different pops just based on a goofy stat like the funko pop number.
 
 _USER PROFILE/CHAT_
 
-    Users are able to search through a list of other fellow funko pop users, click on them to see their complete funko pop collection including their want list.
+- Users are able to search through a list of other fellow funko pop users, click on them to see their complete funko pop collection including their want list.
 
-    You are also able to send direct messages to the user that you click on to view their profile. This way, you can chat about funko pops that the other user has and funkos that the other use finds cool or is interested in. Compare collections and even set up possible trades or whatever each user would like to do!
+- You are also able to send direct messages to the user that you click on to view their profile. This way, you can chat about funko pops that the other user has and funkos that the other use finds cool or is interested in. Compare collections and even set up possible trades or whatever each user would like to do!
 
-    Messages section in the navbar will alert to new messages that are sent to a user, and will update dynamically based on recieving messages - just like a personal chat feature.
+- Messages section in the navbar will alert to new messages that are sent to a user, and will update dynamically based on recieving messages - just like a personal chat feature.
 
 ## Future Updates
 
