@@ -16,7 +16,7 @@ Since there really is no current Funko Pop API readily available, I was tasked w
 
 ![Demo of singing in to website](src/assets/yaf-signin.gif)
 
-    This demo shows signing up for website as new user and mobile friendly desgin and transistions
+    This demo shows signing up for website as new user and mobile friendly desgin and transistions (smoother in person due to limitations of screen recorder)
 
 ![Demo of singing up for website](src/assets/yaf-signup.gif)
 
