@@ -12,18 +12,16 @@ const Messages = () => {
   const { authToken, chats } = userState;
 
   useEffect(() => {
-    if (chats.length === 0) {
-      console.log("fetching user messages...");
-      API.getUserMessages(authToken, uid)
-        .then((res) => {
-          const { data } = res;
-          userDispatch({
-            type: "SET_CHATS",
-            chats: data,
-          });
-        })
-        .catch((err) => console.error(err));
-    }
+    console.log("fetching user messages...");
+    API.getUserMessages(authToken, uid)
+      .then((res) => {
+        const { data } = res;
+        userDispatch({
+          type: "SET_CHATS",
+          chats: data,
+        });
+      })
+      .catch((err) => console.error(err));
   }, []);
 
   return (

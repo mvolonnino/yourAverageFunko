@@ -13,6 +13,7 @@ function Results() {
   });
   const location = useLocation();
   const { search, state } = location;
+  console.log(state);
   const searched = search.replace("?", "");
   const searchedQuery = searched.replace("%20", " ");
 
@@ -41,7 +42,7 @@ function Results() {
               onClick={() =>
                 setShow({
                   name: false,
-                  genre: !show.genre,
+                  genre: true,
                   number: false,
                   msg: false,
                 })

@@ -1,70 +1,84 @@
-# Getting Started with Create React App
+# YOUR AVERAGE FUNKO!
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## ABOUT
 
-## Available Scripts
+This application is all about connecting with other funko pop enthuasists and being able to view and chat about their collections and interests in the wonderful hobby of funko pop collecting.
 
-In the project directory, you can run:
+A user is able to search through a database with well over 10,000 funko pops by series, name or number. They can add funko pops that they already own to their collection, or add the ones that they think are really cool to a want list! You can also move funko pops from your want list to owned as your collection grows, or delete ones that you don't have anymore! You can do it all with your Average Funko.
 
-### `npm start`
+Since there really is no current Funko Pop API readily available, I was tasked with creating a script to collect the data myself. I wrote custom functions to scrape websites to be able to collect all the data on well over 10,000 funko pops that included the series, name, and number of each funko pop.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+---
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Live Demos
 
-### `npm test`
+    This demo shows signing up, with Google Account, and searching through collections
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+![Demo of singing in to website](src/assets/yaf-signin.gif)
 
-### `npm run build`
+    This demo shows signing up for website as new user and mobile friendly desgin and transistions
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+![Demo of singing up for website](src/assets/yaf-signup.gif)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+    This demo shows messaging between users and receiving a real time message and responding
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+![Demo of messaging](sr/../src/assets/yaf-messaging.gif)
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Functionality
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+_FUNKO POP SEARCHING_
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+    A user can use the 'search collection' feature that will allow them to sift through all the series/genres in our database and look to try and collect all the funko pops in that one collection.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+    Or, if the user wants to look up all the funko pops that pertain to 'Thor', they can just use the search feature by name, and have all the funko pops that deal with Thor to look through.
 
-## Learn More
+    My personal favorite though, searching a random funko pop number and being able to see all funkos that come up with that same number! That is a fun way to find different pops just based on a goofy stat like the funko pop number.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+_USER PROFILE/CHAT_
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+    Users are able to search through a list of other fellow funko pop users, click on them to see their complete funko pop collection including their want list.
 
-### Code Splitting
+    You are also able to send direct messages to the user that you click on to view their profile. This way, you can chat about funko pops that the other user has and funkos that the other use finds cool or is interested in. Compare collections and even set up possible trades or whatever each user would like to do!
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+    Messages section in the navbar will alert to new messages that are sent to a user, and will update dynamically based on recieving messages - just like a personal chat feature.
 
-### Analyzing the Bundle Size
+## Future Updates
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- Have a link for each funko pop to be able to bring up various websites that deal with the hobby (example could be cardboardcollection or funko website)
+- Have pricing on funko pops to see what they sell/buy for
+- Keep up on new funko pop releases (hopefully every month)
+- Expand on user profile - add profile avatar updating (in the works already), display room where users can upload photos of their own collections to show off how each user displays their own funko pops
+- Add table for users collection and want list (table like when searching for funko pops or going through series/genres)
 
-### Making a Progressive Web App
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Technologies Utilized
 
-### Advanced Configuration
+- React
+- Context API
+- HTML5
+- CSS
+- MDBReact
+- Material UI
+- Animations
+- Firebase
+- Firebase Auth
+- Firebase Hosting
+- Firestore
+- Puppeteer
+- Node.js
+- Express
+- jsw
+- Axios
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+---
 
-### Deployment
+### Contributing Author(s)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Matt Volonnino :
+  - {
+    - [GitHub Repository](https://github.com/mvolonnino)
+    - [Email](mailto:mvolonnino12@gmail.com)
+  - }
