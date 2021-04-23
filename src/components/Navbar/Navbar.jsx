@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   MDBNavbar,
   MDBNavbarBrand,
@@ -33,7 +33,8 @@ const Navbar = () => {
   const [loading, setLoading] = useState(false);
   const history = useHistory();
   const location = useLocation();
-  const messageAlert = location.state;
+  const { state } = location;
+  const [messageAlert, setMessageAlert] = useState(false);
 
   const handleTogglerClick = () => {
     setCollapsed(!collapsed);
@@ -41,33 +42,35 @@ const Navbar = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    setLoading(true);
-    if (dbFunkoPops.length === 0) {
-      console.log("fetching db funko pops...");
-      getFunkoPopData()
-        .then((res) => {
-          setLoading(false);
-          funkoDispatch({
-            type: "SET_DB_FUNKOPOPS",
-            dbFunkoPops: res,
-          });
+    if (search) {
+      setLoading(true);
+      if (dbFunkoPops.length === 0) {
+        console.log("fetching db funko pops...");
+        getFunkoPopData()
+          .then((res) => {
+            setLoading(false);
+            funkoDispatch({
+              type: "SET_DB_FUNKOPOPS",
+              dbFunkoPops: res,
+            });
 
-          const results = searchData(res, search);
-          history.push({
-            pathname: "/results",
-            search: search,
-            state: results,
-          });
-        })
-        .catch((error) => console.error(error));
-    } else {
-      setLoading(false);
-      const results = searchData(dbFunkoPops, search);
-      history.push({
-        pathname: "/results",
-        search: search,
-        state: results,
-      });
+            const results = searchData(res, search);
+            history.push({
+              pathname: "/results",
+              search: search,
+              state: results,
+            });
+          })
+          .catch((error) => console.error(error));
+      } else {
+        setLoading(false);
+        const results = searchData(dbFunkoPops, search);
+        history.push({
+          pathname: "/results",
+          search: search,
+          state: results,
+        });
+      }
     }
   };
 
@@ -93,6 +96,14 @@ const Navbar = () => {
       onClick={handleTogglerClick}
     />
   );
+
+  useEffect(() => {
+    if (state === true) {
+      setMessageAlert(true);
+    } else if (state === false) {
+      setMessageAlert(false);
+    }
+  }, [state]);
 
   return (
     <div id="apppage">
